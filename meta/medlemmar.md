@@ -30,6 +30,7 @@ i gruppen sorterade i bokstavsordning  <a name="anders877"></a>
 
 > Beskriv kortfattad något du gillar att göra vid sidan av dina
 > studier.
+
 - Tränar ofta
 - Spelar gitarr
 - Gillar att laga mat
