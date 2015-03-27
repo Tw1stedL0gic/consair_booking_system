@@ -115,12 +115,12 @@ Detta kontrakt har den __________________________  upprättats av:
 
 Förnamn | Efternamn | . . . . . . . . . . . Underskrift . . . . . . . . . . .
 --------|-----------|------------
--Andreas  | Rubensson|
--Carl  | Wingårdh |
--Erik  | Österberg |
--Lucas  | Arnström |
--Oskar | Ahlberg |
--Wen Ting   | Jin   |
+Andreas  | Rubensson|
+Carl  | Wingårdh |
+Erik  | Österberg |
+Lucas  | Arnström |
+Oskar | Ahlberg |
+Wen Ting   | Jin   |
  
 
 
