@@ -115,7 +115,7 @@ Detta kontrakt har den __________________________  upprättats av:
 Förnamn | Efternamn | . . . . . . . . . . . Underskrift . . . . . . . . . . .
 --------|-----------|------------
 
-Andreas  | Rubensson|
+|Andreas  | Rubensson|
 
 Carl  | Wingårdh |
 
