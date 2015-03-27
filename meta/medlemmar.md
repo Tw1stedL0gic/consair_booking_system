@@ -17,7 +17,7 @@ Bild                                       | Förnamn               | Efternamn 
 <img src="images/erik.png" width="100px">  | [Erik](#användarnamn)  | Österberg | yymmdd-xxxx  | `användarnamn`
 <img src="images/Lucas.png" width="100px">  | [Lucas](#användarnamn)  | Arnström | yymmdd-xxxx  | `användarnamn`
 <img src="images/oskar.png" width="100px">  | [Oskar](#användarnamn)  | Ahlberg | yymmdd-xxxx  | `användarnamn`
-<img src="images/wenting.png" width="100px">  | [Wen Ting](#användarnamn)  | Jin | yymmdd-xxxx  | `användarnamn`
+<img src="images/wenting.png" width="100px">  | [Wen Ting](#chrisking2020)  | Jin | 870119-1804  | `chrisking2020`
 
 
 > Utgå sedan från mallen nedan och skapa ett avsnitt för varje medlem
