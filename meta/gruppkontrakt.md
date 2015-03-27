@@ -41,7 +41,7 @@ Denna mall för gruppkontrakt är baserat på:
 
 - Tiderna kommer att variera då vi har olika kursbördor, detta kommer att synas på trello.
 
-- Skäl för frånvaro vid möten:
+### Skäl för frånvaro vid möten:
 - Sjukdom
 - Jobbkonfilikter
 - Schemakonflikter
