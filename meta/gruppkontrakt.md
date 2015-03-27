@@ -116,20 +116,10 @@ Förnamn | Efternamn | . . . . . . . . . . . Underskrift . . . . . . . . . . .
 --------|-----------|------------
 
 Andreas  | Rubensson|
-
-
 Carl  | Wingårdh |
-
-
 Erik  | Österberg |
-
-
 Lucas  | Arnström |
-
-
 Oskar | Ahlberg |
-
-
 Wen-ting   | Jin   |
  
 
