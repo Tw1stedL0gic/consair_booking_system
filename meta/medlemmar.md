@@ -15,7 +15,7 @@ Bild                                       | Förnamn               | Efternamn 
 <img src="images/andreas.png" width="100px">  | [Andreas](#andreasrubensson)  | Rubensson | 940722-6019  | `andreasrubensson`
 <img src="images/user.png" width="100px">  | [Carl](#användarnamn)  | Wingårdh | yymmdd-xxxx  | `användarnamn`
 <img src="images/erik.png" width="100px">  | [Erik](#användarnamn)  | Österberg | yymmdd-xxxx  | `användarnamn`
-<img src="images/Lucas.png" width="100px">  | [Lucas](#användarnamn)  | Arnström | 920524-0857  | `chilinot`
+<img src="images/Lucas.png" width="100px">  | [Lucas](#användarnamn)  | Arnström | yymmdd-xxxx  | `användarnamn`
 <img src="images/oskar.png" width="100px">  | [Oskar](#användarnamn)  | Ahlberg | yymmdd-xxxx  | `användarnamn`
 <img src="images/wenting.png" width="100px">  | [Wen Ting](#chrisking2020)  | Jin | 870119-1804  | `chrisking2020`
 
@@ -30,23 +30,20 @@ i gruppen sorterade i bokstavsordning  <a name="anders877"></a>
 
 > Beskriv kortfattad något du gillar att göra vid sidan av dina
 > studier.
+- Tränar ofta
+- Spelar gitarr
+- Gillar att laga mat
 
 ### Starka sidor
 
 > Kortfattad beskrivning över områden där du tror du har lättast att
 > bidra till projektet, till exempel:
 
-- analys/design/specifikation
-- problemlösning och algoritmer
-- skriva kod utifrån färdig specifikation
 - planering
 - samarbete
-- ledarskap
 - research (söka och sammanställa information)
-- dokumentation
 - rapportskrivande
-- muntlig presentation
-- lägg gärna till flera punkter ...
+- sprida glad laganda
 
 ### Personlig utveckling
 
@@ -57,14 +54,9 @@ i gruppen sorterade i bokstavsordning  <a name="anders877"></a>
 - analys/design/specifikation
 - problemlösning och algoritmer
 - skriva kod utifrån färdig specifikation
-- planering
-- samarbete
 - ledarskap
-- research (söka och sammanställa information)
 - dokumentation
-- rapportskrivande
 - muntlig presentation
-- lägg gärna till flera punkter ...
 
 ## Carl Wingårdh
 
@@ -157,11 +149,25 @@ i gruppen sorterade i bokstavsordning  <a name="anders877"></a>
 
 ### Okänd talang
 
-Gaming.
+> Beskriv kortfattad något du gillar att göra vid sidan av dina
+> studier.
 
 ### Starka sidor
 
+> Kortfattad beskrivning över områden där du tror du har lättast att
+> bidra till projektet, till exempel:
 
+- analys/design/specifikation
+- problemlösning och algoritmer
+- skriva kod utifrån färdig specifikation
+- planering
+- samarbete
+- ledarskap
+- research (söka och sammanställa information)
+- dokumentation
+- rapportskrivande
+- muntlig presentation
+- lägg gärna till flera punkter ...
 
 ### Personlig utveckling
 
