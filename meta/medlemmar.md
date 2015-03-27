@@ -14,10 +14,10 @@ Bild                                       | Förnamn               | Efternamn 
 -------------------------------------------|-----------------------|-----------|--------------|----------------------
 <img src="images/andreas.png" width="100px">  | [Andreas](#andreasrubensson)  | Rubensson | 940722-6019  | `andreasrubensson`
 <img src="images/user.png" width="100px">  | [Carl](#användarnamn)  | Wingårdh | yymmdd-xxxx  | `användarnamn`
-<img src="images/user.png" width="100px">  | [Erik](#användarnamn)  | Österberg | yymmdd-xxxx  | `användarnamn`
-<img src="images/user.png" width="100px">  | [Lucas](#användarnamn)  | Arnström | yymmdd-xxxx  | `användarnamn`
-<img src="images/user.png" width="100px">  | [Oskar](#användarnamn)  | Ahlberg | yymmdd-xxxx  | `användarnamn`
-<img src="images/user.png" width="100px">  | [Wen Ting](#användarnamn)  | Jin | yymmdd-xxxx  | `användarnamn`
+<img src="images/erik.png" width="100px">  | [Erik](#användarnamn)  | Österberg | yymmdd-xxxx  | `användarnamn`
+<img src="images/Lucas.png" width="100px">  | [Lucas](#användarnamn)  | Arnström | yymmdd-xxxx  | `användarnamn`
+<img src="images/oskar.png" width="100px">  | [Oskar](#användarnamn)  | Ahlberg | yymmdd-xxxx  | `användarnamn`
+<img src="images/wenting.png" width="100px">  | [Wen Ting](#användarnamn)  | Jin | yymmdd-xxxx  | `användarnamn`
 
 
 > Utgå sedan från mallen nedan och skapa ett avsnitt för varje medlem
