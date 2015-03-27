@@ -12,7 +12,7 @@ OSPP (1DT096) 2015 - Grupp 04
 
 Bild                                       | Förnamn               | Efternamn | Personnummer | Användarnamn (Github)
 -------------------------------------------|-----------------------|-----------|--------------|----------------------
-<img src="images/user.png" width="100px">  | [Andreas](#andreasrubensson)  | Rubensson | 940722-6019  | `andreasrubensson`
+<img src="images/andreas.png" width="100px">  | [Andreas](#andreasrubensson)  | Rubensson | 940722-6019  | `andreasrubensson`
 <img src="images/user.png" width="100px">  | [Carl](#användarnamn)  | Wingårdh | yymmdd-xxxx  | `användarnamn`
 <img src="images/user.png" width="100px">  | [Erik](#användarnamn)  | Österberg | yymmdd-xxxx  | `användarnamn`
 <img src="images/user.png" width="100px">  | [Lucas](#användarnamn)  | Arnström | yymmdd-xxxx  | `användarnamn`
