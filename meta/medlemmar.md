@@ -121,43 +121,15 @@ i gruppen sorterade i bokstavsordning  <a name="anders877"></a>
 
 ### Okänd talang
 
-> Beskriv kortfattad något du gillar att göra vid sidan av dina
-> studier.
+Gaming.
 
 ### Starka sidor
 
-> Kortfattad beskrivning över områden där du tror du har lättast att
-> bidra till projektet, till exempel:
-
-- analys/design/specifikation
-- problemlösning och algoritmer
-- skriva kod utifrån färdig specifikation
-- planering
-- samarbete
-- ledarskap
-- research (söka och sammanställa information)
-- dokumentation
-- rapportskrivande
-- muntlig presentation
-- lägg gärna till flera punkter ...
+Problemlösning och design.
 
 ### Personlig utveckling
 
-> Under projektet hoppas jag förutom att bli ännu bättre på mina redan
-> starka sidor även ges möjlighet att utveckla följande färdigheter,
-> till exempel:
-
-- analys/design/specifikation
-- problemlösning och algoritmer
-- skriva kod utifrån färdig specifikation
-- planering
-- samarbete
-- ledarskap
-- research (söka och sammanställa information)
-- dokumentation
-- rapportskrivande
-- muntlig presentation
-- lägg gärna till flera punkter ...
+Debuggning med valfritt debugger verktyg.
 
 ## Oskar Ahlberg
 
