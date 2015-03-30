@@ -14,7 +14,7 @@ Bild                                       | Förnamn               | Efternamn 
 -------------------------------------------|-----------------------|-----------|--------------|----------------------
 <img src="images/andreas.png" width="100px">  | [Andreas](#andreasrubensson)  | Rubensson | 940722-6019  | `andreasrubensson`
 <img src="images/carl.jpg" width="100px">  | [Carl](#användarnamn)  | Wingårdh | 930126-4694  | `Tw1stedL0gic`
-<img src="images/erik.png" width="100px">  | [Erik](#användarnamn)  | Österberg | yymmdd-xxxx  | `användarnamn`
+<img src="images/erik.png" width="100px">  | [Erik](#användarnamn)  | Österberg | 930220-5571  | `slax32`
 <img src="images/Lucas.png" width="100px">  | [Lucas](#användarnamn)  | Arnström | yymmdd-xxxx  | `användarnamn`
 <img src="images/oskar.png" width="100px">  | [Oskar](#omsala)  | Ahlberg | 841012-1498  | `omsala`
 <img src="images/wenting.png" width="100px">  | [Wen Ting](#chrisking2020)  | Jin | 870119-1804  | `chrisking2020`
