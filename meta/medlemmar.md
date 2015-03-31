@@ -2,13 +2,7 @@
 
 OSPP (1DT096) 2015 - Grupp 04
 
-> Ändra XX till numret på gruppen.
 
-> Tag foton av alla medlemmar i gruppen. Varje foto skall visa
-> personen framifrån från axlarna och uppåt. Spara bilderna i mappen
-> `/meta/images/`.
-
-> Fyll sedan i tabellen nedan. Tabellen skall vara sorterad på förnamn.
 
 Bild                                       | Förnamn               | Efternamn | Personnummer | Användarnamn (Github)
 -------------------------------------------|-----------------------|-----------|--------------|----------------------
@@ -20,23 +14,17 @@ Bild                                       | Förnamn               | Efternamn 
 <img src="images/wenting.png" width="100px">  | [Wen Ting](#chrisking2020)  | Jin | 870119-1804  | `chrisking2020`
 
 
-> Utgå sedan från mallen nedan och skapa ett avsnitt för varje medlem
-i gruppen sorterade i bokstavsordning  <a name="anders877"></a>
+
 
 ## Andreas Rubensson
 
 
 ### Okänd talang
 
-> Beskriv kortfattad något du gillar att göra vid sidan av dina
-> studier.
-
 - Tränar ofta, hjälper till att rensa skallen
 
 ### Starka sidor
 
-> Kortfattad beskrivning över områden där du tror du har lättast att
-> bidra till projektet, till exempel:
 
 - planering
 - samarbete
@@ -46,9 +34,6 @@ i gruppen sorterade i bokstavsordning  <a name="anders877"></a>
 
 ### Personlig utveckling
 
-> Under projektet hoppas jag förutom att bli ännu bättre på mina redan
-> starka sidor även ges möjlighet att utveckla följande färdigheter,
-> till exempel:
 
 - analys/design/specifikation
 - problemlösning och algoritmer
@@ -62,24 +47,22 @@ i gruppen sorterade i bokstavsordning  <a name="anders877"></a>
 
 ### Okänd talang
 
-> Jag sjunger i Smålands Herrensemble, håller i Smålands Teaterförening och är Smålands sånganförare. 
-> Nämnde jag att jag är med i Smålands?
+ Jag sjunger i Smålands Herrensemble, håller i Smålands Teaterförening och är Smålands sånganförare. 
+ Nämnde jag att jag är med i Smålands?
 
 ### Starka sidor
 
-> Jag bidrar mest med planering, research och fördjupning i specifika områden. 
+Jag bidrar mest med planering, research och fördjupning i specifika områden. 
 
 ### Personlig utveckling
 
-> Jag hoppas att utveckla min dokumentation- och rapportskrivande. 
+ Jag hoppas att utveckla min dokumentation- och rapportskrivande. 
 
 ## Erik Österberg
 
 
 ### Okänd talang
 
-> Beskriv kortfattad något du gillar att göra vid sidan av dina
-> studier.
 
 ### Starka sidor
 
@@ -100,9 +83,6 @@ i gruppen sorterade i bokstavsordning  <a name="anders877"></a>
 
 ### Personlig utveckling
 
-> Under projektet hoppas jag förutom att bli ännu bättre på mina redan
-> starka sidor även ges möjlighet att utveckla följande färdigheter,
-> till exempel:
 
 - analys/design/specifikation
 - problemlösning och algoritmer
