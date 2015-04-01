@@ -134,31 +134,17 @@ Att forsätta att lära mig nya saker inom SC och att ta möjlighetet att lära 
 
 ### Okänd talang
 
-> Beskriv kortfattad något du gillar att göra vid sidan av dina
-> studier.
+Matematik
 
 ### Starka sidor
 
-> Kortfattad beskrivning över områden där du tror du har lättast att
-> bidra till projektet, till exempel:
-
-- analys/design/specifikation
-- problemlösning och algoritmer
-- skriva kod utifrån färdig specifikation
-- planering
-- samarbete
-- ledarskap
-- research (söka och sammanställa information)
-- dokumentation
-- rapportskrivande
-- muntlig presentation
-- lägg gärna till flera punkter ...
+Matematik
 
 ### Personlig utveckling
 
-> Under projektet hoppas jag förutom att bli ännu bättre på mina redan
-> starka sidor även ges möjlighet att utveckla följande färdigheter,
-> till exempel:
+Under projektet hoppas jag förutom att bli ännu bättre på mina redan
+starka sidor även ges möjlighet att utveckla följande färdigheter,
+till exempel:
 
 - analys/design/specifikation
 - problemlösning och algoritmer
