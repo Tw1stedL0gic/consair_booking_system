@@ -134,11 +134,11 @@ Att forsätta att lära mig nya saker inom SC och att ta möjlighetet att lära 
 
 ### Okänd talang
 
-Matematik
+- Matematik
 
 ### Starka sidor
 
-Matematik
+- Matematik
 
 ### Personlig utveckling
 
