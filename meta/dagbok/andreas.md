@@ -2,23 +2,15 @@
 
 OSPP (1DT096) 2015 - Grupp 04
 
-<img src="../images/carl.jpg" width="200">
+<img src="../images/andreas.png" width="200">
+
+Gör en kort anteckning i dagboken under aktuell vecka och dag nedan
+varje gång du arbetat på projektet.
 
 ## Vecka 16
 
-##### Måndag
-
-11:15 - 12:15
-
-Vi mötte efter föreläsningen för att spåna idéer. 
-Vi kom fram till fyra idéer.
- 1. Airport Booking
- 2. Stock Trader
- 3. Firechat Simulation
- 4. Network encryption
-
-Själv är jag mest intresserad i flygplatsbokningen. 
-Vi har bestämt att möta imorn vid 9:30 för att bestämma och börja slänga ihop presentationen. 
+##### Måndag 
+Diskuterade projektförslag, kom fram till ett par idéer där ett flygbokningssystem var bland de populäraste men inget specifikt bestämdes. Är öppen för de flesta förslag och språk men vill gärna göra något som kan visas visuellt. Tidsåtgång 1h
 
 ##### Tisdag
 
