@@ -28,6 +28,8 @@ Vi har bestämt att möta imorn vid 9:30 för att bestämma och börja slänga i
 
 ##### Tisdag
 
+10:00 -
+
 ##### Onsdag
 
 ##### Torsdag
