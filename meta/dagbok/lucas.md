@@ -7,7 +7,7 @@ OSPP (1DT096) 2015 - Grupp 4
 ## Vecka 16
 
 ##### Måndag
-##### Arbetstid: ~2 timmar
+###### Arbetstid: ~2 timmar
 
 Brainstormade olika projekt ideér med resten utav gruppen.
 Vi kom fram till lite olika ideér och det verkar som att
@@ -15,6 +15,9 @@ vi ska skriva ett bokningssystem. Personligen skulle jag snarare arbeta
 på vår idé om ett krypterat nätverk. Samt att vi arbetar i Rust istället för Erlang.
 
 ##### Tisdag
+###### Arbetstid: ~2 timmar
+
+Arbetade fram en generel projektarkitektur med resten utav projektgruppen.
 
 ##### Onsdag
 
