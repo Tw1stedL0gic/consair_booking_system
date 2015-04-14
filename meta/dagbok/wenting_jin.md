@@ -1,21 +1,18 @@
-# Dagbok för Lucas Arnström
+# Dagbok för Wenting Jin
 
-OSPP (1DT096) 2015 - Grupp 4
+OSPP (1DT096) 2015 - Grupp 04
 
-<img src="../images/Lucas.png" width="200">
+<img src="../images/wenting.png" width="200">
+
+
+
 
 ## Vecka 16
 
-##### Måndag - Arbetstid: ~2 timmar
+##### Måndag 11:15-12:15
+group meeting for ideas collection, suggested airport booking system
 
-Brainstormade olika projekt ideér med resten utav gruppen.
-Vi kom fram till lite olika ideér och det verkar som att
-vi ska skriva ett bokningssystem. Personligen skulle jag snarare arbeta
-på vår idé om ett krypterat nätverk. Samt att vi arbetar i Rust istället för Erlang.
-
-##### Tisdag - Arbetstid: ~2 timmar
-
-Arbetade fram en generel projektarkitektur med resten utav projektgruppen.
+##### Tisdag
 
 ##### Onsdag
 
