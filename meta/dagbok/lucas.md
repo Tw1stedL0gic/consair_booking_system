@@ -4,12 +4,11 @@ OSPP (1DT096) 2015 - Grupp 4
 
 <img src="../images/Lucas.png" width="200">
 
-Gör en kort anteckning i dagboken under aktuell vecka och dag nedan
-varje gång du arbetat på projektet.
-
 ## Vecka 16
 
 ##### Måndag
+##### Arbetstid: ~2 timmar
+
 Brainstormade olika projekt ideér med resten utav gruppen.
 Vi kom fram till lite olika ideér och det verkar som att
 vi ska skriva ett bokningssystem. Personligen skulle jag snarare arbeta
