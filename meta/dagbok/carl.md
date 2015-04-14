@@ -1,14 +1,8 @@
 # Dagbok för Förnamn Efternamn
 
-OSPP (1DT096) 2015 - Grupp XX
+OSPP (1DT096) 2015 - Grupp 04
 
-> Ändra XX till numret på din grupp.
-
-<img src="../images/user.png" width="200">
-> Ändra så att bilden länkar till bilden på dig.
-
-Gör en kort anteckning i dagboken under aktuell vecka och dag nedan
-varje gång du arbetat på projektet.
+<img src="../images/carl.jpg" width="200">
 
 ## Vecka 16
 
