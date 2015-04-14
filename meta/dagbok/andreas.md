@@ -10,7 +10,7 @@ varje gång du arbetat på projektet.
 ## Vecka 16
 
 ##### Måndag 
-Diskuterade projektförslag, kom fram till ett par idéer där ett flygbokningssystem var bland de populäraste men inget specifikt bestämdes. Tidsåtgång 1h
+Diskuterade projektförslag, kom fram till ett par idéer där ett flygbokningssystem var bland de populäraste men inget specifikt bestämdes. Är öppen för de flesta förslag och språk men vill gärna göra något som kan visas visuellt. Tidsåtgång 1h
 
 ##### Tisdag
 
