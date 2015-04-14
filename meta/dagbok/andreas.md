@@ -13,7 +13,7 @@ varje gång du arbetat på projektet.
 Diskuterade projektförslag, kom fram till ett par idéer där ett flygbokningssystem var bland de populäraste men inget specifikt bestämdes. Är öppen för de flesta förslag och språk men vill gärna göra något som kan visas visuellt. Tidsåtgång 1h
 
 ##### Tisdag
-
+Träffades för att börja göra den muntliga samt skriftliga presentationen. Vi har gjort en mall men inte fyllt i så mycket ännu på den skriftliga presentationen men desto mer på den muntliga. Vi har beslutat att ta idén om flygbokningssystemet. Beslutade att träffas imorgon onsdag från klockan 10 och framåt. Tidsåtgång 3h
 ##### Onsdag
 
 ##### Torsdag
