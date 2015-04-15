@@ -2,7 +2,7 @@
 
 OSPP (1DT096) 2015 - Grupp 04
 
-<img src="../images/wenting.png" width="200">
+<img src="../images/wenting.png" width="50">
 
 
 
@@ -12,7 +12,9 @@ OSPP (1DT096) 2015 - Grupp 04
 ##### Måndag 11:15-12:15
 group meeting for ideas collection, suggested airport booking system
 
-##### Tisdag
+##### Tisdag 10:30-12:30
+agreed on a project theme, brief structure division and potential details discussion, '
+started on presentation layout
 
 ##### Onsdag
 
