@@ -2,7 +2,7 @@
 
 OSPP (1DT096) 2015 - Grupp 04
 
-<img src="../images/wenting.png" alt="The egg of the jesus" width="80" align="middle" class="rotate90">
+<img src="../images/wenting.png" alt="The egg of the jesus" width="80" align="middle" style="image-orientation: 90deg;" >
 
 
 
