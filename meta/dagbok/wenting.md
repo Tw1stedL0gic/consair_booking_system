@@ -2,7 +2,7 @@
 
 OSPP (1DT096) 2015 - Grupp 04
 
-<img src="../images/wenting.png" width="50">
+<img src="../images/wenting.png" alt="The egg of the jesus" width="80" align="middle" class="rotate90">
 
 
 
@@ -16,7 +16,8 @@ group meeting for ideas collection, suggested airport booking system
 agreed on a project theme, brief structure division and potential details discussion, '
 started on presentation layout
 
-##### Onsdag
+##### Onsdag 13:00-15:45
+did start-up presentation with group
 
 ##### Torsdag
 
