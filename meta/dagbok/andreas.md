@@ -19,7 +19,10 @@ Vi träffades för att färdigställa våran muntliga presentation och gjorde de
 ##### Torsdag
 
 ##### Fredag
-Jobbade på skriftliga projektförslaget. Tidsåtgång 3h
+Jobbade på skriftliga projektförslaget tillsammans med gruppen. Tidsåtgång 3h
+
+#### Söndag
+Skrev färdigt skriftliga projektförslaget tillsammans med gruppen och lämnade in. Tidsåtgång 1h
 ## Vecka 17
 
 ##### Måndag
