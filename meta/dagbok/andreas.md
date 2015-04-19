@@ -19,7 +19,7 @@ Vi träffades för att färdigställa våran muntliga presentation och gjorde de
 ##### Torsdag
 
 ##### Fredag
-
+Jobbade på skriftliga projektförslaget. Tidsåtgång 3h
 ## Vecka 17
 
 ##### Måndag
