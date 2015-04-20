@@ -26,6 +26,7 @@ Skrev färdigt skriftliga projektförslaget tillsammans med gruppen och lämnade
 ## Vecka 17
 
 ##### Måndag
+Har planerat och diskuterat uppdelning av projektet och bestämt att ha ett möte imorgon. Jag fick ansvar för att kolla upp hur TCP/IP fungerar mellan Erlang och Java. Har hittat en del info och det verkar helt klart möjligt att implementera. Tidsåtgång 2h + 1h
 
 ##### Tisdag
 
