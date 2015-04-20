@@ -8,6 +8,7 @@ We will divide our project into several parts and assign leaders to each
     Responsible: Oskar
   * Algorithms
     * Booking algorithms
+      Responsible: Erik
     * Connecting flights algorithms
   * TCP/IP? 
      Responsible: Andreas
@@ -28,6 +29,9 @@ We will divide our project into several parts and assign leaders to each
   * Skeleton
     * Server
       Responsible: Wenting
+    * GUI
+      Responsible: Lucas
+    * Simulation
   * Code standard
     Responsible: Carl
 
