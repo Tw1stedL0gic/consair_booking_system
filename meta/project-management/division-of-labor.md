@@ -2,9 +2,10 @@
 
 We will divide our project into several parts and assign leaders to each 
 
+
 * Research
   * Databases 
-     Responsible: Oskar
+    Responsible: Oskar
   * Algorithms
     * Booking algorithms
     * Connecting flights algorithms
@@ -14,13 +15,19 @@ We will divide our project into several parts and assign leaders to each
     * Erlang 
     * How they will work together
 
+
 * Programming & Writing
   * Abstraction layer
      Responsible: Carl
     * Server-GUI (TCP/IP)
-     	 Responsible: Andreas
+      Responsible: Andreas
     * Server-Databse
-     	 Responsible: Oskar
+      Responsible: Oskar
     * Simulation-GUI
+      Responsible: Carl
   * Skeleton
+    * Server
+      Responsible: Wenting
+  * Code standard
+    Responsible: Carl
 
