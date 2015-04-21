@@ -6,6 +6,10 @@ OSPP (1DT096) 2015 - Grupp 04
 
 ## Vecka 16
 
+Uppgift: Muntlig och skriftlig presentation.
+Timmar: 12:45
+Reflektion: Har gått smidigt. Lite dåligt samvete att jag var helt väck under helgen, men det gick bra ändå.
+
 ##### Måndag
 
 11:15 - 12:15
@@ -51,6 +55,10 @@ Efter presentationen jobbade jag med den skriftliga rapporten. Eftersom jag komm
 ## Vecka 17
 
 ##### Måndag
+
+13:15 - 15:45
+
+Vi hade möte med Karl idag. Jag tycker det gick bra, han hade många bra sätt att vägleda oss på. Vi kom fram till att det var viktigt att dela upp arbetet och formellt strukturera vårt jobb för denna vecka. Efter mötet satt vi och började dela upp uppgifter. Under detta mötet planerade vi saker som skulle forskas inför mötet imorn, då vi ska bestämma hur vi ska göra allt som behövs inför progress meeting 1. 
 
 ##### Tisdag
 
