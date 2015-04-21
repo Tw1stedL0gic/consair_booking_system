@@ -24,9 +24,10 @@ skivit lite på den skirftliga delen 1h
 ## Vecka 17
 
 ##### Måndag
-
+påbörjade indelning av arbetete som att vi bestämde vilka som skulle läsa in sig på samt att förberädde oss för möte med karl 4 h
 ##### Tisdag
-
+Peer rewiew on group 07, and going thru the meeting agenda from yesterday
+1500-
 ##### Onsdag
 
 ##### Torsdag

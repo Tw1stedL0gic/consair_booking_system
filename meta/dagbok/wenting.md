@@ -21,11 +21,13 @@ did start-up presentation with group
 
 ##### Torsdag
 
-##### Fredag
+##### Fredag 17:30-18:00
+discussed briefly on conclusion part for projektförslag
 
 ## Vecka 17
 
-##### Måndag
+##### Måndag 15:30-16:30
+workload division on start-up
 
 ##### Tisdag
 
