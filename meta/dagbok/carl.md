@@ -62,6 +62,10 @@ Vi hade möte med Karl idag. Jag tycker det gick bra, han hade många bra sätt 
 
 ##### Tisdag
 
+14:00 - 16:30
+
+Vi hade inte riktigt det mötet som jag hade förväntat, istället satt vi och jobbade på peer review grejen. Jag skrev väldigt mycket på den, nästan allt i del A och C. Jag fick reda idag att en omtenta för Datajuridiken är schemalagd imorgon så jag kommer behöva arbeta på den på onsdag och torsdag. 
+
 ##### Onsdag
 
 ##### Torsdag
