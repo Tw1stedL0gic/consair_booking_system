@@ -1,33 +1,29 @@
-# Dagbok för Wenting Jin
+# Dagbok för Förnamn Efternamn
 
 OSPP (1DT096) 2015 - Grupp 04
 
-<img src="../images/wenting.png" alt="The egg of the jesus" width="80">
 
 
+<img src="../images/oskar.png" width="200">
 
+Gör en kort anteckning i dagboken under aktuell vecka och dag nedan
+varje gång du arbetat på projektet.
 
 ## Vecka 16
 
-##### Måndag 11:15-12:15
-group meeting for ideas collection, suggested airport booking system
-
-##### Tisdag 10:30-12:30
-agreed on a project theme, brief structure division and potential details discussion, '
-started on presentation layout
-
-##### Onsdag 13:00-15:45
-did start-up presentation with group
-
+##### Måndag
+jobbat med att komma på vad vi ska göra för projekt ca 1h
+##### Tisdag
+börjat med den muntliga presentattionene samt den skriftliga samt beslutat att vi skall göra ett bokningsystem. 3h
+##### Onsdag
+Fixat klart med det sista för den muntliga presentationene och pysslat lite med den skiftliga 3 h 
 ##### Torsdag
-
-##### Fredag 17:30-18:00
-discussed briefly on conclusion part for projektförslag
-
+skivit lite på den skirftliga delen 1h
+##### Fredag
+3 h av rapport och samtal om arekteture mm. 
 ## Vecka 17
 
-##### Måndag 15:30-16:30
-workload division on start-up
+##### Måndag
 
 ##### Tisdag
 

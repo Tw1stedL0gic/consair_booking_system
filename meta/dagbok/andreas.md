@@ -15,14 +15,18 @@ Diskuterade projektförslag, kom fram till ett par idéer där ett flygbokningss
 ##### Tisdag
 Träffades för att börja göra den muntliga samt skriftliga presentationen. Vi har gjort en mall men inte fyllt i så mycket ännu på den skriftliga presentationen men desto mer på den muntliga. Vi har beslutat att ta idén om flygbokningssystemet. Beslutade att träffas imorgon onsdag från klockan 10 och framåt. Tidsåtgång 3h
 ##### Onsdag
-
+Vi träffades för att färdigställa våran muntliga presentation och gjorde det också. Vi delade upp arbetet på presentationen också och jag ska prata om den övergripande systemarkitekturen. Detta tycker jag är bra då jag brukar ta de mindre komplicerade delarna. Vi bestämde också att färdigställa det skriftliga projektförslaget imorgon torsdag efter presentationerna, då vi förmodligen fått feedback och säkerhet på hur vi ska göra projektet. Tidsåtgång 2h 45min
 ##### Torsdag
 
 ##### Fredag
+Jobbade på skriftliga projektförslaget tillsammans med gruppen. Tidsåtgång 3h
 
+#### Söndag
+Skrev färdigt skriftliga projektförslaget tillsammans med gruppen och lämnade in. Tidsåtgång 1h
 ## Vecka 17
 
 ##### Måndag
+Har planerat och diskuterat uppdelning av projektet och bestämt att ha ett möte imorgon. Jag fick ansvar för att kolla upp hur TCP/IP fungerar mellan Erlang och Java. Har hittat en del info och det verkar helt klart möjligt att implementera. Tidsåtgång 2h + 1h
 
 ##### Tisdag
 
