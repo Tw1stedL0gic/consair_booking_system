@@ -27,9 +27,11 @@ Arbetade fram en generel projektarkitektur med resten utav projektgruppen.
 
 ##### Måndag
 
-##### Tisdag
+##### Tisdag - Arbetstid: ~1 timme
+Skrev på vår "Peer Review" tillsammans med resten av gruppen hemifrån.
 
-##### Onsdag
+##### Onsdag - Arbetstid: ~1 timme
+Kopierade över vår "Peer Review" till overleaf och rättade till formateringen.
 
 ##### Torsdag
 
