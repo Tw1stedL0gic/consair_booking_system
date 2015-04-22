@@ -28,7 +28,7 @@ Det som fungerade bra vara att den större delen av det som skulle skrivas redan
 
 ##### Detta kan förbättras
 
-Att vi skulle be // Todo
+att Vi skulla ha skrivit det samtidigt som när vi skapade den muntliga persentionene. Då skulle det vara lättare att återkoppla vad som diskuterades samt att se vad som var det underliggade skälen till de valens om gjordes.
 
 ## Övrigt
 
