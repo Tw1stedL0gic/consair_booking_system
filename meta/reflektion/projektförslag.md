@@ -20,13 +20,13 @@ Reflektion över arbetet med det skriftliga projektförslaget och den muntliga p
 
 ##### Detta kan förbättras
 
-Att vi skulle ha tränat mer på vad som skulle sägas under själva redovisningen
+* Att vi skulle ha tränat mer på vad som skulle sägas under själva redovisningen
 
 ## Skriftligt projektförslag
 
 ##### Detta fungerade bra
 
-Det som fungerade bra vara att den större delen av det som skulle skrivas redan hade behandlats i presenatationen, så vi kunnde gå lite djupare i projektrapporten.
+* Det som fungerade bra vara att den större delen av det som skulle skrivas redan hade behandlats i presenatationen, så vi kunnde gå lite djupare i projektrapporten.
 
 ##### Detta kan förbättras
 
@@ -34,5 +34,5 @@ Det som fungerade bra vara att den större delen av det som skulle skrivas redan
 
 ## Övrigt
   * Genom skrivandet av projektförslaget så fick vi en bättre bild om hur och vad vi ville göra i projektet.
-  * Mycket av det som kunde ha förbättras grundas i att vi hade tidsbrist.
+  * Mycket av det som kunde ha förbättras grundas i att vi hade tidsbrist pga osynkade scheman
 
