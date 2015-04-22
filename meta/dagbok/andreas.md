@@ -19,10 +19,14 @@ Vi träffades för att färdigställa våran muntliga presentation och gjorde de
 ##### Torsdag
 
 ##### Fredag
+Jobbade på skriftliga projektförslaget tillsammans med gruppen. Tidsåtgång 3h
 
+#### Söndag
+Skrev färdigt skriftliga projektförslaget tillsammans med gruppen och lämnade in. Tidsåtgång 1h
 ## Vecka 17
 
 ##### Måndag
+Har planerat och diskuterat uppdelning av projektet och bestämt att ha ett möte imorgon. Jag fick ansvar för att kolla upp hur TCP/IP fungerar mellan Erlang och Java. Har hittat en del info och det verkar helt klart möjligt att implementera. Tidsåtgång 2h + 1h
 
 ##### Tisdag
 
