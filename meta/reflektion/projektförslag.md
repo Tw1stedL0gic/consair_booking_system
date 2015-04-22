@@ -14,7 +14,9 @@ Reflektion över arbetet med det skriftliga projektförslaget och den muntliga p
 
 ##### Detta fungerade bra
 
-Hur vi kom fram till vad vi skulle göra samt hur vi kom fram till de olika delarana av presentationen systemarkitekture mm.
+* Hur vi kom fram till vad vi skulle göra samt hur vi kom fram till de olika delarana av presentationen, systemarkitektur mm.
+* Bra flow utan större avbrott
+* Diskussion och hjälp inom sitt område från resten av gruppen om någon var osäker, bra samarbete
 
 ##### Detta kan förbättras
 
@@ -28,9 +30,9 @@ Det som fungerade bra vara att den större delen av det som skulle skrivas redan
 
 ##### Detta kan förbättras
 
-att Vi skulla ha skrivit det samtidigt som när vi skapade den muntliga persentionene. Då skulle det vara lättare att återkoppla vad som diskuterades samt att se vad som var det underliggade skälen till de valens om gjordes.
+* Att vi skulle ha skrivit det samtidigt som när vi skapade den muntliga persentionen. Då skulle det vara lättare att återkoppla vad som diskuterades samt att se vad som var de underliggade skälen till de valens om gjordes.
 
 ## Övrigt
+  * Genom skrivandet av projektförslaget så fick vi en bättre bild om hur och vad vi ville göra i projektet.
+  * Mycket av det som kunde ha förbättras grundas i att vi hade tidsbrist.
 
-> Här kan ni lägga till sådant som inte passar under rubrikerna
-> ovan. Ni kan även lägga till nya rubriker.
