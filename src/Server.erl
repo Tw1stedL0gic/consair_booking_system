@@ -1,9 +1,9 @@
 
 %%Handels the server io for the booking. This is the abstration layer for java / erlang%%
 
--module(Server).
+-module('Server').
 -export([start/0, loop0/1]).
--define(PORTNR, 33333).
+-define(PORTNO, 33333).
 
 start ()->
     start(?PORTNO).
@@ -18,12 +18,12 @@ loop0(Port)->
 	    stop
     end.
 
-loop(Listen)->
+loop(Listen) ->
     case gen_tcp:accept(Listen) of 
-	{ok,S}->
-	    gen_tcp:send[S, io_lib:format("~p~n","Connected"),
-			 gen_tcp:close(S),
-			 loop(Listen);
-			     _ ->
-				loop(Listen)
-			end.
+	{ok,S} ->
+	    gen_tcp:send(S, io_lib:format("~p~n",[{date(),time()}])),
+	    gen_tcp:close(S),
+	    loop(Listen);
+	_ ->
+	    loop(Listen)
+    end.
