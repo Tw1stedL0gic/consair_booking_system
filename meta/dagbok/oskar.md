@@ -27,15 +27,15 @@ skivit lite på den skirftliga delen 1h
 påbörjade indelning av arbetete som att vi bestämde vilka som skulle läsa in sig på samt att förberädde oss för möte med karl 4 h
 ##### Tisdag
 Peer rewiew on group 07, and going thru the meeting agenda from yesterday
-1500-
+1500-1730
 ##### Onsdag
-
+Gick igenom saker som skrevs igår 1h
 ##### Torsdag
-
+påbörjat jobb med interface mellan erlang och java samt att tittat på saker inför demo (måndag) 11-
 ##### Fredag
 
 ## Vecka 18
-
+1
 ##### Måndag
 
 ##### Tisdag
