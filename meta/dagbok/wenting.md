@@ -29,7 +29,8 @@ discussed briefly on conclusion part for projektförslag
 ##### Måndag 15:30-16:30
 workload division on start-up
 
-##### Tisdag
+##### Tisdag 15:30-17:00
+Peerview writing in B) Structure and Disposition part
 
 ##### Onsdag
 
