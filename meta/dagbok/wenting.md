@@ -34,7 +34,8 @@ Peerview writing in B) Structure and Disposition part
 
 ##### Onsdag
 
-##### Torsdag
+##### Torsdag 15:30-18:00
+Message structure in book.erl
 
 ##### Fredag
 
