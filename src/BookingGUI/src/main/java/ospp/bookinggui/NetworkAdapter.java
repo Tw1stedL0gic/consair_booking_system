@@ -2,7 +2,7 @@ package ospp.bookinggui;
 
 public interface NetworkAdapter {
 
-	public void getPassengerList(String flightnumber);
+	public void getPassengerList(Flight flight);
 
 	public void getFlightList();
 
@@ -10,7 +10,7 @@ public interface NetworkAdapter {
 
 	public void disconnect();
 
-	public void book(String flightnumber, BookingInfo booking);
+	public void book(Flight flight, BookingInfo booking);
 
 	public void getPassengerInfo(PAID id);
 }
