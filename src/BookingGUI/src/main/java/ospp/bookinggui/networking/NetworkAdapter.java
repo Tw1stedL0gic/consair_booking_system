@@ -23,7 +23,11 @@
  * Filedescription:
  *
  */
-package ospp.bookinggui;
+package ospp.bookinggui.networking;
+
+import ospp.bookinggui.BookingInfo;
+import ospp.bookinggui.Flight;
+import ospp.bookinggui.PAID;
 
 public class NetworkAdapter implements Adapter {
 

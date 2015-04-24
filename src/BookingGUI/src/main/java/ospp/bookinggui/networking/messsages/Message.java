@@ -1,4 +1,4 @@
-package ospp.bookinggui.messsages;
+package ospp.bookinggui.networking.messsages;
 
 public abstract class Message {
 

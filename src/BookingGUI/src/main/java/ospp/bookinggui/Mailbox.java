@@ -1,6 +1,6 @@
 package ospp.bookinggui;
 
-import ospp.bookinggui.messsages.Message;
+import ospp.bookinggui.networking.messsages.Message;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
