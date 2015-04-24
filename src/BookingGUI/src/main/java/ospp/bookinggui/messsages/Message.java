@@ -1,4 +1,4 @@
-package ospp.bookinggui;
+package ospp.bookinggui.messsages;
 
 public abstract class Message {
 
@@ -30,6 +30,11 @@ public abstract class Message {
 		this.MESSAGE = m;
 	}
 
+	/**
+	 * Constructs a byte array representation of this message to be sent over the socket.
+	 *
+	 * @return The byte array representation of this message.
+	 */
 	public byte[] constructMessage() {
 		byte[] message = new byte[this.MESSAGE_LENGTH];
 
