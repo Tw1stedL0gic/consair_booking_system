@@ -34,7 +34,8 @@ Skrev på vår "Peer Review" tillsammans med resten av gruppen hemifrån.
 Kopierade över vår "Peer Review" till overleaf och rättade till formateringen.
 Arbetade på vår reflektion tillsammans med Andreas och Erik.
 
-##### Torsdag
+##### Torsdag - Arbetstid: ~3 timmar
+Arbatede fram ett paket/meddelandeprotokoll mellan vår backend och frontend.
 
 ##### Fredag
 
