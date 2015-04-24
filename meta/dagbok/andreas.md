@@ -1,4 +1,4 @@
-# Dagbok för Förnamn Efternamn
+# Dagbok för Andreas Rubensson
 
 OSPP (1DT096) 2015 - Grupp 04
 
@@ -32,9 +32,10 @@ Har planerat och diskuterat uppdelning av projektet och bestämt att ha ett möt
 Vi träffades för ett kort möte, jag var tyvärr tvungen att gå efter ca 1 timme. Delade med mig om det jag hittils lärt mig om TCP samt att man skulle kunna använda jinterface som finns inbyggt i erlang/OTP men vi vill fortfarande köra på TCP som det verkar. Vi började arbeta på peer-reviewen av grupp 7's projektförslag. Tidsåtgång 1h
 
 ##### Onsdag
+Satt en snabbis med att kolla igenom peer reviewen och reflektionen som hade deadline samma dag. Tidsåtgång <1h
 
 ##### Torsdag
-
+Träffades för att gå igenom hur meddelandena mellan front och backend skulle utformas, med första Byten avgörande vilken operation man vill utföra och resten av meddelandet med argument osv. Diskuterade och var med på programmeringen i back-end. Tidsåtgång 3h
 ##### Fredag
 
 ## Vecka 18
