@@ -1,4 +1,4 @@
-# Dagbok för Förnamn Efternamn
+# Dagbok för Andreas Rubensson
 
 OSPP (1DT096) 2015 - Grupp 04
 
