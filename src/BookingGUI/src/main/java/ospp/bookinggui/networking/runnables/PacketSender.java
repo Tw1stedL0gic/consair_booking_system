@@ -1,5 +1,5 @@
 /**
- * Created: 14:00 - 2015-04-24
+ * Created: 14:12 - 2015-04-24
  *
  * Author: Lucas Arnström
  *
@@ -23,53 +23,11 @@
  * Filedescription:
  *
  */
-package ospp.bookinggui.networking;
+package ospp.bookinggui.networking.runnables;
 
-import ospp.bookinggui.BookingInfo;
-import ospp.bookinggui.Flight;
-import ospp.bookinggui.Mailbox;
-import ospp.bookinggui.PAID;
-
-public class NetworkAdapter implements Adapter {
-
-	private final Mailbox mailbox;
-
-	public NetworkAdapter(Mailbox box) {
-		this.mailbox = box;
-	}
-
+public class PacketSender implements Runnable {
 	@Override
-	public void getPassengerList(Flight flight) {
-
-	}
-
-	@Override
-	public void getFlightList() {
-
-	}
-
-	@Override
-	public void login(String username, String password) {
-
-	}
-
-	@Override
-	public void connect(String url, int port) {
-
-	}
-
-	@Override
-	public void disconnect() {
-
-	}
-
-	@Override
-	public void book(Flight flight, BookingInfo booking) {
-
-	}
-
-	@Override
-	public void getPassengerInfo(PAID id) {
+	public void run() {
 
 	}
 }
