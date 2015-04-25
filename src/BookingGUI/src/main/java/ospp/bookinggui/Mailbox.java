@@ -1,47 +1,45 @@
 package ospp.bookinggui;
 
-import ospp.bookinggui.networking.messsages.Message;
-
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class Mailbox {
+public class Mailbox<E> {
 
-	private final ConcurrentLinkedQueue<Message> inbox = new ConcurrentLinkedQueue<>();
-	private final ConcurrentLinkedQueue<Message> outbox = new ConcurrentLinkedQueue<>();
+	private final ConcurrentLinkedQueue<E> inbox = new ConcurrentLinkedQueue<>();
+	private final ConcurrentLinkedQueue<E> outbox = new ConcurrentLinkedQueue<>();
 
 	/**
-	 * Adds the given message to the end of the inbox queue.
+	 * Adds the given object to the end of the inbox.
 	 *
-	 * @param m The message to add to the inbox.
+	 * @param o The object to add to the inbox.
 	 */
-	public void addInbox(Message m) {
-		inbox.add(m);
+	public void recieve(E o) {
+		inbox.add(o);
 	}
 
 	/**
-	 * Adds the given message to the end of the outbox queue.
+	 * Adds the given object to the end of the outbox.
 	 *
-	 * @param m The message to add to the outbox.
+	 * @param o The object to add to the outbox.
 	 */
-	public void addOutbox(Message m) {
-		outbox.add(m);
+	public void send(E o) {
+		outbox.add(o);
 	}
 
 	/**
 	 * Polls the head of the inbox and returns it.
 	 *
-	 * @return The polled message, null if inbox is empty.
+	 * @return The polled object, null if inbox is empty.
 	 */
-	public Message pollInbox() {
+	public E getOldestIncoming() {
 		return inbox.poll();
 	}
 
 	/**
 	 * Polls the head of the outbox and returns it.
 	 *
-	 * @return The polled message, null if outbox is empty.
+	 * @return The polled object, null if outbox is empty.
 	 */
-	public Message pollOutbox() {
+	public E getOldestOutgoing() {
 		return outbox.poll();
 	}
 }
