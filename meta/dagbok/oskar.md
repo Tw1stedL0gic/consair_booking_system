@@ -33,8 +33,11 @@ Gick igenom saker som skrevs igår 1h
 ##### Torsdag
 påbörjat jobb med interface mellan erlang och java samt att tittat på saker inför demo (måndag) 11-
 ##### Fredag
-
+satt hemma och läste på om databaser och server inteface i erlang 3h
+##### Satarday
+Suttit och fixat med server pga om desigen av java interface  1,5h
 ## Vecka 18
+
 1
 ##### Måndag
 
