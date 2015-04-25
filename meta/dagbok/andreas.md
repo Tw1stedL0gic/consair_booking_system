@@ -37,6 +37,10 @@ Satt en snabbis med att kolla igenom peer reviewen och reflektionen som hade dea
 ##### Torsdag
 Träffades för att gå igenom hur meddelandena mellan front och backend skulle utformas, med första Byten avgörande vilken operation man vill utföra och resten av meddelandet med argument osv. Diskuterade och var med på programmeringen i back-end. Tidsåtgång 3h
 ##### Fredag
+Satt med Erik och försökte få GUIt att kompilera, men jag somna till och från och var inte direkt nöjd med en insats. Tveksamt om den platsar här. Tidsåtgång 2h
+
+##### Lördag
+Diskuterat hur vi ska göra med server och booking delen i back-enden samt hur vi ska formatera meddelanden, bestämde oss för att mötas imorgon för att arbeta tills vi har en prototyp som vi känner oss nöjda med. Effektiv tidsåtgång 1h
 
 ## Vecka 18
 
