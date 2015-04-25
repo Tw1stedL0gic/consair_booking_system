@@ -4,12 +4,13 @@ import ospp.bookinggui.BookingInfo;
 import ospp.bookinggui.Flight;
 import ospp.bookinggui.Mailbox;
 import ospp.bookinggui.PAID;
+import ospp.bookinggui.networking.messsages.Message;
 
 public class NetworkAdapter implements Adapter {
 
-	private final Mailbox mailbox;
+	private final Mailbox<Message> mailbox;
 
-	public NetworkAdapter(Mailbox box) {
+	public NetworkAdapter(Mailbox<Message> box) {
 		this.mailbox = box;
 	}
 
