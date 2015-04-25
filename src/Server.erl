@@ -2,7 +2,7 @@
 %% @title Name Of This File
 %% @version 1.0.0
 %% {@date}
-%% @author Arthur O'disfile
+%% @author Sir Derpatron the V 
 %% @doc Description of this file and a quick rundown of what the
 %% user will use it for. 
 %% @end
@@ -50,7 +50,9 @@ loop0(Port) ->
 loop(Listen) ->
     case gen_tcp:accept(Listen) of 
 	{ok,S} ->
-	    gen_tcp:send(S, io_lib:format("~p~n",[{date(),time()}])),
+	    %%gen_tcp:send(S, io_lib:format("~p~n",[{date(),time()}])),
+	    
+
 	    gen_tcp:close(S),
 	    loop(Listen);
 	_      ->
@@ -60,6 +62,7 @@ loop(Listen) ->
 %% COMMENT: Can loop0 and loop both be called loop? To fit aux functions
 %% code standard. Better yet: maybe there is a better name for the 
 %% function. Maybe listen_loop or something. - Carl
+%%we are fixing this now.
 
 %%--------------------------------------------------------------%%
 
