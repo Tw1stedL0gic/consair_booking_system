@@ -14,7 +14,6 @@
 start ()->
     start(?PORTNO).
 
-
 %% @doc Auxilary start function 
 -spec start(Pno) -> ok when
       Pno::integer().
@@ -26,6 +25,7 @@ start(Pno) ->
 %%--------------------------------------------------------------%%
 
 %% @doc loop
+-spec loop0(Port) -> ok.
 
 loop0(Port) ->
     case gen_tcp:listen(Port, [binary,{packet,0},{active,false}]) of 
@@ -34,6 +34,9 @@ loop0(Port) ->
  	_           ->
 	    stop
     end.
+
+%% @doc loop
+-spec loop(Listen) -> ok.
 
 loop(Listen) ->
     case gen_tcp:accept(Listen) of 
@@ -44,5 +47,9 @@ loop(Listen) ->
 	_      ->
 	    loop(Listen)
     end.
+
+%% COMMENT: Can loop0 and loop both be called loop? To fit aux functions
+%% code standard. Better yet: maybe there is a better name for the 
+%% function. Maybe listen_loop or something. - Carl
 
 %%--------------------------------------------------------------%%
