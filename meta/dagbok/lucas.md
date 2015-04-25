@@ -35,9 +35,14 @@ Kopierade över vår "Peer Review" till overleaf och rättade till formateringen
 Arbetade på vår reflektion tillsammans med Andreas och Erik.
 
 ##### Torsdag - Arbetstid: ~3 timmar
-Arbatede fram ett paket/meddelandeprotokoll mellan vår backend och frontend.
+Arbetade fram ett paket/meddelandeprotokoll mellan vår backend och frontend.
 
-##### Fredag
+##### Fredag - Arbetstid: ~3 timmar
+Började på nätverksdelen för java programmet.
+
+##### Lördag - Arbetstid: ~4 timmar
+Arbetade med tolkning av de bytes java programmet får från erlang servern.
+Detta är lite struligt eftersom det inte finns några unsigned datatyper i Java.
 
 ## Vecka 18
 
