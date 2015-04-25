@@ -52,7 +52,13 @@ Efter presentationen jobbade jag med den skriftliga rapporten. Eftersom jag komm
 
 ##### Fredag
 
+Nationen
+
 ## Vecka 17
+
+Uppgift: Peer review, reflektion och prototyp. 
+Timmar: 5:00
+Reflektion: Att få information om hemtentan förstörde verkligen min plan för veckan. Jag hade knutit upp mig på nationsarbete och en fest på onsdag och torsdag som inte skulle vara ett problem eftersom jag skulle arbete med gruppen under dagen, men eftersom jag helt plötsligt hade en tenta att skriva så hade jag ingen tid för projektet. 
 
 ##### Måndag
 
@@ -68,9 +74,15 @@ Vi hade inte riktigt det mötet som jag hade förväntat, istället satt vi och 
 
 ##### Onsdag
 
+Jag fick reda på Tisdag om en hemtenta som skulle in på Fredag, så jag sa till gruppen att jag inte kommer hinna jobba på projektet under de nästa tre dagarna. 
+
 ##### Torsdag
 
+Hemtenta
+
 ##### Fredag
+
+Hemtenta
 
 ## Vecka 18
 
