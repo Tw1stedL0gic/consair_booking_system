@@ -42,6 +42,8 @@ Satt med Erik och försökte få GUIt att kompilera, men jag somna till och frå
 ##### Lördag
 Diskuterat hur vi ska göra med server och booking delen i back-enden samt hur vi ska formatera meddelanden, bestämde oss för att mötas imorgon för att arbeta tills vi har en prototyp som vi känner oss nöjda med. Effektiv tidsåtgång 1h
 
+##### Söndag
+Vi åkte aldrig till skolan utan jobbade hemifrån istället och snackade på skype. Lade till i vår loop där vi kollar vilken operation vi vill utföra i modulen där vi kollar inkommande meddelanden i tcp servern att vi ska returnera tcp meddelanden istället för att bara ha ett kall på en funktion. Tidsåtgång 1h
 ## Vecka 18
 
 ##### Måndag
