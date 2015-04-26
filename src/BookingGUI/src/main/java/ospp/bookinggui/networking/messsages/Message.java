@@ -1,6 +1,10 @@
 package ospp.bookinggui.networking.messsages;
 
+import java.util.logging.Logger;
+
 public abstract class Message {
+
+	private static final Logger logger = Logger.getLogger(Message.class.getName());
 
 	public enum Type {
 
@@ -13,20 +17,20 @@ public abstract class Message {
 		DISCONNECT((short) 7),
 		HEARTBEAT((short) 8);
 
-		public final short ID;
+		public final byte ID;
 
 		private Type(short id) {
-			this.ID = id;
+			this.ID = (byte) (id & 0xFF);
 		}
 	}
 
 	private final Type TYPE;
-	private final Integer MESSAGE_LENGTH;
+	private final int MESSAGE_LENGTH;
 	private final byte[] MESSAGE;
 
 	protected Message(Type t, byte[] m) {
 		this.TYPE = t;
-		this.MESSAGE_LENGTH = 5 + m.length;
+		this.MESSAGE_LENGTH = 5 + (m == null ? 0 : m.length);
 		this.MESSAGE = m;
 	}
 
@@ -42,12 +46,25 @@ public abstract class Message {
 		message[1] = (byte) ((this.MESSAGE_LENGTH & 0x00FF0000) >> 16);
 		message[2] = (byte) ((this.MESSAGE_LENGTH & 0x0000FF00) >> 8);
 		message[3] = (byte)  (this.MESSAGE_LENGTH & 0x000000FF);
-		message[4] = (byte) (TYPE.ID & 0xFF);
+		message[4] = TYPE.ID;
 
 		for(int i = 5; i < this.MESSAGE_LENGTH; i++) {
 			message[i] = this.MESSAGE[i - 5];
 		}
 
 		return message;
+	}
+	
+	public static Message deconstructMessage(short id, byte[] message) {
+		
+		switch(id) {
+			case 1:
+				
+			default:
+				logger.severe("Could not deconstruct message!");
+				logger.severe("ID: "  + id);
+		}
+		
+		return null;
 	}
 }
