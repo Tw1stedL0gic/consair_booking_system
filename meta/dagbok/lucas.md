@@ -40,9 +40,14 @@ Arbetade fram ett paket/meddelandeprotokoll mellan vår backend och frontend.
 ##### Fredag - Arbetstid: ~3 timmar
 Började på nätverksdelen för java programmet.
 
-##### Lördag - Arbetstid: ~4 timmar
+##### Lördag - Arbetstid: ~5 timmar
 Arbetade med tolkning av de bytes java programmet får från erlang servern.
 Detta är lite struligt eftersom det inte finns några unsigned datatyper i Java.
+
+Började på en sammanfattning av vårt nätverksprotokoll i latex.
+
+##### Söndag - Arbetstid: ~1 timme
+Startade med PacketListener i java delen.
 
 ## Vecka 18
 
