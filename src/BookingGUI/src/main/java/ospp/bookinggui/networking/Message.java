@@ -1,10 +1,15 @@
 package ospp.bookinggui.networking;
 
+import ospp.bookinggui.networking.messages.Handshake;
+import ospp.bookinggui.networking.messages.HandshakeResponse;
+
 import java.util.logging.Logger;
 
 public abstract class Message {
 
 	private static final Logger logger = Logger.getLogger(Message.class.getName());
+
+	private static final int HEADER_SIZE = 5;
 
 	public enum Type {
 
@@ -54,7 +59,6 @@ public abstract class Message {
 	}
 
 	protected Type type = null;
-	protected int message_length = 0;
 	protected byte[] message = null;
 
 	/**
@@ -63,15 +67,18 @@ public abstract class Message {
 	 * @return The byte array representation of this message.
 	 */
 	public byte[] constructMessage() {
-		byte[] message = new byte[this.message_length];
 
-		message[0] = (byte) ((this.message_length & 0xFF000000) >> 24);
-		message[1] = (byte) ((this.message_length & 0x00FF0000) >> 16);
-		message[2] = (byte) ((this.message_length & 0x0000FF00) >> 8);
-		message[3] = (byte)  (this.message_length & 0x000000FF);
+		int message_length = this.message.length + HEADER_SIZE;
+
+		byte[] message = new byte[message_length];
+
+		message[0] = (byte) ((message_length & 0xFF000000) >> 24);
+		message[1] = (byte) ((message_length & 0x00FF0000) >> 16);
+		message[2] = (byte) ((message_length & 0x0000FF00) >> 8);
+		message[3] = (byte)  (message_length & 0x000000FF);
 		message[4] = type.ID;
 
-		for(int i = 5; i < this.message_length; i++) {
+		for(int i = 5; i < message_length; i++) {
 			message[i] = this.message[i - 5];
 		}
 
@@ -82,10 +89,31 @@ public abstract class Message {
 
 		Type type = Type.getType(id);
 		
-		switch(id) {
+		switch(type) {
+			case HANDSHAKE:
+				int usr_length = 0;
+				usr_length |= message[0] << 8;
+				usr_length |= message[1];
+
+				byte[] usr = new byte[usr_length];
+				System.arraycopy(message, 2, usr, 0, usr_length);
+				String username = usr.toString();
+
+				int pas_length = 0;
+				pas_length |= message[usr_length] << 8;
+				pas_length |= message[usr_length + 1];
+
+				byte[] pas = new byte[pas_length];
+				System.arraycopy(message, usr_length + 2, pas, 0, pas_length);
+				String password = pas.toString();
+
+				return new Handshake(username, password);
+
+			case HANDSHAKE_RESPONSE:
+				return new HandshakeResponse(message[0]);
 
 			default:
-				logger.severe("Could not deconstruct message!");
+				logger.severe("Unsupported message id!");
 				logger.severe("ID: "  + id);
 		}
 		

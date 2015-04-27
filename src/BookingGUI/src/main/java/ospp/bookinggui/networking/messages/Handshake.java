@@ -2,14 +2,14 @@ package ospp.bookinggui.networking.messages;
 
 import ospp.bookinggui.networking.Message;
 
-public class HandshakeMessage extends Message {
+public class Handshake extends Message {
 
-	public HandshakeMessage(String username, String password) {
+	public Handshake(String username, String password) {
 
-		this.message_length = 2 + username.length() + 2 + password.length();
+		int message_length = 2 + username.length() + 2 + password.length();
 		this.type = Type.HANDSHAKE;
 
-		byte[] message = new byte[this.message_length];
+		byte[] message = new byte[message_length];
 
 		int i = 0;
 
