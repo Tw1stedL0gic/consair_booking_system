@@ -2,7 +2,7 @@ package ospp.bookinggui;
 
 import ospp.bookinggui.networking.Adapter;
 import ospp.bookinggui.networking.NetworkAdapter;
-import ospp.bookinggui.networking.messsages.Message;
+import ospp.bookinggui.networking.Message;
 
 public class Main {
 

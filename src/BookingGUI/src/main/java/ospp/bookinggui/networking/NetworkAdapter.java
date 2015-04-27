@@ -4,7 +4,6 @@ import ospp.bookinggui.BookingInfo;
 import ospp.bookinggui.Flight;
 import ospp.bookinggui.Mailbox;
 import ospp.bookinggui.PAID;
-import ospp.bookinggui.networking.messsages.Message;
 
 public class NetworkAdapter implements Adapter {
 
