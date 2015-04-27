@@ -10,7 +10,7 @@ public class HandshakeResponse extends Message {
 		this.message = new byte[] {(byte) (response & 0xFF)};
 		this.type = Type.HANDSHAKE_RESPONSE;
 
-		this.success = response == 0xFF;
+		this.success = response == (short) 0xFF;
 	}
 
 	public boolean isSuccessfull() {

@@ -4,7 +4,13 @@ import ospp.bookinggui.networking.Message;
 
 public class Handshake extends Message {
 
+	private final String username;
+	private final String password;
+
 	public Handshake(String username, String password) {
+
+		this.username = username;
+		this.password = password;
 
 		int message_length = 2 + username.length() + 2 + password.length();
 		this.type = Type.HANDSHAKE;
@@ -28,5 +34,13 @@ public class Handshake extends Message {
 		}
 
 		this.message = message;
+	}
+
+	public String getUsername() {
+		return this.username;
+	}
+
+	public String getPassword() {
+		return this.password;
 	}
 }

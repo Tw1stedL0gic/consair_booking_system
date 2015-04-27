@@ -23,8 +23,8 @@ public class PacketListener implements Runnable {
 
 	@Override
 	public void run() {
-		byte[] header = new byte[5];
-		byte[] message = null;
+		short[] header = new short[5];
+		short[] message = null;
 
 		int index = 0;
 		int data = 0;
@@ -46,7 +46,7 @@ public class PacketListener implements Runnable {
 
 					message_id = (short) (header[4] & 0xFF);
 
-					message = new byte[message_length];
+					message = new short[message_length];
 				}
 				else if(index < (message_length - 5)) {
 					message[index] = (byte) (data & 0xFF);

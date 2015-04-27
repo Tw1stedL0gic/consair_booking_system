@@ -85,27 +85,31 @@ public abstract class Message {
 		return message;
 	}
 	
-	public static Message deconstructMessage(short id, byte[] message) {
+	public static Message deconstructMessage(short id, short[] message) {
 
 		Type type = Type.getType(id);
 		
 		switch(type) {
 			case HANDSHAKE:
+				int index = 0;
+
 				int usr_length = 0;
-				usr_length |= message[0] << 8;
-				usr_length |= message[1];
+				usr_length |= message[index++] << 8;
+				usr_length |= message[index++];
 
 				byte[] usr = new byte[usr_length];
-				System.arraycopy(message, 2, usr, 0, usr_length);
-				String username = usr.toString();
+				System.arraycopy(message, index, usr, 0, usr_length);
+				String username = new String(usr);
+
+				index += usr_length;
 
 				int pas_length = 0;
-				pas_length |= message[usr_length] << 8;
-				pas_length |= message[usr_length + 1];
+				pas_length |= message[index++] << 8;
+				pas_length |= message[index++];
 
 				byte[] pas = new byte[pas_length];
-				System.arraycopy(message, usr_length + 2, pas, 0, pas_length);
-				String password = pas.toString();
+				System.arraycopy(message, index, pas, 0, pas_length);
+				String password = new String(pas);
 
 				return new Handshake(username, password);
 
