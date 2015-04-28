@@ -47,7 +47,7 @@ Vi åkte aldrig till skolan utan jobbade hemifrån istället och snackade på sk
 ## Vecka 18
 
 ##### Måndag
-
+Efter progress meeting 1 så hade vi ett möte och började rätta vårat projektförslag efter att ha fått peer-reviewen av den grupp som läste den. Vi blev i princip klara, osäker om något fattas. Tidsåtgång 1h
 ##### Tisdag
 
 ##### Onsdag
