@@ -11,7 +11,7 @@ import static org.junit.Assert.assertTrue;
 public class TestMessage {
 
 	@Test
-	public void deconHandshake() throws UnsupportedEncodingException {
+	public void deconHandshake1() throws UnsupportedEncodingException {
 		String username = "Tjenare";
 		String password = "foobar";
 
@@ -40,6 +40,22 @@ public class TestMessage {
 
 		assertTrue(handshake.getPassword().equals("foobar"));
 		assertTrue(handshake.getUsername().equals("Tjenare"));
+	}
+
+	@Test
+	public void deconHandshake2() throws UnsupportedEncodingException {
+		Handshake hand_msg = new Handshake("Peter", "Salming");
+
+		byte[] hand_msg_ar = hand_msg.constructMessage();
+
+		Message decon = Message.deconstructMessage((short) 1, hand_msg_ar, "UTF8");
+
+		assertTrue(decon instanceof Handshake);
+
+		Handshake decon_msg = (Handshake) decon;
+
+		assertTrue(decon_msg.getUsername().equals(hand_msg.getUsername()));
+		assertTrue(decon_msg.getPassword().equals(hand_msg.getPassword()));
 	}
 
 	@Test
