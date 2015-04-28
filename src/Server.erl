@@ -31,6 +31,27 @@ start(Pno) ->
     spawn(?MODULE, loop0, [Pno]).
 
 %%--------------------------------------------------------------%%
+
+open_port(Port) ->
+    %% Starts listening to Port. 
+    {ok, listen_socket} = gen_tcp:listen(Port, [binary,              %% Accept data in binary
+						{packet,0},          %% I don't know what this is
+						{active,false}]),    %% Server is not active (I don't know what that means).
+    %% Start listening loop
+    listen_loop(listen_socket).
+    %% Pseudo: Should have some code here to listen for a message
+    %% to shut port. 
+
+listen_loop(listen_socket) ->
+    {ok, socket} = gen_tcp:accept(listen_socket),                    %% waits for connection to be established and saves it in socket.
+    %% pseudo: spawn new process for this connection
+    listen_loop(listen_socket);
+
+
+%% Here is my suggestion for how the connection loop should work.
+%% Open_port will open the port and then start the listening loop
+%% which will wait for connections and when it's made a connection
+%% it will spawn a process which will deal with the connection.
 %%--------------------------------------------------------------%%
 
 %% @doc loop
@@ -147,4 +168,20 @@ loop(Listen) ->
 				loop(Listen);
 	end.
 		
+%% COMMENT: Remember that an atom is as large as an integer in Erlang, 
+%% so to make it clearer we might want to change the numbers 1-10 to 
+%% atoms. Atoms take up space in the atom table, but a constant 10
+%% atoms will not take up too much space. 
+%%
+%% This is because I was not there to write this, but why does
+%% each case need the validate({X, Package}) part? Surely, if the
+%% input manages to pass the pattern matching then we shouldn't need
+%% to validate. (Also I can't find what the validate() function does. 
+%% Have we written it ourselves?
+%%
+%% We should also add comments to each case so we know what each 
+%% case is handling. 
+%% - Carl
+
 		
+%%--------------------------------------------------------------%%
