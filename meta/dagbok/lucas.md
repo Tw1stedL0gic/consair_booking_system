@@ -51,8 +51,9 @@ Startade med PacketListener i java delen.
 
 ## Vecka 18
 
-##### Måndag - Arbetstid: ~1 timme
+##### Måndag - Arbetstid: ~3 timmar
 Arbetade mer med paketen. Hur de ska avkodas och kodas till och från byte-listor.
+Började skriva på unittester för paketen, hittade mycket trams.
 
 ##### Tisdag
 
