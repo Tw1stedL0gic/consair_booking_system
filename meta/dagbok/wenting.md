@@ -41,7 +41,8 @@ Message structure in book.erl
 
 ## Vecka 18
 
-##### Måndag
+##### Måndag 14:00-15:00
+Read through peerview, did some change for projektförslag groupwise
 
 ##### Tisdag
 
