@@ -1,4 +1,4 @@
-# Dagbok för Lucas Arnström
+﻿# Dagbok för Lucas Arnström
 
 OSPP (1DT096) 2015 - Grupp 4
 
@@ -55,7 +55,8 @@ Startade med PacketListener i java delen.
 Arbetade mer med paketen. Hur de ska avkodas och kodas till och från byte-listor.
 Började skriva på unittester för paketen, hittade mycket trams.
 
-##### Tisdag
+##### Tisdag - Arbetstid: ~2 timmar
+Utvecklade fler unittester och lagade de problem som dessa tester påvisade.
 
 ##### Onsdag
 
