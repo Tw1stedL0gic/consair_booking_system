@@ -1,4 +1,4 @@
-# Dagbok för Förnamn Efternamn
+# Dagbok för Carl Wingårdh
 
 OSPP (1DT096) 2015 - Grupp 04
 
@@ -57,7 +57,7 @@ Nationen
 ## Vecka 17
 
 Uppgift: Peer review, reflektion och prototyp. 
-Timmar: 5:00
+Timmar: 6:30
 Reflektion: Att få information om hemtentan förstörde verkligen min plan för veckan. Jag hade knutit upp mig på nationsarbete och en fest på onsdag och torsdag som inte skulle vara ett problem eftersom jag skulle arbete med gruppen under dagen, men eftersom jag helt plötsligt hade en tenta att skriva så hade jag ingen tid för projektet. 
 
 ##### Måndag
@@ -84,11 +84,25 @@ Hemtenta
 
 Hemtenta
 
+##### Lördag
+
+11:30 - 13:00
+
+Jobbade lite hemifrån med formattering och dokumentation. Det var ett effektivt sätt att försöka komma ikapp med vad resten av laget har jobbat med (har också pratat med dem lite och läst genom deras dagböcker).
+
 ## Vecka 18
 
 ##### Måndag
 
+13:30 - 15:15
+
+Gick på milstolpemöte 1. Vi satt sen och bestämde lite om hur valborgsveckan kommer se ut. 
+
 ##### Tisdag
+
+13:30 - 15:30
+
+Jag och Andreas satt och jobbade lite på servern och simulationen. Jag har läst på så mycket jag kan om gen_tcp. Jag skrev en alternativ lösning till hur vi hanterar kopplingen mellan två enheter. Eftersom det bara var jag och Andreas så kunde jag dock inte diskutera den med nån. Jag gör väl det genom Facebook. 
 
 ##### Onsdag
 
