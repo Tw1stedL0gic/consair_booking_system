@@ -23,8 +23,8 @@ public class PacketListener implements Runnable {
 
 	@Override
 	public void run() {
-		short[] header = new short[5];
-		short[] message = null;
+		byte[] header = new byte[5];
+		byte[] message = null;
 
 		int index = 0;
 		int data = 0;
@@ -46,7 +46,7 @@ public class PacketListener implements Runnable {
 
 					message_id = (short) (header[4] & 0xFF);
 
-					message = new short[message_length];
+					message = new byte[message_length];
 				}
 				else if(index < (message_length - 5)) {
 					message[index] = (byte) (data & 0xFF);
@@ -54,7 +54,7 @@ public class PacketListener implements Runnable {
 				else {
 					logger.fine("Finished reading message!");
 
-					mailbox.recieve(Message.deconstructMessage(message_id, message));
+					mailbox.recieve(Message.deconstructMessage(message_id, message, "UTF8"));
 
 					index = -1;
 				}

@@ -3,6 +3,7 @@ package ospp.bookinggui.networking;
 import ospp.bookinggui.networking.messages.Handshake;
 import ospp.bookinggui.networking.messages.HandshakeResponse;
 
+import java.io.UnsupportedEncodingException;
 import java.util.logging.Logger;
 
 public abstract class Message {
@@ -85,7 +86,7 @@ public abstract class Message {
 		return message;
 	}
 	
-	public static Message deconstructMessage(short id, short[] message) {
+	public static Message deconstructMessage(short id, byte[] message, String encoding) throws UnsupportedEncodingException {
 
 		Type type = Type.getType(id);
 		
@@ -99,7 +100,7 @@ public abstract class Message {
 
 				byte[] usr = new byte[usr_length];
 				System.arraycopy(message, index, usr, 0, usr_length);
-				String username = new String(usr);
+				String username = new String(usr, encoding);
 
 				index += usr_length;
 
@@ -109,7 +110,7 @@ public abstract class Message {
 
 				byte[] pas = new byte[pas_length];
 				System.arraycopy(message, index, pas, 0, pas_length);
-				String password = new String(pas);
+				String password = new String(pas, encoding);
 
 				return new Handshake(username, password);
 
