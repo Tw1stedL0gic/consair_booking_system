@@ -8,32 +8,9 @@ public class Handshake extends Message {
 	private final String password;
 
 	public Handshake(String username, String password) {
-
 		this.username = username;
 		this.password = password;
-
-		int message_length = 2 + username.length() + 2 + password.length();
 		this.type = Type.HANDSHAKE;
-
-		byte[] message = new byte[message_length];
-
-		int i = 0;
-
-		message[i++] = (byte) ((username.length() & 0xFF00) >> 8);
-		message[i++] = (byte) (username.length() & 0x00FF);
-
-		for(byte b : username.getBytes()) {
-			message[i++] = b;
-		}
-
-		message[i++] = (byte) ((password.length() & 0xFF00) >> 8);
-		message[i++] = (byte) (password.length() & 0x00FF);
-
-		for(byte b : password.getBytes()) {
-			message[i++] = b;
-		}
-
-		this.message = message;
 	}
 
 	public String getUsername() {
@@ -42,5 +19,28 @@ public class Handshake extends Message {
 
 	public String getPassword() {
 		return this.password;
+	}
+
+	@Override
+	public byte[] constructBody() {
+		byte[] body = new byte[Message.AL_SIZE * 2 + username.length() + password.length()];
+
+		int i = 0;
+
+		body[i++] = (byte) ((username.length() & 0xFF00) >> 8);
+		body[i++] = (byte) (username.length() & 0x00FF);
+
+		for(byte b : username.getBytes()) {
+			body[i++] = b;
+		}
+
+		body[i++] = (byte) ((password.length() & 0xFF00) >> 8);
+		body[i++] = (byte) (password.length() & 0x00FF);
+
+		for(byte b : password.getBytes()) {
+			body[i++] = b;
+		}
+
+		return body;
 	}
 }

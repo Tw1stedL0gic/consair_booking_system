@@ -23,44 +23,50 @@ public class PacketListener implements Runnable {
 
 	@Override
 	public void run() {
-		byte[] header = new byte[5];
-		byte[] message = null;
+		int data;
+
+		int m_length = 0;
+		int[] message = null;
+		short id = 0;
 
 		int index = 0;
-		int data = 0;
+
 		try {
-			int message_length = 0;
-			short message_id = 0;
-
 			while((data = this.reader.read()) != -1) {
-				if(index < 4) {
-					header[index] = (byte) (data & 0xFF);
-				}
-				else if(index == 4) {
-					message_length = 0;
 
-					message_length |= header[0] << 24;
-					message_length |= header[1] << 16;
-					message_length |= header[2] << 8;
-					message_length |= header[3];
-
-					message_id = (short) (header[4] & 0xFF);
-
-					message = new byte[message_length];
+				// Header - Message Length
+				if(index < Message.HEADER_SIZE - 1) {
+					m_length |= (data << (8 * (3-index)));
 				}
-				else if(index < (message_length - 5)) {
-					message[index] = (byte) (data & 0xFF);
+
+				// Header - Message ID
+				else if(index == Message.HEADER_SIZE - 1) {
+					// We are only interested in storing the body of the message.
+					message = new int[m_length - Message.HEADER_SIZE];
+					id = (short) (data & 0xff);
 				}
+
+				// Message body
+				else if(index < m_length) {
+					message[index - Message.HEADER_SIZE] = data;
+				}
+
+				// Finished, add message to inbox and reset accumulators!
 				else {
-					logger.fine("Finished reading message!");
 
-					mailbox.recieve(Message.deconstructMessage(message_id, message, "UTF8"));
+					mailbox.recieve(Message.parseMessage(id, message, Message.ENCODING));
 
 					index = -1;
+					m_length = 0;
+					message = null;
+					id = 0;
 				}
 
+				// Increment index counter
 				++index;
 			}
+
+			logger.severe("END OF STREAM!");
 		}
 		catch(IOException e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);

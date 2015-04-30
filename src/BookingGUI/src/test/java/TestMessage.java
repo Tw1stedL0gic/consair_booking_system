@@ -1,4 +1,5 @@
 import org.junit.Test;
+import ospp.bookinggui.Utils;
 import ospp.bookinggui.networking.Message;
 import ospp.bookinggui.networking.messages.Handshake;
 import ospp.bookinggui.networking.messages.HandshakeResponse;
@@ -7,7 +8,6 @@ import java.io.UnsupportedEncodingException;
 
 import static org.junit.Assert.assertTrue;
 
-@SuppressWarnings("WrongPackageStatement")
 public class TestMessage {
 
 	@Test
@@ -15,8 +15,8 @@ public class TestMessage {
 		String username = "Tjenare";
 		String password = "foobar";
 
-		byte[] usr = username.getBytes("UTF8");
-		byte[] pas = password.getBytes("UTF8");
+		byte[] usr = username.getBytes(Message.ENCODING);
+		byte[] pas = password.getBytes(Message.ENCODING);
 
 		byte[] message = new byte[4 + usr.length + pas.length];
 
@@ -32,7 +32,7 @@ public class TestMessage {
 		message[index++] = (byte) (pas.length & 0x00FF);
 		System.arraycopy(pas, 0, message, index, pas.length);
 
-		Message msg = Message.deconstructMessage((short) 1, message, "UTF8");
+		Message msg = Message.parseMessage((short) 1, Utils.convertByteArrayToInt(message), Message.ENCODING);
 
 		assertTrue(msg instanceof Handshake);
 
@@ -46,9 +46,9 @@ public class TestMessage {
 	public void deconHandshake2() throws UnsupportedEncodingException {
 		Handshake hand_msg = new Handshake("Peter", "Salming");
 
-		byte[] hand_msg_ar = hand_msg.constructMessage();
+		byte[] hand_msg_ar = hand_msg.createMessage();
 
-		Message decon = Message.deconstructMessage((short) 1, hand_msg_ar, "UTF8");
+		Message decon = Message.parseMessage((short) 1, Utils.convertByteArrayToInt(hand_msg_ar), Message.ENCODING);
 
 		assertTrue(decon instanceof Handshake);
 
@@ -61,21 +61,23 @@ public class TestMessage {
 	@Test
 	public void deconHandshakeResp() throws UnsupportedEncodingException {
 
-		byte[] hand_resp_success = new byte[] {
-			(byte) 0xFF
+		int[] hand_resp_success = new int[] {
+			0xFF
 		};
 
-		byte[] hand_resp_failure = new byte[] {
+		int[] hand_resp_failure = new int[] {
 			0x00
 		};
 
-		Message hand_resp_success_msg = Message.deconstructMessage((short) 2, hand_resp_success, "UTF8");
-		Message hand_resp_failure_msg = Message.deconstructMessage((short) 2, hand_resp_failure, "UTF8");
+		Message hand_resp_success_msg = Message.parseMessage((short) 2, hand_resp_success, Message.ENCODING);
+		Message hand_resp_failure_msg = Message.parseMessage((short) 2, hand_resp_failure, Message.ENCODING);
 
 		assertTrue(hand_resp_failure_msg instanceof HandshakeResponse);
 		assertTrue(hand_resp_success_msg instanceof HandshakeResponse);
 
-		assertTrue(!((HandshakeResponse) hand_resp_failure_msg).isSuccessfull());
-		assertTrue(((HandshakeResponse) hand_resp_success_msg).isSuccessfull());
+		assertTrue(!((HandshakeResponse) hand_resp_failure_msg).isSuccessful());
+		assertTrue(((HandshakeResponse) hand_resp_success_msg).isSuccessful());
 	}
+
+
 }
