@@ -60,7 +60,9 @@ Utvecklade fler unittester och lagade de problem som dessa tester påvisade.
 
 ##### Onsdag
 
-##### Torsdag
+##### Torsdag - Arbetstid: ~2 timmar
+Skrev om det mesta av koden jag arbetat på då allt hade resulterat i sen röra.
+Det börjar bli lite bättre struktur nu.
 
 ##### Fredag
 
