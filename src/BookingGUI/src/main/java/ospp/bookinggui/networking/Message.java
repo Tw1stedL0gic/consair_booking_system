@@ -15,16 +15,16 @@ public abstract class Message {
 	private static final Logger logger      = Logger.getLogger(Message.class.getName());
 	protected            Type   type        = null;
 
-	public static Message parseMessage(short id, int[] message, String encoding) throws UnsupportedEncodingException {
+	public static Message parseMessage(short id, int[] body, String encoding) throws UnsupportedEncodingException {
 
 		Type type = Type.getType(id);
 
 		switch(type) {
 			case HANDSHAKE:
-				return parseHandshake(message, encoding);
+				return parseHandshake(body, encoding);
 
 			case HANDSHAKE_RESPONSE:
-				return new HandshakeResponse(message[0]);
+				return new HandshakeResponse(body[0]);
 
 			default:
 				logger.severe("Unsupported message id!");
