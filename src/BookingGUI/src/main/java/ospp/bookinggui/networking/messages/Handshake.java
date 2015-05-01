@@ -1,6 +1,9 @@
 package ospp.bookinggui.networking.messages;
 
+import ospp.bookinggui.Utils;
 import ospp.bookinggui.networking.Message;
+
+import java.io.UnsupportedEncodingException;
 
 public class Handshake extends Message {
 
@@ -22,24 +25,23 @@ public class Handshake extends Message {
 	}
 
 	@Override
-	public byte[] constructBody() {
-		byte[] body = new byte[Message.AL_SIZE * 2 + username.length() + password.length()];
+	public byte[] constructBody() throws UnsupportedEncodingException {
+		byte[] usr = username.getBytes(Message.ENCODING);
+		byte[] pas = password.getBytes(Message.ENCODING);
 
-		int i = 0;
+		byte[] body = new byte[4 + usr.length + pas.length];
 
-		body[i++] = (byte) ((username.length() & 0xFF00) >> 8);
-		body[i++] = (byte) (username.length() & 0x00FF);
+		int index = 0;
 
-		for(byte b : username.getBytes()) {
-			body[i++] = b;
-		}
+		body[index++] = (byte) ((usr.length & 0xFF00) >> 8);
+		body[index++] = (byte) (usr.length & 0x00FF);
+		System.arraycopy(usr, 0, body, index, usr.length);
 
-		body[i++] = (byte) ((password.length() & 0xFF00) >> 8);
-		body[i++] = (byte) (password.length() & 0x00FF);
+		index += usr.length;
 
-		for(byte b : password.getBytes()) {
-			body[i++] = b;
-		}
+		body[index++] = (byte) ((pas.length & 0xFF00) >> 8);
+		body[index++] = (byte) (pas.length & 0x00FF);
+		System.arraycopy(pas, 0, body, index, pas.length);
 
 		return body;
 	}

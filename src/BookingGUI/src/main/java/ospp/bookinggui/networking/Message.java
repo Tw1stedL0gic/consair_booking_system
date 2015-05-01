@@ -39,22 +39,22 @@ public abstract class Message {
 
 		int index = 0;
 
-		int usr_length = 0;
-		usr_length |= m_byte[index++] << 8;
-		usr_length |= m_byte[index++];
+		int al_usr = 0;
+		al_usr |= m_byte[index++] << 8;
+		al_usr |= m_byte[index++];
 
-		byte[] usr = new byte[usr_length];
-		System.arraycopy(m_byte, index, usr, 0, usr_length);
+		byte[] usr = new byte[al_usr];
+		System.arraycopy(m_byte, index, usr, 0, al_usr);
 		String username = new String(usr, encoding);
 
-		index += usr_length;
+		index += al_usr;
 
-		int pas_length = 0;
-		pas_length |= m_byte[index++] << 8;
-		pas_length |= m_byte[index++];
+		int al_pas = 0;
+		al_pas |= m_byte[index++] << 8;
+		al_pas |= m_byte[index++];
 
-		byte[] pas = new byte[pas_length];
-		System.arraycopy(m_byte, index, pas, 0, pas_length);
+		byte[] pas = new byte[al_pas];
+		System.arraycopy(m_byte, index, pas, 0, al_pas);
 		String password = new String(pas, encoding);
 
 		return new Handshake(username, password);
@@ -82,9 +82,9 @@ public abstract class Message {
 		return header;
 	}
 
-	public abstract byte[] constructBody();
+	public abstract byte[] constructBody() throws UnsupportedEncodingException;
 
-	public byte[] createMessage() {
+	public byte[] createMessage() throws UnsupportedEncodingException {
 		byte[] body = this.constructBody();
 		byte[] header = this.constructHeader(body.length);
 

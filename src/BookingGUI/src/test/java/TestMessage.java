@@ -46,7 +46,7 @@ public class TestMessage {
 	public void deconHandshake2() throws UnsupportedEncodingException {
 		Handshake hand_msg = new Handshake("Peter", "Salming");
 
-		byte[] hand_msg_ar = hand_msg.createMessage();
+		byte[] hand_msg_ar = hand_msg.constructBody();
 
 		Message decon = Message.parseMessage((short) 1, Utils.convertByteArrayToInt(hand_msg_ar), Message.ENCODING);
 
