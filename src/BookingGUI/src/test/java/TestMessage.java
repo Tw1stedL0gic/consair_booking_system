@@ -78,6 +78,4 @@ public class TestMessage {
 		assertTrue(!((HandshakeResponse) hand_resp_failure_msg).isSuccessful());
 		assertTrue(((HandshakeResponse) hand_resp_success_msg).isSuccessful());
 	}
-
-
 }
