@@ -14,11 +14,11 @@ public class PacketListener implements Runnable {
 	private static final Logger logger = Logger.getLogger(PacketListener.class.getName());
 
 	private final Mailbox<Message>    mailbox;
-	private final BufferedInputStream reader;
+	private final BufferedInputStream input;
 
 	public PacketListener(Mailbox<Message> m, InputStream is) {
 		this.mailbox = m;
-		this.reader = new BufferedInputStream(is);
+		this.input = new BufferedInputStream(is);
 	}
 
 	@Override
@@ -32,7 +32,7 @@ public class PacketListener implements Runnable {
 		int index = 0;
 
 		try {
-			while((data = this.reader.read()) != -1) {
+			while((data = this.input.read()) != -1) {
 
 				// Header - Message Length
 				if(index < Message.HEADER_SIZE - 1) {
