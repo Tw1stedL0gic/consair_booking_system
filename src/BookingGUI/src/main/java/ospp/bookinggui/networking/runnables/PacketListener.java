@@ -1,6 +1,7 @@
 package ospp.bookinggui.networking.runnables;
 
 import ospp.bookinggui.Mailbox;
+import ospp.bookinggui.Utils;
 import ospp.bookinggui.networking.Message;
 
 import java.io.BufferedInputStream;
@@ -53,6 +54,7 @@ public class PacketListener implements Runnable {
 
 				// Finished, add message to inbox and reset accumulators!
 				else {
+					logger.info("Added message to inbox!");
 
 					mailbox.recieve(Message.parseMessage(id, message, Message.ENCODING));
 
@@ -67,6 +69,8 @@ public class PacketListener implements Runnable {
 			}
 
 			logger.severe("END OF STREAM!");
+			logger.fine("Stream leftovers:");
+			logger.fine(Utils.bytePresentation(message));
 		}
 		catch(IOException e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);
