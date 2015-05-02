@@ -37,7 +37,11 @@ Arbetade på vår reflektion tillsammans med Andreas och Erik.
 ##### Torsdag - Arbetstid: ~3 timmar
 Arbatede fram ett paket/meddelandeprotokoll mellan vår backend och frontend.
 
-##### Fredag
+##### Fredag - Arbetstid: ~2-3 timmar
+En massa buggtestande.
+
+##### Lördag - Arbetstid: ~1 timme
+Mer buggtestning.
 
 ## Vecka 18
 
