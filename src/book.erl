@@ -9,8 +9,8 @@
 %% ------------------------
 
 -module(book).
--export([loop/1, get/1, login/1, validate/1, heartbeat/1, disconnect/1]).
-
+%%-export([loop/1, get/1, login/1, validate/1, heartbeat/1, disconnect/1]).
+-export([]).
 %%---------------------------------------------------------------------%%
 
 
@@ -37,8 +37,8 @@
 %%---------------------------------------------------------------------%%
 
 %% @doc TODO: add documentation
--spec set() -> ok when 
-      Ref::integer(),string().
+%%-spec set() -> ok when 
+%%      Ref::{integer(),string()}.
 
 
 set(Ref) ->
@@ -64,7 +64,7 @@ seat(Flight,Date) ->
 
 %% @doc TODO: add documentation
 -spec login(User,Key) -> ok when 
-      User::interger(),
+      User::integer(),
       Key::string().
 
 

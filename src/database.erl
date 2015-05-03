@@ -7,17 +7,17 @@
 %% user will use it for. 
 %% @end
 %% ------------------------
-
+%%To make this file work you need MySql and amnesisa ( http://sourceforge.net/projects/amnesia/) 
 -moduel(database).
 
 -include_lib("amnesia/include/amnesia_dn_def.hrl").
 -export([]).
 %% Adds driver info for the Database
 -driver_info() ->
-  [{driver, mysql_drv},
-   {host, "localhost"},
-   {user, "airline"},
-   {password, "airline"}].
+    [{driver, mysql_drv},
+     {host, "localhost"},
+     {user, "airline"},
+     {password, "airline"}].
 
 %%The def of the diffrent tables   
 tables () -> [flightno,passengerno,seats].
