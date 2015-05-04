@@ -35,9 +35,14 @@ public class PacketListener implements Runnable {
 		try {
 			while((data = this.input.read()) != -1) {
 
+				logger.info(Utils.bytePresentation(new int[] {data}));
+
 				// Header - Message Length
 				if(index < Message.HEADER_SIZE - 1) {
 					m_length |= (data << (8 * (3-index)));
+
+					logger.info("Header - Message length");
+					logger.info(Utils.bytePresentation(new int[] {m_length}));
 				}
 
 				// Header - Message ID
@@ -45,11 +50,17 @@ public class PacketListener implements Runnable {
 					// We are only interested in storing the body of the message.
 					message = new int[m_length - Message.HEADER_SIZE];
 					id = (short) (data & 0xff);
+
+					logger.info("Header - Message ID");
+					logger.info(Utils.bytePresentation(new int[] {id}));
 				}
 
 				// Message body
 				else if(index < m_length) {
 					message[index - Message.HEADER_SIZE] = data;
+
+					logger.info("Message - body");
+					logger.info(Utils.bytePresentation(message));
 				}
 
 				// Finished, add message to inbox and reset accumulators!
@@ -69,8 +80,8 @@ public class PacketListener implements Runnable {
 			}
 
 			logger.severe("END OF STREAM!");
-			logger.fine("Stream leftovers:");
-			logger.fine(Utils.bytePresentation(message));
+			logger.severe("Stream leftovers:");
+			logger.severe(Utils.bytePresentation(message));
 		}
 		catch(IOException e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);
