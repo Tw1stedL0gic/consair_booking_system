@@ -28,65 +28,67 @@ start ()->
       Pno::integer().
 
 start(Pno) ->
-    spawn(?MODULE, loop0, [Pno]).
+    spawn(?MODULE, open_port, [Pno]).
 
 %%--------------------------------------------------------------%%
+
+%% @doc open_port
+-spec open_port(Port) -> ok.
 
 open_port(Port) ->
-    %% Starts listening to Port. 
-    {ok, listen_socket} = gen_tcp:listen(Port, [binary,              %% Accept data in binary
-						{packet,0},          %% I don't know what this is
-						{active,false}]),    %% Server is not active (I don't know what that means).
-    %% Start listening loop
-    listen_loop(listen_socket).
-    %% Pseudo: Should have some code here to listen for a message
-    %% to shut port. 
-
-listen_loop(listen_socket) ->
-    {ok, socket} = gen_tcp:accept(listen_socket),                    %% waits for connection to be established and saves it in socket.
-    %% pseudo: spawn new process for this connection
-    listen_loop(listen_socket);
-
-
-%% Here is my suggestion for how the connection loop should work.
-%% Open_port will open the port and then start the listening loop
-%% which will wait for connections and when it's made a connection
-%% it will spawn a process which will deal with the connection.
-%%--------------------------------------------------------------%%
-
-%% @doc loop
--spec loop0(Port) -> ok.
-
-loop0(Port) ->
-    case gen_tcp:listen(Port, [binary,{packet,0},{active,false}]) of 
-	{ok, LSock} ->
-	    loop(LSock);
- 	_           ->
+    %% Start listening to port
+    case gen_tcp:listen(Port, [binary,            %% Accept data in binary
+			       {packet,0},        %% I don't know what this is
+			       {active,false}])   %% Server is not active (I don't know what that means)
+    of 
+	{ok, Socket} -> %% Port opened successfully
+	    %% Start listen loop
+	    listen_loop(Socket);
+ 	_           -> %% Any other result
+	    %% Stop listening to port
 	    stop
     end.
 
-%% @doc loop
--spec loop(Listen) -> ok.
-
-loop(Listen) ->
-    case gen_tcp:accept(Listen) of 
-	{ok,S} ->
-	    %%gen_tcp:send(S, io_lib:format("~p~n",[{date(),time()}])),
-	    
-
-	    gen_tcp:close(S),
-	    loop(Listen);
-	_      ->
-	    loop(Listen)
-    end.
-
-%% COMMENT: Can loop0 and loop both be called loop? To fit aux functions
-%% code standard. Better yet: maybe there is a better name for the 
-%% function. Maybe listen_loop or something. - Carl
-%%we are fixing this now.
+%% Need implement some sort of closing of the port
 
 %%--------------------------------------------------------------%%
 
+%% @doc listen_loop
+-spec listen_loop(Socket) -> ok.
+
+listen_loop(Socket) ->
+    case gen_tcp:accept(Socket) of 
+	{ok,S} ->
+	    %% Spawn process to handle this connection
+	    spawn(?MODULE, loop, [S]),   
+	    gen_tcp:close(S),
+	    loop(Socket);
+	_      ->
+	    loop(Socket)
+    end.
+
+%%--------------------------------------------------------------%%
+
+connection_handler(S) ->
+    %% handling connection with socket S
+
+    case gen_tcp:recv(S, 4) of
+	{error, closed} ->
+	    %% error because port was closed
+	    tbi;
+	{error, Reason} ->
+	    %% handle error
+	    tbi;
+	{ok, Package} ->
+	    %% convert Package into a format that 
+	    %% message handler can read, also make
+	    %% sure that package is correct
+	    
+	    message_translator(Package, 4)
+	    message_handler(Package)		      
+    end.
+
+%%--------------------------------------------------------------%%
 
 %% @doc TODO: add documentation
 -spec loop(Input) -> ok when 
@@ -96,9 +98,25 @@ loop(Listen) ->
 %%Kan vara många fel här, under grov bearbetning. Ska bytas ut mot funktionen loop ovan
 	
 
-loop(Listen) ->
-	case gen_tcp::accept(Listen) of
-		{ok, LSock}->
+message_handler(Message) ->
+    case Message of
+	1  ->
+	    
+
+	    %% 1: Hämta passagerare (front-end to back-end)
+	    %% 2: Passagerarlista (back-end to front-end)
+	    %% 3: Boka plats
+	    %% 4: Response to #3 (lyckat / misslyckat)
+	    %% 5: Login
+	    %% 6: Response #5
+	    %% 7: Disconnect / Terminera Anslutning
+	    %% 8: Heartbeat
+	    %% 9: Get passenger info (front-end -> back-end)
+	    %% 10: Response #9
+
+
+
+%
 			{1, Package, PID} -> %receive Id=1 with PID_1
 				case validate({1,Package}) of
 					false ->
@@ -185,3 +203,17 @@ loop(Listen) ->
 
 		
 %%--------------------------------------------------------------%%
+
+%% @doc this function will decipher the message sent
+%% It will take the message and the size. 
+%% The idea is that it will be used for the 
+%% first 4 meta-info-bytes as well as the rest
+%% of the message. 
+
+message_translator(Message, size) ->
+    %% translate the bytes into a format that erlang will understand
+
+hardcoded_message_translator(Message, 4) ->
+    5;
+hardcoded_message_translator(Message, 5) ->
+    
