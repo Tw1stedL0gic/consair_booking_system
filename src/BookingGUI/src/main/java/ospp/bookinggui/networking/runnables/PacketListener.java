@@ -35,6 +35,8 @@ public class PacketListener implements Runnable {
 		try {
 			while((data = this.input.read()) != -1) {
 
+				logger.info("Recieved data: " + Utils.bytePresentation(new int[] {data}));
+
 				// Header - Message Length
 				if(index < Message.HEADER_SIZE - 1) {
 					m_length |= (data << (8 * (3-index)));
@@ -53,6 +55,7 @@ public class PacketListener implements Runnable {
 
 					// Finished, add message to inbox and reset accumulators!
 					if(index == m_length - 1) {
+						logger.info("Added message to inbox! MSG: " + Utils.bytePresentation(message));
 						mailbox.recieve(Message.parseMessage(id, message, Message.ENCODING));
 
 						index = -1;
