@@ -45,16 +45,16 @@ public class PacketListener implements Runnable {
 				// Header - Message ID
 				else if(index == Message.HEADER_SIZE - 1) {
 					// We are only interested in storing the body of the message.
-					message = new int[m_length - Message.HEADER_SIZE];
+					message = new int[m_length - 1];
 					id = (short) (data & 0xff);
 				}
 
 				// Message body
-				else if(index < m_length) {
+				else if(index < m_length + Message.HEADER_SIZE - 1) {
 					message[index - Message.HEADER_SIZE] = data;
 
 					// Finished, add message to inbox and reset accumulators!
-					if(index == m_length - 1) {
+					if(index == m_length + Message.HEADER_SIZE - 2) {
 						logger.info("Added message to inbox! MSG: " + Utils.bytePresentation(message));
 						mailbox.recieve(Message.parseMessage(id, message, Message.ENCODING));
 

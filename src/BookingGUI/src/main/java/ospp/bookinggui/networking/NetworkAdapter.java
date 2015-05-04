@@ -48,7 +48,7 @@ public class NetworkAdapter implements Adapter {
 
 	@Override
 	public void connect(String url, int port) {
-
+		//TODO send handshake to server
 	}
 
 	@Override

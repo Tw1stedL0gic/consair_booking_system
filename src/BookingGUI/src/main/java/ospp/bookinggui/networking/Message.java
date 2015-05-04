@@ -71,7 +71,7 @@ public abstract class Message {
 	public byte[] constructHeader(int body_size) {
 		byte[] header = new byte[HEADER_SIZE];
 
-		int message_length = HEADER_SIZE + body_size;
+		int message_length = 1 + body_size;
 
 		header[0] = (byte) ((message_length & 0xff000000) >> 24);
 		header[1] = (byte) ((message_length & 0x00ff0000) >> 16);
@@ -112,6 +112,9 @@ public abstract class Message {
 		}
 
 		public static Type getType(int id) {
+			if(id > Type.values().length) {
+				throw new IllegalArgumentException("Incorrect ID! ID is too large!");
+			}
 			return Type.values()[id - 1];
 		}
 	}
