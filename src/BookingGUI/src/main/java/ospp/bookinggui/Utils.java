@@ -20,7 +20,7 @@ public class Utils {
 	public static int[] convertByteArrayToInt(byte[] ba) {
 		int[] ia = new int[ba.length];
 		for(int i = 0; i < ba.length; i++) {
-			ia[i] = ba[i];
+			ia[i] = (((int) ba[i]) & 0x000000ff);
 		}
 		return ia;
 	}

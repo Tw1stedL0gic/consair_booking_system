@@ -6,9 +6,9 @@ public class HandshakeResponse extends Message {
 
 	private final boolean success;
 
-	public HandshakeResponse(int response) {
+	public HandshakeResponse(boolean success) {
 		this.type = Type.HANDSHAKE_RESPONSE;
-		this.success = ((byte) response) == ((byte) 0xff);
+		this.success = success;
 	}
 
 	public boolean isSuccessful() {
@@ -17,7 +17,7 @@ public class HandshakeResponse extends Message {
 
 	@Override
 	public byte[] constructBody() {
-		byte value = this.success ? (byte) 0xff : 0x00;
+		byte value = this.success ? (byte) 0x000000ff : 0x00000000;
 		return new byte[] {value};
 	}
 }

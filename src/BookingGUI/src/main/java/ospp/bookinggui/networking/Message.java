@@ -24,7 +24,8 @@ public abstract class Message {
 				return parseHandshake(body, encoding);
 
 			case HANDSHAKE_RESPONSE:
-				return new HandshakeResponse(body[0]);
+				boolean success = body[0] == 0x000000ff;
+				return new HandshakeResponse(success);
 
 			default:
 				logger.severe("Unsupported message id!");
