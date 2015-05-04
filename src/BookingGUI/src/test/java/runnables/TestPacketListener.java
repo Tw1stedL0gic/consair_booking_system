@@ -23,7 +23,7 @@ public class TestPacketListener {
 	@Test(timeout = 500)
 	public void testOne() throws UnsupportedEncodingException {
 		Logger logger = Logger.getLogger(PacketListener.class.getName());
-		logger.setLevel(Level.ALL);
+		logger.setLevel(Level.OFF);
 
 		byte[] ba = new HandshakeResponse(true).createMessage();
 		Mailbox<Message> mailbox = new Mailbox<>();
