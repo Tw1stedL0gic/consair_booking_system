@@ -72,7 +72,7 @@ listen_loop(Socket) ->
 connection_handler(S) ->
     %% handling connection with socket S
 
-    case gen_tcp:recv(S, 4) of
+    case gen_tcp:recv(S, 4) of 
 	{error, closed} ->
 	    %% error because port was closed
 	    tbi;
@@ -83,10 +83,26 @@ connection_handler(S) ->
 	    %% convert Package into a format that 
 	    %% message handler can read, also make
 	    %% sure that package is correct
-	    
-	    message_translator(Package, 4)
-	    message_handler(Package)		      
-    end.
+	    <<MessLeng:32/unsigned>> = Package,
+	    case gen_tcp:recv(S, MessLeng) of
+		{error, closed} ->
+		    %% error because port was closed
+		    tbi;
+		{error, Reason} ->
+		    %% handle error
+		    tbi;
+		{ok, <<ID:8/unsigned, Mess/binary>>} ->
+		    %% convert Package into a format that 
+		    %% message handler can read, also make
+		    %% sure that package is correct
+		    case message_handler(ID, Mess) of
+			{ok, SendData} ->
+			    gen_tcp:send(S,SendData);
+			{err, Reason}  -> tbi
+		    end
+			 
+	    end
+end.
 
 %%--------------------------------------------------------------%%
 
@@ -97,94 +113,132 @@ connection_handler(S) ->
 	  
 %%Kan vara många fel här, under grov bearbetning. Ska bytas ut mot funktionen loop ovan
 	
+%%	    %% 1: Hämta passagerare (front-end to back-end)
+%%	    %% 2: Passagerarlista (back-end to front-end)
+%%	    %% 3: Boka plats
+%%	    %% 4: Response to #3 (lyckat / misslyckat)
+%%	    %% 5: Login
+%%	    %% 6: Response #5
+%%	    %% 7: Disconnect / Terminera Anslutning
+%%	    %% 8: Heartbeat
+%%	    %% 9: Get passenger info (front-end -> back-end)
+%%	    %% 10: Response #9
+message_handler(1,Mess) ->
+    tbi;
+message_handler(2,Mess) ->
+    tbi;
+message_handler(3,Mess) -> %% Get passengerlist
+    <<AL:16/unsigned, FN/binary>> = Mess,
+    {ok, createMessage(4,getPassengerlist(AL,FN))};
+message_handler(4,Mess) ->
+    {err, unsupported};
+message_handler(5,Mess) ->
+    tbi;
+message_handler(6,Mess) ->
+    tbi;
+message_handler(7,Mess) ->
+    tbi;
+message_handler(8,Mess) ->
+    tbi;
+message_handler(9,Mess) ->
+    tbi;
+message_handler(10,Mess) ->
+    tbi;
 
-message_handler(Message) ->
-    case Message of
-	1  ->
-	    
+getPassengerlist(AL,FN) ->
+    getFromDatabase. %% [1,2,3,4,5,6,7]. %% get from database
 
-	    %% 1: Hämta passagerare (front-end to back-end)
-	    %% 2: Passagerarlista (back-end to front-end)
-	    %% 3: Boka plats
-	    %% 4: Response to #3 (lyckat / misslyckat)
-	    %% 5: Login
-	    %% 6: Response #5
-	    %% 7: Disconnect / Terminera Anslutning
-	    %% 8: Heartbeat
-	    %% 9: Get passenger info (front-end -> back-end)
-	    %% 10: Response #9
+createMessage(4,[H | T]) ->
+    foldl(fun(Elem,<<Acc/binary>>) -> <<Acc/binary,Elem:8>> end,<<(length([H|T])*8+1):32/unsigned,4:8/unsigned>>, [H|T])>>.
 
-
-
-%
-			{1, Package, PID} -> %receive Id=1 with PID_1
-				case validate({1,Package}) of
-					false ->
-						print_Bad_Argument, loop(Input);
-					true -> gen_tcp::send(LSock, get({PassengerList, PID}), loop(Input))
-				end;
-			{2, Package, PID} -> % receive XXXXXXXX, do YYYYYYYYYY
-				case validate({2,Package}) of
-					false ->
-						print_Bad_Argument;
-					true -> PID ! {PassengerList, Package}
-				end;
-				loop(Input);
-			{3, Package, PID} ->  % receive XXXXXXXX, do YYYYYYYYYY
-				case validate({3,Package}) of
-					false ->
-						print_Bad_Argument, loop(Input);
-					true -> gen_tcp::send(LSock, get({BookSeat, PID}), loop(Input))
-				end;
-			{4, Package, PID} ->  % receive XXXXXXXX, do YYYYYYYYYY
-				case validate({4,Package}) of
-					false ->
-						print_Bad_Argument;
-					true -> PID ! {BookSeat, Package}
-				end			
-				loop(Input);
-			{5, Package, PID} ->  % receive XXXXXXXX, do YYYYYYYYYY
-				case validate({5,Package}) of
-					false ->
-						print_Bad_Argument, loop(Input);
-					true -> login({Login, PID}), loop(Input)
-				end;
-			{6, Package, PID} ->  % receive XXXXXXXX, do YYYYYYYYYY
-				case validate({6,Package}) of
-					false ->
-						print_Bad_Argument;
-					true -> PID ! {Login, Package}
-				end			
-				loop(Input);
-			{7, Package, PID} ->  % receive XXXXXXXX, do YYYYYYYYYY		 
-				case validate({7,Package}) of
-					false ->
-						print_Bad_Argument;
-					true -> disconnect({Disconnect, PID})
-				end
-				loop(Input);
-			{8, Package, PID} ->  % receive XXXXXXXX, do YYYYYYYYYY
-				case validate({8,Package}) of
-					false ->
-						print_Bad_Argument;
-					true -> heartbeat({Heartbeat, PID})
-				end
-				loop(Input);
-			{9, Package, PID} ->  % receive XXXXXXXX, do YYYYYYYYYY
-				case validate({9,Package}) of
-					false ->
-						print_Bad_Argument, loop(Input);
-					true -> gen_tcp::send(LSock, get({PassengerInfo, PID}), loop(Input))
-				end;
-			{10, Package, PID} ->  % receive XXXXXXXX, do YYYYYYYYYY
-				case validate({10,Package}) of
-					false ->
-						print_Bad_Argument;
-					true -> PID ! {PassengerInfo, Package}
-				end		
-				gen_tcp::close(LSock),
-				loop(Listen);
-	end.
+%%
+%%message_handlerOLD(Message) 
+%%    case Message of
+%%	1  ->
+%%	    
+%%
+%%	    %% 1: Hämta passagerare (front-end to back-end)
+%%	    %% 2: Passagerarlista (back-end to front-end)
+%%	    %% 3: Boka plats
+%%	    %% 4: Response to #3 (lyckat / misslyckat)
+%%	    %% 5: Login
+%%	    %% 6: Response #5
+%%	    %% 7: Disconnect / Terminera Anslutning
+%%	    %% 8: Heartbeat
+%%	    %% 9: Get passenger info (front-end -> back-end)
+%%	    %% 10: Response #9
+%%
+%%
+%%
+%%
+%%			{1, Package, PID} -> %receive Id=1 with PID_1
+%%				case validate({1,Package}) of
+%%					false ->
+%%						print_Bad_Argument, loop(Input);
+%%					true -> gen_tcp::send(LSock, get({PassengerList, PID}), loop(Input))
+%%				end;
+%%			{2, Package, PID} -> % receive XXXXXXXX, do YYYYYYYYYY
+%%				case validate({2,Package}) of
+%%					false ->
+%%						print_Bad_Argument;
+%%					true -> PID ! {PassengerList, Package}
+%%				end;
+%%				loop(Input);
+%%			{3, Package, PID} ->  % receive XXXXXXXX, do YYYYYYYYYY
+%%				case validate({3,Package}) of
+%%					false ->
+%%						print_Bad_Argument, loop(Input);
+%%%%					true -> gen_tcp::send(LSock, get({BookSeat, PID}), loop(Input))
+%%				end;
+%%			{4, Package, PID} ->  % receive XXXXXXXX, do YYYYYYYYYY
+%%				case validate({4,Package}) of
+%%					false ->
+%%						print_Bad_Argument;
+%%					true -> PID ! {BookSeat, Package}
+%%				end			
+%%				loop(Input);
+%%			{5, Package, PID} ->  % receive XXXXXXXX, do YYYYYYYYYY
+%%				case validate({5,Package}) of
+%%					false ->
+%%						print_Bad_Argument, loop(Input);
+%%					true -> login({Login, PID}), loop(Input)
+%%				end;
+%%			{6, Package, PID} ->  % receive XXXXXXXX, do YYYYYYYYYY
+%%				case validate({6,Package}) of
+%%					false ->
+%%						print_Bad_Argument;
+%%					true -> PID ! {Login, Package}
+%%				end			
+%%				loop(Input);
+%%%%%%%%%%			{7, Package, PID} ->  % receive XXXXXXXX, do YYYYYYYYYY		 
+%%				case validate({7,Package}) of
+%%					false ->
+%%						print_Bad_Argument;
+%%					true -> disconnect({Disconnect, PID})
+%%				end
+%%				loop(Input);
+%%			{8, Package, PID} ->  % receive XXXXXXXX, do YYYYYYYYYY
+%%				case validate({8,Package}) of
+%%					false ->
+%%						print_Bad_Argument;
+%%					true -> heartbeat({Heartbeat, PID})
+%%				end
+%%				loop(Input);
+%%			{9, Package, PID} ->  % receive XXXXXXXX, do YYYYYYYYYY
+%%				case validate({9,Package}) of
+%%					false ->
+%%						print_Bad_Argument, loop(Input);
+%%					true -> gen_tcp::send(LSock, get({PassengerInfo, PID}), loop(Input))
+%%				end;
+%%			{10, Package, PID} ->  % receive XXXXXXXX, do YYYYYYYYYY
+%%				case validate({10,Package}) of
+%%					false ->
+%%						print_Bad_Argument;
+%%					true -> PID ! {PassengerInfo, Package}
+%%				end		
+%%				gen_tcp::close(LSock),
+%%				loop(Listen);
+%%	end.
 		
 %% COMMENT: Remember that an atom is as large as an integer in Erlang, 
 %% so to make it clearer we might want to change the numbers 1-10 to 
