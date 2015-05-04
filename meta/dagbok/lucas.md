@@ -64,7 +64,11 @@ Utvecklade fler unittester och lagade de problem som dessa tester påvisade.
 Skrev om det mesta av koden jag arbetat på då allt hade resulterat i sen röra.
 Det börjar bli lite bättre struktur nu.
 
-##### Fredag
+##### Fredag - Arbetstid: ~2-3 timmar
+En massa buggtestande.
+
+##### Lördag - Arbetstid: ~1 timme
+Mer buggtestning.
 
 ## Vecka 19
 
