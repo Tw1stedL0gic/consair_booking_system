@@ -30,15 +30,13 @@ public class PacketSender implements Runnable {
 			// If mailbox is empty, sleep for a while then check again.
 			if(m == null) {
 				try {
-					Thread.sleep(20);
+					Thread.sleep(10);
 					continue;
 				}
 				catch(InterruptedException e) {
 					logger.log(Level.SEVERE, e.getMessage(), e);
 				}
 			}
-
-			System.out.println("1");
 
 			// Attempt to create message.
 			byte[] data;
@@ -50,12 +48,10 @@ public class PacketSender implements Runnable {
 				continue;
 			}
 
-			System.out.println("2");
-
 			// Attempt to send the data.
 			try {
 				this.output.write(data, 0, data.length);
-				System.out.println("3");
+				this.output.flush();
 			}
 			catch(IOException e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
