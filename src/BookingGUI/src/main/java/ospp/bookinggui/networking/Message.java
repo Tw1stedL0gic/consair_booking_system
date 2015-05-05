@@ -103,7 +103,9 @@ public abstract class Message {
 		DISCONNECT,
 		HEARTBEAT,
 		GET_PASSENGER_INFO,
-		GET_PASSENGER_INFO_RESP;
+		GET_PASSENGER_INFO_RESP,
+		GET_FLIGHT_LIST,
+		GET_FLIGHT_LIST_RESP;
 
 		public final byte ID;
 
