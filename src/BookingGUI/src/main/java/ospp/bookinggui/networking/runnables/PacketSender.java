@@ -38,6 +38,8 @@ public class PacketSender implements Runnable {
 				}
 			}
 
+			System.out.println("1");
+
 			// Attempt to create message.
 			byte[] data;
 			try {
@@ -48,9 +50,12 @@ public class PacketSender implements Runnable {
 				continue;
 			}
 
+			System.out.println("2");
+
 			// Attempt to send the data.
 			try {
 				this.output.write(data, 0, data.length);
+				System.out.println("3");
 			}
 			catch(IOException e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
