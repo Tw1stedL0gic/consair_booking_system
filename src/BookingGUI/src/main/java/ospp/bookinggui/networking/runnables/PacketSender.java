@@ -14,6 +14,8 @@ public class PacketSender implements Runnable {
 	private final Mailbox<Message> mailbox;
 	private final BufferedOutputStream output;
 
+	private volatile boolean keepRunning = true;
+
 	public PacketSender(Mailbox<Message> mailbox, OutputStream os) {
 		this.mailbox = mailbox;
 		this.output = new BufferedOutputStream(os);
@@ -22,17 +24,17 @@ public class PacketSender implements Runnable {
 	@Override
 	public void run() {
 
-		while(true) {
+		while(keepRunning) {
 			Message m = mailbox.getOldestOutgoing();
 
 			// If mailbox is empty, sleep for a while then check again.
 			if(m == null) {
 				try {
-					Thread.sleep(100);
+					Thread.sleep(20);
 					continue;
 				}
 				catch(InterruptedException e) {
-					e.printStackTrace();
+					logger.log(Level.SEVERE, e.getMessage(), e);
 				}
 			}
 
@@ -54,5 +56,9 @@ public class PacketSender implements Runnable {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 			}
 		}
+	}
+
+	public void stop() {
+		this.keepRunning = false;
 	}
 }
