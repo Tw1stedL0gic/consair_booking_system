@@ -17,7 +17,7 @@ public class HandshakeResponseMSG extends Message {
 
 	@Override
 	public byte[] constructBody() {
-		byte value = this.success ? (byte) 0x000000ff : 0x00000000;
+		byte value = this.success ? (byte) 0xff : 0x00;
 		return new byte[] {value};
 	}
 }
