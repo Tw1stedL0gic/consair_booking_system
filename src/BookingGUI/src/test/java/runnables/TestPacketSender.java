@@ -3,6 +3,7 @@ package runnables;
 import org.junit.Before;
 import org.junit.Test;
 import ospp.bookinggui.Mailbox;
+import ospp.bookinggui.Utils;
 import ospp.bookinggui.networking.Message;
 import ospp.bookinggui.networking.messages.Handshake;
 import ospp.bookinggui.networking.runnables.PacketSender;
@@ -36,7 +37,7 @@ public class TestPacketSender {
 
 		// Ugly! But we need to wait for the sender to complete its work
 		try {
-			Thread.sleep(100);
+			Thread.sleep(30);
 		} catch(InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -44,5 +45,30 @@ public class TestPacketSender {
 		sender.stop();
 
 		assertArrayEquals(m.createMessage(), output.toByteArray());
+	}
+
+	@Test(timeout = 500)
+	public void testTwo() throws UnsupportedEncodingException {
+		Mailbox<Message> mailbox = new Mailbox<>();
+		ByteArrayOutputStream output = new ByteArrayOutputStream();
+
+		PacketSender sender = new PacketSender(mailbox, output);
+		new Thread(sender).start();
+
+		Handshake m1 = new Handshake("tjenare", "greger");
+		Handshake m2 = new Handshake("tjosan", "posan");
+
+		mailbox.send(m1);
+		mailbox.send(m2);
+
+		try {
+			Thread.sleep(50);
+		} catch(InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		sender.stop();
+
+		assertArrayEquals(Utils.concat(m1.createMessage(), m2.createMessage()), output.toByteArray());
 	}
 }
