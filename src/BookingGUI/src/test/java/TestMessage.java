@@ -1,8 +1,8 @@
 import org.junit.Test;
 import ospp.bookinggui.Utils;
 import ospp.bookinggui.networking.Message;
-import ospp.bookinggui.networking.messages.Handshake;
-import ospp.bookinggui.networking.messages.HandshakeResponse;
+import ospp.bookinggui.networking.messages.HandshakeMSG;
+import ospp.bookinggui.networking.messages.HandshakeResponseMSG;
 
 import java.io.UnsupportedEncodingException;
 
@@ -34,9 +34,9 @@ public class TestMessage {
 
 		Message msg = Message.parseMessage((short) 1, Utils.convertByteArrayToInt(message), Message.ENCODING);
 
-		assertTrue(msg instanceof Handshake);
+		assertTrue(msg instanceof HandshakeMSG);
 
-		Handshake handshake = (Handshake) msg;
+		HandshakeMSG handshake = (HandshakeMSG) msg;
 
 		assertTrue(handshake.getPassword().equals("foobar"));
 		assertTrue(handshake.getUsername().equals("Tjenare"));
@@ -44,15 +44,15 @@ public class TestMessage {
 
 	@Test
 	public void deconHandshake2() throws UnsupportedEncodingException {
-		Handshake hand_msg = new Handshake("Peter", "Salming");
+		HandshakeMSG hand_msg = new HandshakeMSG("Peter", "Salming");
 
 		byte[] hand_msg_ar = hand_msg.constructBody();
 
 		Message decon = Message.parseMessage((short) 1, Utils.convertByteArrayToInt(hand_msg_ar), Message.ENCODING);
 
-		assertTrue(decon instanceof Handshake);
+		assertTrue(decon instanceof HandshakeMSG);
 
-		Handshake decon_msg = (Handshake) decon;
+		HandshakeMSG decon_msg = (HandshakeMSG) decon;
 
 		assertTrue(decon_msg.getUsername().equals(hand_msg.getUsername()));
 		assertTrue(decon_msg.getPassword().equals(hand_msg.getPassword()));
@@ -72,10 +72,10 @@ public class TestMessage {
 		Message hand_resp_success_msg = Message.parseMessage((short) 2, hand_resp_success, Message.ENCODING);
 		Message hand_resp_failure_msg = Message.parseMessage((short) 2, hand_resp_failure, Message.ENCODING);
 
-		assertTrue(hand_resp_failure_msg instanceof HandshakeResponse);
-		assertTrue(hand_resp_success_msg instanceof HandshakeResponse);
+		assertTrue(hand_resp_failure_msg instanceof HandshakeResponseMSG);
+		assertTrue(hand_resp_success_msg instanceof HandshakeResponseMSG);
 
-		assertTrue(!((HandshakeResponse) hand_resp_failure_msg).isSuccessful());
-		assertTrue(((HandshakeResponse) hand_resp_success_msg).isSuccessful());
+		assertTrue(!((HandshakeResponseMSG) hand_resp_failure_msg).isSuccessful());
+		assertTrue(((HandshakeResponseMSG) hand_resp_success_msg).isSuccessful());
 	}
 }

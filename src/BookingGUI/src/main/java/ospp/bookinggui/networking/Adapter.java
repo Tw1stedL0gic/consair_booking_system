@@ -27,14 +27,6 @@ public interface Adapter {
 	public void login(String username, String password);
 
 	/**
-	 * Attempt to connect to the given server.
-	 *
-	 * @param url
-	 * @param port
-	 */
-	public void connect(String url, int port);
-
-	/**
 	 * Terminate the connection to the server.
 	 */
 	public void disconnect();

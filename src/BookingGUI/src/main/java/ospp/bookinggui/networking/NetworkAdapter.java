@@ -4,6 +4,7 @@ import ospp.bookinggui.BookingInfo;
 import ospp.bookinggui.Flight;
 import ospp.bookinggui.Mailbox;
 import ospp.bookinggui.PAID;
+import ospp.bookinggui.networking.messages.HandshakeMSG;
 import ospp.bookinggui.networking.runnables.PacketListener;
 import ospp.bookinggui.networking.runnables.PacketSender;
 
@@ -33,36 +34,31 @@ public class NetworkAdapter implements Adapter {
 
 	@Override
 	public void getPassengerList(Flight flight) {
-
+		mailbox.send(new GetPassengerListMSG(flight));
 	}
 
 	@Override
 	public void getFlightList() {
-
+		mailbox.send(new GetFlightListMSG());
 	}
 
 	@Override
 	public void login(String username, String password) {
-
-	}
-
-	@Override
-	public void connect(String url, int port) {
-		//TODO send handshake to server
+		mailbox.send(new HandshakeMSG(username, password));
 	}
 
 	@Override
 	public void disconnect() {
-
+		mailbox.send(new DisconnectMSG());
 	}
 
 	@Override
 	public void book(Flight flight, BookingInfo booking) {
-
+		mailbox.send(new BookSeatMSG(flight, booking));
 	}
 
 	@Override
 	public void getPassengerInfo(PAID id) {
-
+		mailbox.send(new GetPassengerInfoMSG(id));
 	}
 }

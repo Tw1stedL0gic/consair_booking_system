@@ -1,8 +1,8 @@
 package ospp.bookinggui.networking;
 
 import ospp.bookinggui.Utils;
-import ospp.bookinggui.networking.messages.Handshake;
-import ospp.bookinggui.networking.messages.HandshakeResponse;
+import ospp.bookinggui.networking.messages.HandshakeMSG;
+import ospp.bookinggui.networking.messages.HandshakeResponseMSG;
 
 import java.io.UnsupportedEncodingException;
 import java.util.logging.Logger;
@@ -25,7 +25,7 @@ public abstract class Message {
 
 			case HANDSHAKE_RESPONSE:
 				boolean success = body[0] == 0x000000ff;
-				return new HandshakeResponse(success);
+				return new HandshakeResponseMSG(success);
 
 			default:
 				logger.severe("Unsupported message id!");
@@ -58,7 +58,7 @@ public abstract class Message {
 		System.arraycopy(m_byte, index, pas, 0, al_pas);
 		String password = new String(pas, encoding);
 
-		return new Handshake(username, password);
+		return new HandshakeMSG(username, password);
 	}
 
 	public static byte[] setALValue(byte[] m, int al, int offset) {

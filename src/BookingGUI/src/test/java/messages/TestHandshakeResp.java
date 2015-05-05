@@ -3,7 +3,7 @@ package messages;
 import org.junit.Test;
 import ospp.bookinggui.Utils;
 import ospp.bookinggui.networking.Message;
-import ospp.bookinggui.networking.messages.HandshakeResponse;
+import ospp.bookinggui.networking.messages.HandshakeResponseMSG;
 
 import java.io.UnsupportedEncodingException;
 
@@ -13,16 +13,16 @@ public class TestHandshakeResp {
 
 	@Test
 	public void test1() throws UnsupportedEncodingException {
-		HandshakeResponse handresp = new HandshakeResponse(true);
+		HandshakeResponseMSG handresp = new HandshakeResponseMSG(true);
 		byte[] message = handresp.constructBody();
 
 		int[] con = Utils.convertByteArrayToInt(message);
 
 		Message msg = Message.parseMessage((short) 2, con, Message.ENCODING);
 
-		assertTrue(msg instanceof HandshakeResponse);
+		assertTrue(msg instanceof HandshakeResponseMSG);
 
-		HandshakeResponse retrieved = (HandshakeResponse) msg;
+		HandshakeResponseMSG retrieved = (HandshakeResponseMSG) msg;
 
 		assertTrue(retrieved.isSuccessful());
 	}

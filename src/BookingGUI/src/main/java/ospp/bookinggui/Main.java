@@ -34,7 +34,6 @@ public class Main {
 
 		Adapter adapter = new NetworkAdapter(mailbox, args[0], Integer.valueOf(args[1]));
 
-		//TODO initiate networkadapter
 		//TODO start GUI loop
 	}
 }

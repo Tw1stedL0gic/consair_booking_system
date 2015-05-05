@@ -4,12 +4,12 @@ import ospp.bookinggui.networking.Message;
 
 import java.io.UnsupportedEncodingException;
 
-public class Handshake extends Message {
+public class HandshakeMSG extends Message {
 
 	private final String username;
 	private final String password;
 
-	public Handshake(String username, String password) {
+	public HandshakeMSG(String username, String password) {
 		this.username = username;
 		this.password = password;
 		this.type = Type.HANDSHAKE;
