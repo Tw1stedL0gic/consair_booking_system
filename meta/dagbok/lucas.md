@@ -72,9 +72,12 @@ Mer buggtestning.
 
 ## Vecka 19
 
-##### Måndag
+##### Måndag - Arbetstid: ~4 timmar
+Arbetade med gruppen. Vi fick igång kommunikation mellan java klienten och erlang servern.
+De kan kommunicera nu, men bara väldigt grundläggande saker. Vi måste arbeta mer på det.
 
-##### Tisdag
+##### Tisdag - Arbetstid: ?
+Buggtestande, buggtestande, buggtestande.
 
 ##### Onsdag
 
