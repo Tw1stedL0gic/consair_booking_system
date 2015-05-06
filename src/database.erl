@@ -8,12 +8,16 @@
 %% @end
 %% ------------------------
 %%To make this file work you need MySql and amnesisa ( http://sourceforge.net/projects/amnesia/) 
--moduel(database).
 
--include_lib("amnesia/include/amnesia_dn_def.hrl").
--export([]).
+-module(database).
+%%-include_lib("../lib/amnesia-1.6.2/include/amnesia_db_def.hrl").
+-include_lib("amnesia/include/amnesia_db_def.hrl").
+
+
+%%-export([]).
 %% Adds driver info for the Database
--driver_info() ->
+
+driver_info() ->
     [{driver, mysql_drv},
      {host, "localhost"},
      {user, "airline"},
@@ -39,10 +43,10 @@ table (passengerno) ->
 %%The diffrent columns of the database as well links the relations between the tabels.
 table (seats) -> 
 %%links tables seats to flight no
-[ refers_to (flightno),
+[ refers_to(flightno),
   {seat, varchar, not_null},
   %%links tables to Passenger id
-  refers_to (passengerno),
+  refers_to(passengerno),
   {seat_price, {decimal, 10,2}, not_null},
   {seat_res, integer, not_null},
   {seat_booked, integer, not_null}].
