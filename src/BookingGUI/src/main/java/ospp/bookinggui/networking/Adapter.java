@@ -11,12 +11,12 @@ public interface Adapter {
 	 *
 	 * @param flight The flight to get the passengerlist of.
 	 */
-	public void getPassengerList(Flight flight);
+	void getPassengerList(Flight flight);
 
 	/**
 	 * Retrieves a list of all flights from the server and adds it to the inbox.
 	 */
-	public void getFlightList();
+	void getFlightList();
 
 	/**
 	 * Attempt to authenticate against the server with the given username and password.
@@ -24,12 +24,12 @@ public interface Adapter {
 	 * @param username
 	 * @param password
 	 */
-	public void login(String username, String password);
+	void login(String username, String password);
 
 	/**
 	 * Terminate the connection to the server.
 	 */
-	public void disconnect();
+	void disconnect();
 
 	/**
 	 * Book a seat at the given flight with the given info.
@@ -37,11 +37,11 @@ public interface Adapter {
 	 * @param flight
 	 * @param booking
 	 */
-	public void book(Flight flight, BookingInfo booking);
+	void book(Flight flight, BookingInfo booking);
 
 	/**
 	 * Retrieves the information of the passenger with the given ID and adds it to the inbox.
 	 * @param id
 	 */
-	public void getPassengerInfo(Passenger id);
+	void getPassengerInfo(Passenger id);
 }

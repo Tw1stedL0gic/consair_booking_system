@@ -82,7 +82,7 @@ public abstract class Message {
 
 		public final byte ID;
 
-		private Type() {
+		Type() {
 			this.ID = (byte) ((this.ordinal() + 1) & 0xFF);
 		}
 
