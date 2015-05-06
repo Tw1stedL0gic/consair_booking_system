@@ -45,7 +45,7 @@ open_port(Port) ->
 listen_loop(listen_socket) ->
     {ok, socket} = gen_tcp:accept(listen_socket),                    %% waits for connection to be established and saves it in socket.
     %% pseudo: spawn new process for this connection
-    listen_loop(listen_socket);
+    listen_loop(listen_socket).
 
 
 %% Here is my suggestion for how the connection loop should work.
@@ -55,7 +55,8 @@ listen_loop(listen_socket) ->
 %%--------------------------------------------------------------%%
 
 %% @doc loop
--spec loop0(Port) -> ok.
+%% -----------
+%%-spec loop0(Port) -> ok.
 
 loop0(Port) ->
     case gen_tcp:listen(Port, [binary,{packet,0},{active,false}]) of 
@@ -66,7 +67,7 @@ loop0(Port) ->
     end.
 
 %% @doc loop
--spec loop(Listen) -> ok.
+%%-spec loop(Listen) -> ok.
 
 loop(Listen) ->
     case gen_tcp:accept(Listen) of 
@@ -96,77 +97,77 @@ loop(Listen) ->
 %%Kan vara många fel här, under grov bearbetning. Ska bytas ut mot funktionen loop ovan
 	
 
-loop(Listen) ->
-	case gen_tcp::accept(Listen) of
-		{ok, LSock}->
-			{1, Package, PID} -> %receive Id=1 with PID_1
-				case validate({1,Package}) of
-					false ->
-						print_Bad_Argument, loop(Input);
-					true -> gen_tcp::send(LSock, get({PassengerList, PID}), loop(Input))
-				end;
-			{2, Package, PID} -> % receive XXXXXXXX, do YYYYYYYYYY
-				case validate({2,Package}) of
-					false ->
-						print_Bad_Argument;
-					true -> PID ! {PassengerList, Package}
-				end;
-				loop(Input);
-			{3, Package, PID} ->  % receive XXXXXXXX, do YYYYYYYYYY
-				case validate({3,Package}) of
-					false ->
-						print_Bad_Argument, loop(Input);
-					true -> gen_tcp::send(LSock, get({BookSeat, PID}), loop(Input))
-				end;
-			{4, Package, PID} ->  % receive XXXXXXXX, do YYYYYYYYYY
-				case validate({4,Package}) of
-					false ->
-						print_Bad_Argument;
-					true -> PID ! {BookSeat, Package}
-				end			
-				loop(Input);
-			{5, Package, PID} ->  % receive XXXXXXXX, do YYYYYYYYYY
-				case validate({5,Package}) of
-					false ->
-						print_Bad_Argument, loop(Input);
-					true -> login({Login, PID}), loop(Input)
-				end;
-			{6, Package, PID} ->  % receive XXXXXXXX, do YYYYYYYYYY
-				case validate({6,Package}) of
-					false ->
-						print_Bad_Argument;
-					true -> PID ! {Login, Package}
-				end			
-				loop(Input);
-			{7, Package, PID} ->  % receive XXXXXXXX, do YYYYYYYYYY		 
-				case validate({7,Package}) of
-					false ->
-						print_Bad_Argument;
-					true -> disconnect({Disconnect, PID})
-				end
-				loop(Input);
-			{8, Package, PID} ->  % receive XXXXXXXX, do YYYYYYYYYY
-				case validate({8,Package}) of
-					false ->
-						print_Bad_Argument;
-					true -> heartbeat({Heartbeat, PID})
-				end
-				loop(Input);
-			{9, Package, PID} ->  % receive XXXXXXXX, do YYYYYYYYYY
-				case validate({9,Package}) of
-					false ->
-						print_Bad_Argument, loop(Input);
-					true -> gen_tcp::send(LSock, get({PassengerInfo, PID}), loop(Input))
-				end;
-			{10, Package, PID} ->  % receive XXXXXXXX, do YYYYYYYYYY
-				case validate({10,Package}) of
-					false ->
-						print_Bad_Argument;
-					true -> PID ! {PassengerInfo, Package}
-				end		
-				gen_tcp::close(LSock),
-				loop(Listen);
-	end.
+%% loop(Listen) ->
+%%     case gen_tcp:accept(Listen) of
+%% 	{ok, LSock}->
+%% 	    {1, Package, PID} -> %receive Id=1 with PID_1
+%% 			   case validate({1,Package}) of
+%% 			       false ->
+%% 				   print_Bad_Argument, loop(Input);
+%% 			       true -> gen_tcp::send(LSock, get({PassengerList, PID}), loop(Input))
+%% 						end;
+%% 			{2, Package, PID} -> % receive XXXXXXXX, do YYYYYYYYYY
+%% 				case validate({2,Package}) of
+%% 					false ->
+%% 						print_Bad_Argument;
+%% 					true -> PID ! {PassengerList, Package}
+%% 				end;
+%% 				loop(Input);
+%% 			{3, Package, PID} ->  % receive XXXXXXXX, do YYYYYYYYYY
+%% 				case validate({3,Package}) of
+%% 					false ->
+%% 						print_Bad_Argument, loop(Input);
+%% 					true -> gen_tcp::send(LSock, get({BookSeat, PID}), loop(Input))
+%% 				end;
+%% 			{4, Package, PID} ->  % receive XXXXXXXX, do YYYYYYYYYY
+%% 				case validate({4,Package}) of
+%% 					false ->
+%% 						print_Bad_Argument;
+%% 					true -> PID ! {BookSeat, Package}
+%% 				end			
+%% 				loop(Input);
+%% 			{5, Package, PID} ->  % receive XXXXXXXX, do YYYYYYYYYY
+%% 				case validate({5,Package}) of
+%% 					false ->
+%% 						print_Bad_Argument, loop(Input);
+%% 					true -> login({Login, PID}), loop(Input)
+%% 				end;
+%% 			{6, Package, PID} ->  % receive XXXXXXXX, do YYYYYYYYYY
+%% 				case validate({6,Package}) of
+%% 					false ->
+%% 						print_Bad_Argument;
+%% 					true -> PID ! {Login, Package}
+%% 				end			
+%% 				loop(Input);
+%% 			{7, Package, PID} ->  % receive XXXXXXXX, do YYYYYYYYYY		 
+%% 				case validate({7,Package}) of
+%% 					false ->
+%% 						print_Bad_Argument;
+%% 					true -> disconnect({Disconnect, PID})
+%% 				end
+%% 				loop(Input);
+%% 			{8, Package, PID} ->  % receive XXXXXXXX, do YYYYYYYYYY
+%% 				case validate({8,Package}) of
+%% 					false ->
+%% 						print_Bad_Argument;
+%% 					true -> heartbeat({Heartbeat, PID})
+%% 				end
+%% 				loop(Input);
+%% 			{9, Package, PID} ->  % receive XXXXXXXX, do YYYYYYYYYY
+%% 				case validate({9,Package}) of
+%% 					false ->
+%% 						print_Bad_Argument, loop(Input);
+%% 					true -> gen_tcp::send(LSock, get({PassengerInfo, PID}), loop(Input))
+%% 				end;
+%% 			{10, Package, PID} ->  % receive XXXXXXXX, do YYYYYYYYYY
+%% 				case validate({10,Package}) of
+%% 					false ->
+%% 						print_Bad_Argument;
+%% 					true -> PID ! {PassengerInfo, Package}
+%% 				end		
+%% 				gen_tcp::close(LSock),
+%% 				loop(Listen);
+%% 	end.
 		
 %% COMMENT: Remember that an atom is as large as an integer in Erlang, 
 %% so to make it clearer we might want to change the numbers 1-10 to 
