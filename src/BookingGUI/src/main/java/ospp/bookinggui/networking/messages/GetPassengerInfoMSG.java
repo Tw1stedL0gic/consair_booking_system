@@ -1,18 +1,34 @@
 package ospp.bookinggui.networking.messages;
 
-import ospp.bookinggui.PassengerIdentification;
+import ospp.bookinggui.Passenger;
 import ospp.bookinggui.networking.Message;
 
 import java.io.UnsupportedEncodingException;
 
 public class GetPassengerInfoMSG extends Message {
 
-	public GetPassengerInfoMSG(PassengerIdentification id) {
+	private final Passenger passenger;
+
+	public GetPassengerInfoMSG(Passenger p) {
 		this.type = Type.GET_PASSENGER_INFO;
+		this.passenger = p;
 	}
 
 	@Override
 	public byte[] constructBody() throws UnsupportedEncodingException {
-		return new byte[0];
+		byte[] msg = new byte[8];
+
+		Long id = this.passenger.getIdentification();
+
+		msg[0] = (byte) (((id & 0xff00000000000000L) >> 56) & 0xff);
+		msg[1] = (byte)  ((id & 0x00ff000000000000L) >> 48);
+		msg[2] = (byte)  ((id & 0x0000ff0000000000L) >> 40);
+		msg[3] = (byte)  ((id & 0x000000ff00000000L) >> 32);
+		msg[4] = (byte)  ((id & 0x00000000ff000000L) >> 24);
+		msg[5] = (byte)  ((id & 0x0000000000ff0000L) >> 16);
+		msg[6] = (byte)  ((id & 0x000000000000ff00L) >> 8);
+		msg[7] = (byte)   (id & 0x00000000000000ffL);
+
+		return msg;
 	}
 }

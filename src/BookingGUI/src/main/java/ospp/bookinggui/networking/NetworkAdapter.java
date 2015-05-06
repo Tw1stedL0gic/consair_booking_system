@@ -3,7 +3,7 @@ package ospp.bookinggui.networking;
 import ospp.bookinggui.BookingInfo;
 import ospp.bookinggui.Flight;
 import ospp.bookinggui.Mailbox;
-import ospp.bookinggui.PassengerIdentification;
+import ospp.bookinggui.Passenger;
 import ospp.bookinggui.networking.messages.*;
 import ospp.bookinggui.networking.runnables.PacketListener;
 import ospp.bookinggui.networking.runnables.PacketSender;
@@ -58,7 +58,7 @@ public class NetworkAdapter implements Adapter {
 	}
 
 	@Override
-	public void getPassengerInfo(PassengerIdentification id) {
+	public void getPassengerInfo(Passenger id) {
 		mailbox.send(new GetPassengerInfoMSG(id));
 	}
 }

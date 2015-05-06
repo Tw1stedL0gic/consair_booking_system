@@ -1,5 +1,6 @@
 package ospp.bookinggui.networking.messages;
 
+import ospp.bookinggui.Utils;
 import ospp.bookinggui.networking.Message;
 
 import java.io.UnsupportedEncodingException;
@@ -43,5 +44,31 @@ public class HandshakeMSG extends Message {
 		System.arraycopy(pas, 0, body, index, pas.length);
 
 		return body;
+	}
+
+	public static HandshakeMSG parse(int[] body, String encoding) throws UnsupportedEncodingException {
+		byte[] m_byte = Utils.convertIntArrayToByte(body);
+
+		int index = 0;
+
+		int al_usr = 0;
+		al_usr |= m_byte[index++] << 8;
+		al_usr |= m_byte[index++];
+
+		byte[] usr = new byte[al_usr];
+		System.arraycopy(m_byte, index, usr, 0, al_usr);
+		String username = new String(usr, encoding);
+
+		index += al_usr;
+
+		int al_pas = 0;
+		al_pas |= m_byte[index++] << 8;
+		al_pas |= m_byte[index++];
+
+		byte[] pas = new byte[al_pas];
+		System.arraycopy(m_byte, index, pas, 0, al_pas);
+		String password = new String(pas, encoding);
+
+		return new HandshakeMSG(username, password);
 	}
 }

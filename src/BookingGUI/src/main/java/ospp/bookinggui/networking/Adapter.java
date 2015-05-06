@@ -2,7 +2,7 @@ package ospp.bookinggui.networking;
 
 import ospp.bookinggui.BookingInfo;
 import ospp.bookinggui.Flight;
-import ospp.bookinggui.PassengerIdentification;
+import ospp.bookinggui.Passenger;
 
 public interface Adapter {
 
@@ -43,5 +43,5 @@ public interface Adapter {
 	 * Retrieves the information of the passenger with the given ID and adds it to the inbox.
 	 * @param id
 	 */
-	public void getPassengerInfo(PassengerIdentification id);
+	public void getPassengerInfo(Passenger id);
 }

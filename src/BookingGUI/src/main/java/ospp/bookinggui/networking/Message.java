@@ -21,11 +21,10 @@ public abstract class Message {
 
 		switch(type) {
 			case HANDSHAKE:
-				return parseHandshake(body, encoding);
+				return HandshakeMSG.parse(body, encoding);
 
 			case HANDSHAKE_RESPONSE:
-				boolean success = body[0] == 0x000000ff;
-				return new HandshakeResponseMSG(success);
+				return HandshakeResponseMSG.parse(body);
 
 			default:
 				logger.severe("Unsupported message id!");
@@ -33,32 +32,6 @@ public abstract class Message {
 		}
 
 		return null;
-	}
-
-	private static Message parseHandshake(int[] message, String encoding) throws UnsupportedEncodingException {
-		byte[] m_byte = Utils.convertIntArrayToByte(message);
-
-		int index = 0;
-
-		int al_usr = 0;
-		al_usr |= m_byte[index++] << 8;
-		al_usr |= m_byte[index++];
-
-		byte[] usr = new byte[al_usr];
-		System.arraycopy(m_byte, index, usr, 0, al_usr);
-		String username = new String(usr, encoding);
-
-		index += al_usr;
-
-		int al_pas = 0;
-		al_pas |= m_byte[index++] << 8;
-		al_pas |= m_byte[index++];
-
-		byte[] pas = new byte[al_pas];
-		System.arraycopy(m_byte, index, pas, 0, al_pas);
-		String password = new String(pas, encoding);
-
-		return new HandshakeMSG(username, password);
 	}
 
 	public static byte[] setALValue(byte[] m, int al, int offset) {
