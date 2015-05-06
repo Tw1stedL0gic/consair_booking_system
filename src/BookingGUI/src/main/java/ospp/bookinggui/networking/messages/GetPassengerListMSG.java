@@ -5,11 +5,11 @@ import ospp.bookinggui.networking.Message;
 
 import java.io.UnsupportedEncodingException;
 
-public class GetPassengerListMSG extends Message {
+public class GetPassengerListMsg extends Message {
 
 	private final Flight flight;
 
-	public GetPassengerListMSG(Flight f) {
+	public GetPassengerListMsg(Flight f) {
 		this.type = Type.GET_PASSENGERS;
 		this.flight = f;
 	}

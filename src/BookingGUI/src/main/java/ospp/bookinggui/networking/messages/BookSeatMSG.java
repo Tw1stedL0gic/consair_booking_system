@@ -6,9 +6,9 @@ import ospp.bookinggui.networking.Message;
 
 import java.io.UnsupportedEncodingException;
 
-public class BookSeatMSG extends Message {
+public class BookSeatMsg extends Message {
 
-	public BookSeatMSG(Flight f, BookingInfo info) {
+	public BookSeatMsg(Flight f, BookingInfo info) {
 		this.type = Type.BOOK_SEAT;
 	}
 

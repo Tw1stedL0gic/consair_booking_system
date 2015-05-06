@@ -34,31 +34,31 @@ public class NetworkAdapter implements Adapter {
 
 	@Override
 	public void getPassengerList(Flight flight) {
-		mailbox.send(new GetPassengerListMSG(flight));
+		mailbox.send(new GetPassengerListMsg(flight));
 	}
 
 	@Override
 	public void getFlightList() {
-		mailbox.send(new GetFlightListMSG());
+		mailbox.send(new GetFlightListMsg());
 	}
 
 	@Override
 	public void login(String username, String password) {
-		mailbox.send(new HandshakeMSG(username, password));
+		mailbox.send(new HandshakeMsg(username, password));
 	}
 
 	@Override
 	public void disconnect() {
-		mailbox.send(new DisconnectMSG());
+		mailbox.send(new DisconnectMsg());
 	}
 
 	@Override
 	public void book(Flight flight, BookingInfo booking) {
-		mailbox.send(new BookSeatMSG(flight, booking));
+		mailbox.send(new BookSeatMsg(flight, booking));
 	}
 
 	@Override
 	public void getPassengerInfo(Passenger id) {
-		mailbox.send(new GetPassengerInfoMSG(id));
+		mailbox.send(new GetPassengerInfoMsg(id));
 	}
 }

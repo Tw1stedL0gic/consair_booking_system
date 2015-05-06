@@ -4,9 +4,9 @@ import ospp.bookinggui.networking.Message;
 
 import java.io.UnsupportedEncodingException;
 
-public class GetFlightListMSG extends Message {
+public class GetFlightListMsg extends Message {
 
-	public GetFlightListMSG() {
+	public GetFlightListMsg() {
 		this.type = Type.GET_FLIGHT_LIST;
 	}
 

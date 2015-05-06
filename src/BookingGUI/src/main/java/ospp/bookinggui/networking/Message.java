@@ -1,8 +1,8 @@
 package ospp.bookinggui.networking;
 
 import ospp.bookinggui.Utils;
-import ospp.bookinggui.networking.messages.HandshakeMSG;
-import ospp.bookinggui.networking.messages.HandshakeResponseMSG;
+import ospp.bookinggui.networking.messages.HandshakeMsg;
+import ospp.bookinggui.networking.messages.HandshakeRespMsg;
 
 import java.io.UnsupportedEncodingException;
 import java.util.logging.Logger;
@@ -21,10 +21,10 @@ public abstract class Message {
 
 		switch(type) {
 			case HANDSHAKE:
-				return HandshakeMSG.parse(body, encoding);
+				return HandshakeMsg.parse(body, encoding);
 
 			case HANDSHAKE_RESPONSE:
-				return HandshakeResponseMSG.parse(body);
+				return HandshakeRespMsg.parse(body);
 
 			default:
 				logger.severe("Unsupported message id!");

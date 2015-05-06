@@ -5,7 +5,7 @@ import org.junit.Test;
 import ospp.bookinggui.Mailbox;
 import ospp.bookinggui.Utils;
 import ospp.bookinggui.networking.Message;
-import ospp.bookinggui.networking.messages.HandshakeMSG;
+import ospp.bookinggui.networking.messages.HandshakeMsg;
 import ospp.bookinggui.networking.runnables.PacketSender;
 
 import java.io.ByteArrayOutputStream;
@@ -31,7 +31,7 @@ public class TestPacketSender {
 		PacketSender sender = new PacketSender(mailbox, output);
 		new Thread(sender).start();
 
-		HandshakeMSG m = new HandshakeMSG("tjenare", "greger");
+		HandshakeMsg m = new HandshakeMsg("tjenare", "greger");
 
 		mailbox.send(m);
 
@@ -55,8 +55,8 @@ public class TestPacketSender {
 		PacketSender sender = new PacketSender(mailbox, output);
 		new Thread(sender).start();
 
-		HandshakeMSG m1 = new HandshakeMSG("tjenare", "greger");
-		HandshakeMSG m2 = new HandshakeMSG("tjosan", "posan");
+		HandshakeMsg m1 = new HandshakeMsg("tjenare", "greger");
+		HandshakeMsg m2 = new HandshakeMsg("tjosan", "posan");
 
 		mailbox.send(m1);
 		mailbox.send(m2);

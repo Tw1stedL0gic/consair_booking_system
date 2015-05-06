@@ -5,8 +5,8 @@ import org.junit.Test;
 import ospp.bookinggui.Mailbox;
 import ospp.bookinggui.Utils;
 import ospp.bookinggui.networking.Message;
-import ospp.bookinggui.networking.messages.HandshakeMSG;
-import ospp.bookinggui.networking.messages.HandshakeResponseMSG;
+import ospp.bookinggui.networking.messages.HandshakeMsg;
+import ospp.bookinggui.networking.messages.HandshakeRespMsg;
 import ospp.bookinggui.networking.runnables.PacketListener;
 
 import java.io.ByteArrayInputStream;
@@ -27,7 +27,7 @@ public class TestPacketListener {
 
 	@Test(timeout = 500)
 	public void testOne() throws UnsupportedEncodingException {
-		byte[] ba = new HandshakeResponseMSG(true).createMessage();
+		byte[] ba = new HandshakeRespMsg(true).createMessage();
 		Mailbox<Message> mailbox = new Mailbox<>();
 
 		ByteArrayInputStream input = new ByteArrayInputStream(ba);
@@ -42,17 +42,17 @@ public class TestPacketListener {
 
 		assertTrue(m2 == null);
 		assertTrue(m != null);
-		assertTrue(m instanceof HandshakeResponseMSG);
+		assertTrue(m instanceof HandshakeRespMsg);
 
-		HandshakeResponseMSG hr = (HandshakeResponseMSG) m;
+		HandshakeRespMsg hr = (HandshakeRespMsg) m;
 
 		assertTrue(hr.isSuccessful());
 	}
 
 	@Test(timeout = 500)
 	public void testTwo() throws UnsupportedEncodingException {
-		byte[] m1 = new HandshakeMSG("tjenare", "greger").createMessage();
-		byte[] m2 = new HandshakeMSG("poop", "dickbutt").createMessage();
+		byte[] m1 = new HandshakeMsg("tjenare", "greger").createMessage();
+		byte[] m2 = new HandshakeMsg("poop", "dickbutt").createMessage();
 
 		Mailbox<Message> mailbox = new Mailbox<>();
 
@@ -70,11 +70,11 @@ public class TestPacketListener {
 		assertTrue(two != null);
 		assertTrue(three == null);
 
-		assertTrue(one instanceof HandshakeMSG);
-		assertTrue(two instanceof HandshakeMSG);
+		assertTrue(one instanceof HandshakeMsg);
+		assertTrue(two instanceof HandshakeMsg);
 
-		HandshakeMSG mOne = (HandshakeMSG) one;
-		HandshakeMSG mTwo = (HandshakeMSG) two;
+		HandshakeMsg mOne = (HandshakeMsg) one;
+		HandshakeMsg mTwo = (HandshakeMsg) two;
 
 		assertEquals(mOne.getUsername(), "tjenare");
 		assertEquals(mOne.getPassword(), "greger");

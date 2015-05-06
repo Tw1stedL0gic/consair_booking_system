@@ -4,9 +4,9 @@ import ospp.bookinggui.networking.Message;
 
 import java.io.UnsupportedEncodingException;
 
-public class DisconnectMSG extends Message {
+public class DisconnectMsg extends Message {
 
-	public DisconnectMSG() {
+	public DisconnectMsg() {
 		this.type = Type.DISCONNECT;
 	}
 

@@ -2,11 +2,11 @@ package ospp.bookinggui.networking.messages;
 
 import ospp.bookinggui.networking.Message;
 
-public class HandshakeResponseMSG extends Message {
+public class HandshakeRespMsg extends Message {
 
 	private final boolean success;
 
-	public HandshakeResponseMSG(boolean success) {
+	public HandshakeRespMsg(boolean success) {
 		this.type = Type.HANDSHAKE_RESPONSE;
 		this.success = success;
 	}
@@ -21,8 +21,8 @@ public class HandshakeResponseMSG extends Message {
 		return new byte[] {value};
 	}
 
-	public static HandshakeResponseMSG parse(int[] body) {
+	public static HandshakeRespMsg parse(int[] body) {
 		boolean success = body[0] == 0x000000ff;
-		return new HandshakeResponseMSG(success);
+		return new HandshakeRespMsg(success);
 	}
 }
