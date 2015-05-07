@@ -59,7 +59,7 @@ Efter progress meeting 1 så hade vi ett möte och började rätta vårat projek
 ## Vecka 19
 
 ##### Måndag
-
+Jobbade med mycket inläsning om tcp osv. Vi planerade en del och delade upp arbetet. Ska fortsätta jobba med hur man tar emot och skickar meddelanden i tcp i backend. Tidsåtgång 5h
 ##### Tisdag
 
 ##### Onsdag
