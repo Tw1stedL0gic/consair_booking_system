@@ -149,7 +149,7 @@ getPassengerlist(AL,FN) ->
     getFromDatabase. %% [1,2,3,4,5,6,7]. %% get from database
 
 createMessage(4,[H | T]) ->
-    foldl(fun(Elem,<<Acc/binary>>) -> <<Acc/binary,Elem:8>> end,<<(length([H|T])*8+1):32/unsigned,4:8/unsigned>>, [H|T])>>.
+    foldl(fun(Elem,<<Acc/binary>>) -> <<Acc/binary,Elem:64/unsigned>> end,<<(length([H|T])*8+1):32/unsigned,4:8/unsigned>>, [H|T])>>.
 
 %%
 %%message_handlerOLD(Message) 
