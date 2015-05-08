@@ -38,7 +38,7 @@ start(Pno) ->
 open_port(Port) ->
     %% Start listening to port
     case gen_tcp:listen(Port, [binary,            %% Accept data in binary
-			       {packet,0},        %% I don't know what this is
+			       {packet,5},        %% I don't know what this is
 			       {active,false}])   %% Server is not active (I don't know what that means)
     of 
 	{ok, Socket} -> %% Port opened successfully
