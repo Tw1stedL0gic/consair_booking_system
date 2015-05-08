@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="ospp.booking.bookingfx.BookOptionInterfaceController">
+    <stylesheets>
+        <URL value="@/styles/bookoptioninterface.css" />
+    </stylesheets>
+   <children>
+      <Button layoutX="47.0" layoutY="351.0" mnemonicParsing="false" text="Back" />
+      <Button layoutX="479.0" layoutY="351.0" mnemonicParsing="false" text="Next" />
+      <ListView fx:id="planeList" layoutX="49.0" layoutY="75.0" prefHeight="225.0" prefWidth="483.0">
+         <rotationAxis>
+            <Point3D x="1.0" y="1.0" />
+         </rotationAxis>
+      </ListView>
+   </children>
+</AnchorPane>

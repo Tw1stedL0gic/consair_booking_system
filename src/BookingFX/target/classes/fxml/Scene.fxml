@@ -1,14 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="200" prefWidth="320" xmlns:fx="http://javafx.com/fxml" fx:controller="ospp.booking.bookingfx.FXMLController">
+<AnchorPane id="AnchorPane" prefHeight="291.0" prefWidth="414.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ospp.booking.bookingfx.FXMLController">
     <children>
-        <Button layoutX="126" layoutY="90" text="Click Me!" onAction="#handleButtonAction" fx:id="button" />
-        <Label layoutX="126" layoutY="120" minHeight="16" minWidth="69" fx:id="label" />
+        <Label fx:id="label" layoutX="237.0" layoutY="73.0" minHeight="16" minWidth="69" /><VBox layoutX="14.0" layoutY="14.0" prefHeight="138.0" prefWidth="388.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+<children><Text id="head" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 28;" text="Connect to Erlang" wrappingWidth="244.7109375" /><HBox prefHeight="100.0" prefWidth="457.0">
+<children><TextField prefHeight="25.0" prefWidth="290.0" promptText="IP of Erlang server" text="127.0.0.1" HBox.hgrow="ALWAYS" />
+        <Button fx:id="button" layoutX="239.0" layoutY="161.0" onAction="#handleButtonAction" text="Connect">
+<HBox.margin>
+<Insets left="4.0" />
+</HBox.margin></Button>
+</children>
+<VBox.margin>
+<Insets />
+</VBox.margin></HBox><TextArea fx:id="textarea" editable="false" layoutX="14.0" layoutY="90.0" prefHeight="99999.0" prefWidth="99999.0">
+<VBox.margin>
+<Insets top="6.0" />
+</VBox.margin></TextArea>
+</children>
+<padding>
+<Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+</padding></VBox>
     </children>
 </AnchorPane>
