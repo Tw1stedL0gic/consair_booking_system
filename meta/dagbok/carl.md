@@ -114,6 +114,12 @@ Jag och Andreas satt och jobbade lite på servern och simulationen. Jag har läs
 
 ##### Måndag
 
+5:40
+
+10:00 - 15:40
+
+Jobbade med Lucas för att få Erlang och Java att prata med varandra. Kom ganska långt med att skicka från Erlang till Java. Nästa steg är att skicka från Java till Erlang, vilket jag tror kommer bli lite problematiskt (eftersom jag inte riktigt känner mig säker i vad Java kommer skicka för nåt).
+
 ##### Tisdag
 
 ##### Onsdag
@@ -121,6 +127,12 @@ Jag och Andreas satt och jobbade lite på servern och simulationen. Jag har läs
 ##### Torsdag
 
 ##### Fredag
+
+4:30 
+
+11:00 - 15:30
+
+Jobbade hemifrån på en prototyp för Erlang backend. Jag har lyckats få en server terminal att hantera flera andra client terminaler samtidigt. Det lyckades och jag ska applicera detta på det egentliga programmet. 
 
 ## Vecka 20
 
