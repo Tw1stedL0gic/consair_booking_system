@@ -25,6 +25,41 @@ public class TestMessage {
 	}
 
 	@Test
+	public void constructHeader() {
+
+		// Test with a zero body size
+		Message foo = new Message() {
+			// Initialize the anon class with random message type to avoid NPE's.
+			{
+				this.type = Type.HEARTBEAT;
+			}
+
+			@Override
+			public byte[] constructBody() throws UnsupportedEncodingException {
+				return new byte[0];
+			}
+		};
+
+		byte[] header = foo.constructHeader(0);
+
+		byte[] expected = new byte[] {
+			0, 0, 0, 1, Message.Type.HEARTBEAT.ID
+		};
+
+		assertArrayEquals(expected, header);
+
+
+		// Test with a >zero body size
+		byte[] header2 = foo.constructHeader(0x0f1232fa);
+
+		byte[] expected2 = new byte[] {
+			0x0f, 0x12, 0x32, (byte) 0xfa + 1, Message.Type.HEARTBEAT.ID
+		};
+
+		assertArrayEquals(expected2, header2);
+	}
+
+	@Test
 	public void deconHandshake1() throws UnsupportedEncodingException {
 		String username = "Tjenare";
 		String password = "foobar";
