@@ -27,7 +27,6 @@ public class TestMessage {
 	@Test
 	public void constructHeader() {
 
-		// Test with a zero body size
 		Message foo = new Message() {
 			// Initialize the anon class with random message type to avoid NPE's.
 			{
@@ -40,6 +39,7 @@ public class TestMessage {
 			}
 		};
 
+		// Test with a zero body size
 		byte[] header = foo.constructHeader(0);
 
 		byte[] expected = new byte[] {
