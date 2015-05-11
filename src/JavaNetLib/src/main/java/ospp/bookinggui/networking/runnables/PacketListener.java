@@ -56,7 +56,7 @@ public class PacketListener implements Runnable {
 					// Finished, add message to inbox and reset accumulators!
 					if(index == m_length + Message.HEADER_SIZE - 2) {
 						logger.fine("Added message to inbox! MSG: " + Utils.bytePresentation(message));
-						mailbox.recieve(Message.parseMessage(id, message, Message.ENCODING));
+						mailbox.recieve(Message.parseMessage(id, message));
 
 						index = -1;
 						m_length = 0;
