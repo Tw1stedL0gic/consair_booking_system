@@ -35,7 +35,10 @@ public abstract class Message {
 
 	public static byte[] setALValue(byte[] m, int al, int offset) {
 		for(int i = 0; i < AL_SIZE; i++) {
-			m[offset + i] = (byte) ((al >> (8 * (AL_SIZE - i))) & 0xff);
+			int shift_mult = AL_SIZE - i - 1;
+			int shift_amount = 8 * shift_mult;
+			int shifted = al >> shift_amount;
+			m[offset + i] = (byte) (shifted & 0xff);
 		}
 		return m;
 	}

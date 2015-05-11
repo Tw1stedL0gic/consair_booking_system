@@ -6,9 +6,23 @@ import ospp.bookinggui.networking.messages.HandshakeRespMsg;
 
 import java.io.UnsupportedEncodingException;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertTrue;
 
 public class TestMessage {
+
+	@Test
+	public void setALValue() {
+		int al = 12;
+		byte[] message = new byte[Message.AL_SIZE];
+
+		Message.setALValue(message, al, 0);
+
+		byte[] expected = new byte[Message.AL_SIZE];
+		expected[Message.AL_SIZE - 1] = 12;
+
+		assertArrayEquals(expected, message);
+	}
 
 	@Test
 	public void deconHandshake1() throws UnsupportedEncodingException {
