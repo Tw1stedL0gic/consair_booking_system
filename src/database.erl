@@ -8,7 +8,7 @@
 %% @end
 %% ------------------------
 %%To make this file work you need MySql and amnesisa ( http://sourceforge.net/projects/amnesia/) 
-
+% %amnesia:db_tool(database, [{make_hdr, "."},make_db, {dba_user, "airline"}, {dba_password, "airline"}]). 
 -module(database).
 %%-include_lib("../lib/amnesia-1.6.2/include/amnesia_db_def.hrl").
 -include_lib("amnesia/include/amnesia_db_def.hrl").
