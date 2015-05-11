@@ -28,7 +28,7 @@ start ()->
       Pno::integer().
 
 start(Pno) ->
-    spawn(?MODULE, loop0, [Pno]).
+    spawn(?MODULE, open_port, [Pno]).
 
 %%--------------------------------------------------------------%%
 
@@ -58,36 +58,77 @@ listen_loop(listen_socket) ->
 %% -----------
 %%-spec loop0(Port) -> ok.
 
-loop0(Port) ->
-    case gen_tcp:listen(Port, [binary,{packet,0},{active,false}]) of 
-	{ok, LSock} ->
-	    loop(LSock);
- 	_           ->
+open_port(Port) ->
+    %% Start listening to port
+    case gen_tcp:listen(Port, [binary,            %% Accept data in binary
+			       {packet,5},        %% I don't know what this is
+			       {active,false}])   %% Server is not active (I don't know what that means)
+    of 
+	{ok, Socket} -> %% Port opened successfully
+	    %% Start listen loop
+	    listen_loop(Socket);
+ 	_           -> %% Any other result
+	    %% Stop listening to port
 	    stop
     end.
 
 %% @doc loop
 %%-spec loop(Listen) -> ok.
 
-loop(Listen) ->
-    case gen_tcp:accept(Listen) of 
+%%--------------------------------------------------------------%%
+
+%% @doc listen_loop
+-spec listen_loop(Socket) -> ok.
+
+listen_loop(Socket) ->
+    case gen_tcp:accept(Socket) of 
 	{ok,S} ->
-	    %%gen_tcp:send(S, io_lib:format("~p~n",[{date(),time()}])),
-	    
-
+	    %% Spawn process to handle this connection
+	    spawn(?MODULE, loop, [S]),   
 	    gen_tcp:close(S),
-	    loop(Listen);
+	    loop(Socket);
 	_      ->
-	    loop(Listen)
+	    loop(Socket)
     end.
-
-%% COMMENT: Can loop0 and loop both be called loop? To fit aux functions
-%% code standard. Better yet: maybe there is a better name for the 
-%% function. Maybe listen_loop or something. - Carl
-%%we are fixing this now.
 
 %%--------------------------------------------------------------%%
 
+connection_handler(S) ->
+    %% handling connection with socket S
+
+    case gen_tcp:recv(S, 4) of 
+	{error, closed} ->
+	    %% error because port was closed
+	    tbi;
+	{error, Reason} ->
+	    %% handle error
+	    tbi;
+	{ok, Package} ->
+	    %% convert Package into a format that 
+	    %% message handler can read, also make
+	    %% sure that package is correct
+	    <<MessLeng:32/unsigned>> = Package,
+	    case gen_tcp:recv(S, MessLeng) of
+		{error, closed} ->
+		    %% error because port was closed
+		    tbi;
+		{error, Reason} ->
+		    %% handle error
+		    tbi;
+		{ok, <<ID:8/unsigned, Mess/binary>>} ->
+		    %% convert Package into a format that 
+		    %% message handler can read, also make
+		    %% sure that package is correct
+		    case message_handler(ID, Mess) of
+			{ok, SendData} ->
+			    gen_tcp:send(S,SendData);
+			{err, Reason}  -> tbi
+		    end
+			 
+	    end
+end.
+
+%%--------------------------------------------------------------%%
 
 %% @doc TODO: add documentation
 -spec loop(Input) -> ok when 
@@ -96,6 +137,37 @@ loop(Listen) ->
 	  
 %%Kan vara många fel här, under grov bearbetning. Ska bytas ut mot funktionen loop ovan
 	
+%%	    %% 1: Hämta passagerare (front-end to back-end)
+%%	    %% 2: Passagerarlista (back-end to front-end)
+%%	    %% 3: Boka plats
+%%	    %% 4: Response to #3 (lyckat / misslyckat)
+%%	    %% 5: Login
+%%	    %% 6: Response #5
+%%	    %% 7: Disconnect / Terminera Anslutning
+%%	    %% 8: Heartbeat
+%%	    %% 9: Get passenger info (front-end -> back-end)
+%%	    %% 10: Response #9
+message_handler(1,Mess) ->
+    tbi;
+message_handler(2,Mess) ->
+    tbi;
+message_handler(3,Mess) -> %% Get passengerlist
+    <<AL:16/unsigned, FN/binary>> = Mess,
+    {ok, createMessage(4,getPassengerlist(AL,FN))};
+message_handler(4,Mess) ->
+    {err, unsupported};
+message_handler(5,Mess) ->
+    tbi;
+message_handler(6,Mess) ->
+    tbi;
+message_handler(7,Mess) ->
+    tbi;
+message_handler(8,Mess) ->
+    tbi;
+message_handler(9,Mess) ->
+    tbi;
+message_handler(10,Mess) ->
+    tbi;
 
 %% loop(Listen) ->
 %%     case gen_tcp:accept(Listen) of
@@ -186,3 +258,17 @@ loop(Listen) ->
 
 		
 %%--------------------------------------------------------------%%
+
+%% @doc this function will decipher the message sent
+%% It will take the message and the size. 
+%% The idea is that it will be used for the 
+%% first 4 meta-info-bytes as well as the rest
+%% of the message. 
+
+message_translator(Message, size) ->
+    %% translate the bytes into a format that erlang will understand
+
+hardcoded_message_translator(Message, 4) ->
+    5;
+hardcoded_message_translator(Message, 5) ->
+    
