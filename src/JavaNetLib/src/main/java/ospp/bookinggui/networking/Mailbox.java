@@ -1,4 +1,4 @@
-package ospp.bookinggui;
+package ospp.bookinggui.networking;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 

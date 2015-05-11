@@ -2,7 +2,7 @@ package runnables;
 
 import org.junit.Before;
 import org.junit.Test;
-import ospp.bookinggui.Mailbox;
+import ospp.bookinggui.networking.Mailbox;
 import ospp.bookinggui.Utils;
 import ospp.bookinggui.networking.Message;
 import ospp.bookinggui.networking.messages.HandshakeMsg;

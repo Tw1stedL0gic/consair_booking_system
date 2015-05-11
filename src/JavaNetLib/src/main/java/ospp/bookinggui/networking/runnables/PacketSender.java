@@ -1,6 +1,6 @@
 package ospp.bookinggui.networking.runnables;
 
-import ospp.bookinggui.Mailbox;
+import ospp.bookinggui.networking.Mailbox;
 import ospp.bookinggui.networking.Message;
 
 import java.io.*;
