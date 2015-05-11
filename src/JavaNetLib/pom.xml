@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ospp</groupId>
-    <artifactId>bookinggui</artifactId>
+    <artifactId>javanetlib</artifactId>
     <version>0.1-ALPHA</version>
 
     <!-- This is the name of the compiled jar-file -->
-    <name>BookingGUI</name>
+    <name>JavaNetLib</name>
 
     <!-- Source encoding -->
     <properties>
@@ -51,20 +51,6 @@
                     <source>1.7</source>
                     <target>1.7</target>
                     <showDeprecation>true</showDeprecation>
-                </configuration>
-            </plugin>
-
-            <!-- Jar -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.3.2</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>ospp.bookinggui.Main</mainClass>
-                        </manifest>
-                    </archive>
                 </configuration>
             </plugin>
 
