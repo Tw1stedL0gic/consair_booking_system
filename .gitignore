@@ -2,3 +2,4 @@
 *.idea/
 *.iml
 *target/
+src/BookingGUI/dependency-reduced-pom.xml

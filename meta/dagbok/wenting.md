@@ -44,7 +44,8 @@ Message structure in book.erl
 ##### Måndag 14:00-15:00
 Read through peerview, did some change for projektförslag groupwise
 
-##### Tisdag
+##### Tisdag 20:00-21:00
+Read up/research GUI with Erik
 
 ##### Onsdag
 
@@ -54,15 +55,18 @@ Read through peerview, did some change for projektförslag groupwise
 
 ## Vecka 19
 
-##### Måndag
+##### Måndag 10:00-11:30, 15:30-18:30
+Package 3,4 in Server.erl
 
 ##### Tisdag
 
 ##### Onsdag
 
-##### Torsdag
+##### Torsdag 15:00-16:00
+GUI discussion in projectroom on board
 
-##### Fredag
+##### Fredag 15:00-17:00
+GUI javafx with Andreas and Erik
 
 ## Vecka 20
 

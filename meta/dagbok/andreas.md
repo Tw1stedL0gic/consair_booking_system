@@ -59,15 +59,15 @@ Efter progress meeting 1 så hade vi ett möte och började rätta vårat projek
 ## Vecka 19
 
 ##### Måndag
-
+Jobbade med mycket inläsning om tcp osv. Vi planerade en del och delade upp arbetet. Ska fortsätta jobba med hur man tar emot och skickar meddelanden i tcp i backend. Tidsåtgång 5h
 ##### Tisdag
 
 ##### Onsdag
 
 ##### Torsdag
-
+Fick en genomgång av Erik om hur meddelandeöversättningen i erlang som dom arbetat på fungerar samt diskuterade en del om hur vi tyckte att GUIt ska se ut. Tidsåtgång 2h
 ##### Fredag
-
+Jobbad på GUIt i javaFX med Erik och Wenting, första två sidorna har någorlunda design medans vi har en idé om hur resten ska se ut. Tidsåtgång 2h
 ## Vecka 20
 
 ##### Måndag
