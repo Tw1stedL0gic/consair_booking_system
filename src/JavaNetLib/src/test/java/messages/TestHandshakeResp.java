@@ -18,7 +18,7 @@ public class TestHandshakeResp {
 
 		int[] con = Utils.convertByteArrayToInt(message);
 
-		Message msg = Message.parseMessage((short) 2, con, Message.ENCODING);
+		Message msg = Message.parseMessage((short) 2, con);
 
 		assertTrue(msg instanceof HandshakeRespMsg);
 

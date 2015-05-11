@@ -32,7 +32,7 @@ public class TestMessage {
 		message[index++] = (byte) (pas.length & 0x00FF);
 		System.arraycopy(pas, 0, message, index, pas.length);
 
-		Message msg = Message.parseMessage((short) 1, Utils.convertByteArrayToInt(message), Message.ENCODING);
+		Message msg = Message.parseMessage((short) 1, Utils.convertByteArrayToInt(message));
 
 		assertTrue(msg instanceof HandshakeMsg);
 
@@ -48,7 +48,7 @@ public class TestMessage {
 
 		byte[] hand_msg_ar = hand_msg.constructBody();
 
-		Message decon = Message.parseMessage((short) 1, Utils.convertByteArrayToInt(hand_msg_ar), Message.ENCODING);
+		Message decon = Message.parseMessage((short) 1, Utils.convertByteArrayToInt(hand_msg_ar));
 
 		assertTrue(decon instanceof HandshakeMsg);
 
@@ -69,8 +69,8 @@ public class TestMessage {
 			0x00
 		};
 
-		Message hand_resp_success_msg = Message.parseMessage((short) 2, hand_resp_success, Message.ENCODING);
-		Message hand_resp_failure_msg = Message.parseMessage((short) 2, hand_resp_failure, Message.ENCODING);
+		Message hand_resp_success_msg = Message.parseMessage((short) 2, hand_resp_success);
+		Message hand_resp_failure_msg = Message.parseMessage((short) 2, hand_resp_failure);
 
 		assertTrue(hand_resp_failure_msg instanceof HandshakeRespMsg);
 		assertTrue(hand_resp_success_msg instanceof HandshakeRespMsg);

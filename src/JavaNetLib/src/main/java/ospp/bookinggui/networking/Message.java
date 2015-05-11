@@ -15,13 +15,13 @@ public abstract class Message {
 	private static final Logger logger      = Logger.getLogger(Message.class.getName());
 	protected            Type   type        = null;
 
-	public static Message parseMessage(short id, int[] body, String encoding) throws UnsupportedEncodingException {
+	public static Message parseMessage(short id, int[] body) throws UnsupportedEncodingException {
 
 		Type type = Type.getType(id);
 
 		switch(type) {
 			case HANDSHAKE:
-				return HandshakeMsg.parse(body, encoding);
+				return HandshakeMsg.parse(body);
 
 			case HANDSHAKE_RESPONSE:
 				return HandshakeRespMsg.parse(body);
@@ -29,9 +29,8 @@ public abstract class Message {
 			default:
 				logger.severe("Unsupported message id!");
 				logger.severe("ID: " + id);
+				throw new IllegalArgumentException("Unsupported message id!");
 		}
-
-		return null;
 	}
 
 	public static byte[] setALValue(byte[] m, int al, int offset) {
