@@ -1,0 +1,36 @@
+The main database consists of 3 diffrent database tables as the following
+
+flightno
+---------
+This table handels all the diffrent flights, it contains the following columns
+
+Id, ( row id)
+Flight_no
+flight_to
+flight_from
+flight_take_off_time
+
+
+passengerno
+--------------------
+main customer datatabel it contains all the informatio of the customers
+
+id key
+passenger_no
+name
+address
+payment_info
+email
+
+seats
+-------------------
+Seat infomation for alla the flights
+
+
+id key
+flightno
+seat
+passengerno
+seat_price
+seat_res
+seat_booked
