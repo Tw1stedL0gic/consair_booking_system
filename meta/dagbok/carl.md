@@ -138,6 +138,8 @@ Jobbade hemifrån på en prototyp för Erlang backend. Jag har lyckats få en se
 
 ##### Måndag
 
+08:45 - 09:45
+
 ##### Tisdag
 
 ##### Onsdag
