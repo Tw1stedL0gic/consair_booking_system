@@ -7,6 +7,8 @@ package ospp.booking.bookingfx;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 
 /**
@@ -14,7 +16,7 @@ import javafx.fxml.Initializable;
  *
  * @author Andreas
  */
-public class AdditionalOptionsInterfaceController implements Initializable {
+public class AdditionalOptionsInterfaceController implements Initializable, ControlledScreen {
 
     /**
      * Initializes the controller class.
@@ -23,5 +25,23 @@ public class AdditionalOptionsInterfaceController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
     }    
+    
+    
+    
+    @FXML
+    void backButtonClick(ActionEvent event) {
+        myScreenMaster.setScreen("bookoptioninterface");
+    }
+    @FXML
+    void nextButtonClick(ActionEvent event) {
+        myScreenMaster.setScreen("confirminterface");
+    }
+    
+    
+    private ScreenMaster myScreenMaster;
+    @Override
+    public void setScreenParent(ScreenMaster sm) {
+        myScreenMaster = sm;
+    }
     
 }

@@ -7,38 +7,33 @@ package ospp.booking.bookingfx;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 
 /**
  * FXML Controller class
  *
  * @author Andreas
  */
-public class ConfirmInterfaceController implements Initializable, ControlledScreen {
+public class SeatBookerController implements Initializable, ControlledScreen {
+
+        @FXML
+        private WebView webView;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+            WebEngine engine = webView.getEngine();
+            engine.load("http://www.google.com");
     }    
-
-    @FXML
-    void backButtonClick(ActionEvent event) {
-        myScreenMaster.setScreen("additionaloptionsinterface");
-    }
-    @FXML
-    void confirmButtonClick(ActionEvent event) {
-        myScreenMaster.setScreen("confirmedinterface");
-    }
     
     private ScreenMaster myScreenMaster;
     @Override
     public void setScreenParent(ScreenMaster sm) {
         myScreenMaster = sm;
     }
-    
 }

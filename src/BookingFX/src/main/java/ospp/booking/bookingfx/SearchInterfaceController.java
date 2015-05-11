@@ -10,6 +10,8 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TitledPane;
 
@@ -22,7 +24,7 @@ import javafx.scene.control.TitledPane;
  *
  * @author Andreas
  */
-public class SearchInterfaceController implements Initializable {
+public class SearchInterfaceController implements Initializable, ControlledScreen {
 
     private int adultNr = 0;
     private int childNr = 0;
@@ -36,6 +38,21 @@ public class SearchInterfaceController implements Initializable {
 
     @FXML
     private Label childLabel;
+   
+
+    @FXML
+    private DatePicker returnCalendar;
+
+
+    @FXML
+    private CheckBox turReturBox;
+
+
+    @FXML
+    void disableReturnCalendar(ActionEvent event) {
+
+    }
+    
 
     @FXML
     void adultDecClick(ActionEvent event) {
@@ -64,6 +81,12 @@ public class SearchInterfaceController implements Initializable {
         childNr++;
         updateTotalNr();
     }
+    
+    @FXML
+    void searchButtonClick(ActionEvent event) {
+        myScreenMaster.setScreen("bookoptioninterface");
+    }
+    
     
     void updateTotalNr(){
         
@@ -94,6 +117,13 @@ public class SearchInterfaceController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         updateTotalNr();
         totalLabel.expandedProperty().set(false);
+        returnCalendar.disableProperty().bind(turReturBox.selectedProperty().not());
     }    
+
+    private ScreenMaster myScreenMaster;
+    @Override
+    public void setScreenParent(ScreenMaster sm) {
+        myScreenMaster = sm;
+    }
     
 }

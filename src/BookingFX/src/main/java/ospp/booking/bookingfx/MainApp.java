@@ -9,15 +9,36 @@ import javafx.stage.Stage;
 
 
 public class MainApp extends Application {
-
+    
+    
     @Override
     public void start(Stage stage) throws Exception {
         //Parent root = FXMLLoader.load(getClass().getResource("/fxml/Scene.fxml"));
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/SearchInterface.fxml"));
+        //Parent root = FXMLLoader.load(getClass().getResource("/fxml/SearchInterface.fxml"));
+        ScreenMaster sm = new ScreenMaster();
+        
+        sm.loadScreen("searchinterface", "/fxml/SearchInterface.fxml");
+        sm.loadScreen("bookoptioninterface", "/fxml/BookOptionInterface.fxml");
+        sm.loadScreen("additionaloptionsinterface", "/fxml/AdditionalOptionsInterface.fxml");
+        sm.loadScreen("confirminterface", "/fxml/ConfirmInterface.fxml");
+        sm.loadScreen("confirmedinterface", "/fxml/ConfirmedInterface.fxml");
+        sm.loadScreen("seatbooker", "/fxml/seatBooker.fxml");
+        
+        sm.setScreen("seatbooker");
+        
+        Parent root = sm;
+        
+        
         Scene scene = new Scene(root);
         scene.getStylesheets().add("/styles/searchinterface.css");
+        scene.getStylesheets().add("/styles/bookoptioninterface.css");
+        scene.getStylesheets().add("/styles/additionaloptionsinterface.css");
+        scene.getStylesheets().add("/styles/confirminterface.css");
+        scene.getStylesheets().add("/styles/confirmedinterface.css");
+        scene.getStylesheets().add("/styles/Styles.css");
         
-        stage.setTitle("JavaFX and Maven");
+        
+        stage.setTitle("Cons air");
         stage.setScene(scene);
         stage.show();
     }
