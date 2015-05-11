@@ -41,4 +41,6 @@ Run `server_prototype:start_client(IP, PORT, MESSAGE).`.
 * **MESSAGE**: A list of messages to send. This list should only include bit strings or regular string (as they can be considered bit strings).
 * *Ex*: ["Hello", "World", <<"Foo">>, <<"Bar">>, <<1,2,3>>, <<1,2,3,4,5,6,7,8,9,10>>]
 
+*Ex*: `server_prototype:start_client("localhost", 3333, ["Hello", "Foo", "Ipsum", <<1,2,3>>, "What"]).`
+
 When this is run, it will spawn a process for each message. The process will wait a random amount of time, then send the message. It will then recieve a message from the server and the connection is terminated. 
