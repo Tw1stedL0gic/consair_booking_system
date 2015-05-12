@@ -18,6 +18,7 @@ ebin/%.beam: src/%.erl
 clean:
 	rm -Rf ebin/*
 	rm -Rf src/*.beam
+	rm -Rf src/backend/*.beam
 	rm -Rf doc/*.html
 
 doc: 
