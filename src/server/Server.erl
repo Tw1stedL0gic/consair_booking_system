@@ -14,6 +14,7 @@
 -export([start/0, loop0/1]).
 -define(PORTNO, 33333).
 -define(CONNECTIONOPTIONS, [binary, {packet, 4}, {active, false}]).
+-define(ALLOWEDTIMEOUTS, 10). %% Amount of minutes allowed before conenction is terminated
 
 %%--------------------------------------------------------------%%
 
@@ -34,30 +35,79 @@ start ()->
 start(Port) ->
     %% Open port
     {ok, LSock} = gen_tcp:listen(Port, ?CONNECTIONOPTIONS),
-    listener_spawner(LSock, 1).
+    listener_spawner(LSock, 0).
 
 %%--------------------------------------------------------------%%
 
 %% @doc a spawner for listening processes. will switch between
 %% listening for messages from processes and listening to
 %% attempts to create connections. 
+%% LSock is the listening sock
+%% N is the number of active connections
 
-%% Calling this function will close the server. 
+%% Calling this function with N = 0 will close the server. 
 
-listener_spawner(_, 0) ->
+connector_spawner(_, -1) ->
     io:fwrite("Exit message received, closing~n");
 
-listener_spawner(LSock, N) ->
+connector_spawner(LSock, N) ->
+    %% receive message from other processes for 100ms
     receive
-	exit ->
-	    listener_spawner(LSock, 0);
-	 ->
+	exit ->        %% if received exit -> exit the loop (connection processes are still alive)
+	    io:fwrite("Number of connections: ~p  Exit called~n", [N]),
+	    connector_spawner(LSock, -1);
+	terminated ->  %% if received terminated -> reduce amount of connections
+	    io:fwrite("Number of Connections: ~p  Process terminated~n", [N-1, NewPID]),
+	    connector_spawner(LSock, N-1)
+    after 100 ->
+	    %% try connecting to other device for 100ms
+	    case gen_tcp:accept(LSock, 100) of
+		{ok, Sock} ->
+		    %% spawn process to handle this connection
+		    NewPID = spawn(server_prototype, connector, [Sock, N+1, 0, self()]),
+		    io:fwrite("Number of Connections: ~p  New process: ~p~n", [N+1, NewPID]),
+		    connector_spawner(LSock, N+1);
+		{error, timeout} ->
+		    connector_spawner(LSock, N);
+		{error, Error} ->
+		    io:fwrite("Error: ~p", [{error, Error}])
+	    end
+    end.
 
-listen_loop(listen_socket) ->
-    {ok, socket} = gen_tcp:accept(listen_socket),                    %% waits for connection to be established and saves it in socket.
-    %% pseudo: spawn new process for this connection
-    listen_loop(listen_socket).
+%% @doc Connector, which listens to the connection
 
+%% Connection timed out (10 timeouts).
+connector(Sock, ID, 10, ParentPID) ->
+    %% send message to client that it is timed out
+    %% revert all database changes
+    io:fwrite("C~p: ~p timeouts reached, connection terminated~n", [ID, ?ALLOWEDTIMEOUTS]).
+
+connector(Sock, ID, Timeouts, ParentPID) ->
+    %% announce established connection to client and terminal
+    gen_tcp:send(Sock, <<ID>>),
+    io:fwrite("C~p: Connection established", [ID]),
+    
+    case gen_tcp:recv(Sock, 0, 60000) of
+	{error, timeout} -> %% in case of timeout, reloop.
+	    %% iterate a counter, which will warn client when timeouting too much
+	    %% after 10 minutes it will break the connection.
+	    io:fwrite("C~p: Timeout ~n, ~n tries remaining", [Timeouts, ?ALLOWEDTIMEOUTS-Timeouts]), 
+	    connector(Sock, ID, Timeouts+1, ParentPID);
+	{error, closed} -> %% in case of connection closed, tell parent
+	    io:fwrite("C~p: Connection closed, terminating.~n", [ID]),
+	    ParentPID ! Terminated;
+	{error, Error} -> %% In case of error, print error and announce termination to parent
+	    io:fwrite("C~p: {error, ~p}", [ID, Error]),
+	    ParentPID ! Terminated;	
+	{ok, <<"exit">>} -> %% In case of message "exit", tell parent to exit
+	    io:fwrite("C~p: Exit message received", [ID]),
+	    ParentPID ! exit;	    
+	{ok, Package} -> %% In case of random package, print and send back "Thanks"
+	    io:fwrite("C~p: Message received: ~p~n", [ID, Package]),
+	    gen_tcp:send(Sock, <<1, "Thanks">>),
+	    listener(Sock, ID, 0, ParentPID)
+    end.
+    
 
 %% Here is my suggestion for how the connection loop should work.
 %% Open_port will open the port and then start the listening loop
