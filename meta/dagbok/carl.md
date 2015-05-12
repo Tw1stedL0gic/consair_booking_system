@@ -138,9 +138,19 @@ Jobbade hemifrån på en prototyp för Erlang backend. Jag har lyckats få en se
 
 ##### Måndag
 
-08:45 - 09:45
+5:00
+
+08:45 - 09:45, 13:00 - 17:00
+
+Jobbade på morgonen och eftermiddagen på min prototyp. Har fått en fungerande prototype och har applicerat min prototyp på den egentliga servern. 
 
 ##### Tisdag
+
+4:00
+
+11:00 - 15:00
+
+Nu har vi en server som svarar på meddelanden. Jag har gjort en seperat fil som hanterar paketen, detta är för att skapa en gräns mellan snackandet och tänkandet i servern. 
 
 ##### Onsdag
 

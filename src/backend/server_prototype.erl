@@ -23,16 +23,16 @@ start_server(Port) ->
     listener_spawner(LSock, 1).
 
 listener_spawner(_, 0) ->
-    io:fwrite("Close message recieved, closing~n");
+    io:fwrite("Exit message recieved, closing~n");
 
 listener_spawner(LSock, N) ->
     receive
-	close ->
+	exit ->
 	    listener_spawner(LSock, 0);
 	terminated -> 
 	    io:fwrite("Connection terminated.~n"),
 	    listener_spawner(LSock, N-1)
-	after 100 ->
+    after 100 ->
 	    %% connect to other device
 	    case gen_tcp:accept(LSock, 100) of
 		{ok, Sock} ->
@@ -45,22 +45,25 @@ listener_spawner(LSock, N) ->
 	    end
     end.
     
-listener(Sock, N, ParentPID) ->    
-    io:fwrite("C~p: Awaiting message...~n", [N]),
+listener(Sock, ID, ParentPID) ->    
+    gen_tcp:send(Sock, <<ID>>),
+    io:fwrite("C~p: Awaiting message...~n", [ID]),
     case gen_tcp:recv(Sock, 0, 30000) of
 	{error, timeout} -> 
 	    io:fwrite("..."),
-	    listener(Sock, N, ParentPID);
+	    listener(Sock, ID, ParentPID);
 	{error, closed} ->
-	    io:fwrite("C~p: Connection terminated.~n", [N]),
-	    ParentPID ! terminated;
+	    io:fwrite("C~p: Connection terminated.~n", [ID]);
 	{error, Error} ->
-	    io:fwrite("C~p: Error: ~p~n", [N, {error, Error}]),
+	    io:fwrite("C~p: Error: ~p~n", [ID, {error, Error}]),
 	    {error, Error};
+	{ok, <<"exit">>} ->
+	    ParentPID ! exit,
+	    io:fwrite("C~p: Exit message received, sending to parent~n", [ID]);
 	{ok, Package} ->
-	    io:fwrite("C~p: Message recieved: ~p~n", [N, Package]),
+	    io:fwrite("C~p: Message recieved: ~p~n", [ID, Package]),
 	    gen_tcp:send(Sock, translate_package(Package)),
-	    listener(Sock, N, ParentPID)
+	    listener(Sock, ID, ParentPID)
     end.
 
 translate_package(Package) ->
@@ -83,7 +86,7 @@ start_client(IP, Port, Message) ->
 %% Recursive spawner of processes to go through the message list. 
 
 talker_spawner(_, _, []) ->
-    io:fwrite("Final message sent.~n");
+    io:fwrite("Final message proccess spawned.~n");
 
 talker_spawner(IP, Port, [Message | MessageTail]) ->
     NewPID = spawn(server_prototype, talker, [IP, Port, Message]),
@@ -91,27 +94,29 @@ talker_spawner(IP, Port, [Message | MessageTail]) ->
     talker_spawner(IP, Port, MessageTail).
 
 talker(IP, Port, Message) ->
-    %% Connect to IP and Port
+    %% Connect to IP and Port and receive ID
     Sock = connect(IP, Port),
-    
+    {ok, <<ID>>} = gen_tcp:recv(Sock, 0),
+    io:fwrite("C~p: Connection established, ID ~p allocated~n", [ID, ID]),
+
     %% Random sleep time
     random:seed(erlang:now()),
     timer:sleep(random:uniform(10000)),
     
     %% Send message
     gen_tcp:send(Sock, Message),
-    io:fwrite("~p sent!~n", [Message]),
+    io:fwrite("C~p: ~p sent!~n", [ID, Message]),
     
     %% Wait 3 seconds to receive a message
     case gen_tcp:recv(Sock, 0, 3000) of
 	{error, timeout} ->
-	    io:fwrite("No response~n");
+	    io:fwrite("C~p: No response~n", [ID]);
 	{error, closed} ->
-	    io:fwrite("Connection terminated.~n");
+	    io:fwrite("C~p: Connection terminated.~n", [ID]);
 	{error, Error} ->
-	    io:fwrite("Error: ~p~n", [{error, Error}]);
+	    io:fwrite("C~p: Error: ~p~n", [ID, {error, Error}]);
 	{ok, Package} ->
-	    io:fwrite("Message received: ~p~n", [Package])
+	    io:fwrite("C~p: Message received: ~p~n", [ID, Package])
     end.
 
 

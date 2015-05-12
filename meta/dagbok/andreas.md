@@ -71,7 +71,7 @@ Jobbad på GUIt i javaFX med Erik och Wenting, första två sidorna har någorlu
 ## Vecka 20
 
 ##### Måndag
-
+Hade möte om vad vi har gjort, jobbade sedan på GUIt med Erik och Wenting. Vi har gjort en övergripande design på de sidor vi tänkt att använda och har gjort så att man kan gå mellan dom. Nästa steg blir att kunna skicka requests till den del som kommunicerar med servern så att vi kan få svar från databasen. Tidsåtgång 6h 30 min
 ##### Tisdag
 
 ##### Onsdag
