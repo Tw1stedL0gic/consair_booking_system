@@ -32,7 +32,7 @@ listener_spawner(LSock, N) ->
 	terminated -> 
 	    io:fwrite("Connection terminated.~n"),
 	    listener_spawner(LSock, N-1)
-	after 100 ->
+    after 100 ->
 	    %% connect to other device
 	    case gen_tcp:accept(LSock, 100) of
 		{ok, Sock} ->
@@ -86,7 +86,7 @@ start_client(IP, Port, Message) ->
 %% Recursive spawner of processes to go through the message list. 
 
 talker_spawner(_, _, []) ->
-    io:fwrite("Final message sent.~n");
+    io:fwrite("Final message proccess spawned.~n");
 
 talker_spawner(IP, Port, [Message | MessageTail]) ->
     NewPID = spawn(server_prototype, talker, [IP, Port, Message]),
