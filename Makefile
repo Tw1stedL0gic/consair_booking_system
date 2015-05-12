@@ -1,10 +1,9 @@
 ERLC_FLAGS=-Wall
 
-SOURCES=$(wildcard src/*.erl)
-SOURCES=$(wildcard src/backend/*.erl)
+SOURCES=$(wildcard src/*.erl src/backend/*.erl)
 
-HEADERS=$(wildcard src/*.hrl)
-HEADERS=$(wildcard src/backend/*.hrl)
+HEADERS=$(wildcard src/*.hrl src/backend/*.hrl)
+
 OBJECTS:=$(SOURCES:src/%.erl=ebin/%.beam)
 
 APPNAME= ConsAir_Bookingsystem
