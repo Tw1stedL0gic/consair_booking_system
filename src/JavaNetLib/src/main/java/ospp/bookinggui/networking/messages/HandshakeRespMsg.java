@@ -7,7 +7,7 @@ public class HandshakeRespMsg extends Message {
 	private final boolean success;
 
 	public HandshakeRespMsg(boolean success) {
-		this.type = Type.HANDSHAKE_RESPONSE;
+		super(Type.HANDSHAKE_RESPONSE);
 		this.success = success;
 	}
 

@@ -7,7 +7,7 @@ import java.io.UnsupportedEncodingException;
 public class DisconnectMsg extends Message {
 
 	public DisconnectMsg() {
-		this.type = Type.DISCONNECT;
+		super(Type.DISCONNECT);
 	}
 
 	@Override

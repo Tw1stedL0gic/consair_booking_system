@@ -7,7 +7,7 @@ import java.io.UnsupportedEncodingException;
 public class GetFlightListMsg extends Message {
 
 	public GetFlightListMsg() {
-		this.type = Type.GET_FLIGHT_LIST;
+		super(Type.GET_FLIGHT_LIST);
 	}
 
 	@Override

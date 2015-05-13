@@ -10,7 +10,7 @@ public class GetPassengerListMsg extends Message {
 	private final Flight flight;
 
 	public GetPassengerListMsg(Flight f) {
-		this.type = Type.GET_PASSENGERS;
+		super(Type.GET_PASSENGERS);
 		this.flight = f;
 	}
 

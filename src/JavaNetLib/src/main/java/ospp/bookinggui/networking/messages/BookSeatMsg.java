@@ -9,7 +9,7 @@ import java.io.UnsupportedEncodingException;
 public class BookSeatMsg extends Message {
 
 	public BookSeatMsg(Flight f, BookingInfo info) {
-		this.type = Type.BOOK_SEAT;
+		super(Type.BOOK_SEAT);
 	}
 
 	@Override

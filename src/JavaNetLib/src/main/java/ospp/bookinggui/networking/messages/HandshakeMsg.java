@@ -11,9 +11,9 @@ public class HandshakeMsg extends Message {
 	private final String password;
 
 	public HandshakeMsg(String username, String password) {
+		super(Type.HANDSHAKE);
 		this.username = username;
 		this.password = password;
-		this.type = Type.HANDSHAKE;
 	}
 
 	public String getUsername() {

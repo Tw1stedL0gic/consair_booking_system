@@ -10,7 +10,7 @@ public class GetPassengerInfoMsg extends Message {
 	private final Passenger passenger;
 
 	public GetPassengerInfoMsg(Passenger p) {
-		this.type = Type.GET_PASSENGER_INFO;
+		super(Type.GET_PASSENGER_INFO);
 		this.passenger = p;
 	}
 
