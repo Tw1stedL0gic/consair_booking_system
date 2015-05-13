@@ -17,12 +17,12 @@
          <children>
             <AnchorPane maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="128.0" prefWidth="800.0">
                <children>
-                  <Text layoutX="155.0" layoutY="67.0" rotate="-9.5" scaleX="3.0" scaleY="3.0" scaleZ="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Search flight" wrappingWidth="133.40625" AnchorPane.bottomAnchor="57.98828125" AnchorPane.leftAnchor="155.0" />
-                  <ImageView fitHeight="192.0" fitWidth="249.0" layoutX="329.0" layoutY="-18.0">
+                  <ImageView fitHeight="192.0" fitWidth="249.0" layoutX="-27.0" AnchorPane.bottomAnchor="32.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="-32.0">
                      <image>
                         <Image url="@../img/Cons-Air.png" />
                      </image>
                   </ImageView>
+                  <Text layoutX="284.0" layoutY="106.0" scaleX="3.0" scaleY="3.0" scaleZ="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Search flight" wrappingWidth="133.40625" AnchorPane.bottomAnchor="18.98828125" AnchorPane.leftAnchor="284.0" />
                </children>
             </AnchorPane>
             <ScrollPane fitToWidth="true" prefViewportHeight="376.0" prefViewportWidth="661.0" VBox.vgrow="ALWAYS">

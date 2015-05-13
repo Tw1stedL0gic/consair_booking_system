@@ -20,15 +20,15 @@ import javafx.scene.web.WebView;
 public class SeatBookerController implements Initializable, ControlledScreen {
 
         @FXML
-        private WebView webView;
+        //private WebView webView;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-            WebEngine engine = webView.getEngine();
-            engine.load("http://www.google.com");
+            //WebEngine engine = webView.getEngine();
+            //engine.load("http://www.google.com");
     }    
     
     private ScreenMaster myScreenMaster;
