@@ -24,7 +24,7 @@ public class MainApp extends Application {
         sm.loadScreen("confirmedinterface", "/fxml/ConfirmedInterface.fxml");
         sm.loadScreen("seatbooker", "/fxml/seatBooker.fxml");
         
-        sm.setScreen("searchinterface");
+        sm.setScreen("seatbooker");
         
         Parent root = sm;
         
