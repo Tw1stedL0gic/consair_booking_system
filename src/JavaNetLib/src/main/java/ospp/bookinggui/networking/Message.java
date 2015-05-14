@@ -38,13 +38,48 @@ public abstract class Message {
 	}
 
 	public static byte[] setALValue(byte[] m, int al, int offset) {
+		if(m.length + offset < Message.AL_SIZE) {
+			throw new IndexOutOfBoundsException("The message-array can not fit an AL-block!");
+		}
+
 		for(int i = 0; i < AL_SIZE; i++) {
 			int shift_mult = AL_SIZE - i - 1;
 			int shift_amount = 8 * shift_mult;
 			int shifted = al >> shift_amount;
 			m[offset + i] = (byte) (shifted & 0xff);
 		}
+
 		return m;
+	}
+
+	public static int getALValue(byte[] m, int offset) {
+		if(m.length < offset + Message.AL_SIZE) {
+			throw new IndexOutOfBoundsException("There does not fit an AL-block at the given offset in the byte array!");
+		}
+
+		int value = 0;
+
+		for(int i = 0; i < Message.AL_SIZE; i++) {
+			value = ((value << 8) | m[offset + i]);
+		}
+
+		return value;
+	}
+
+	public static byte[] setArgument(byte[] out, byte[] in, int offset) {
+		if(out.length + offset < in.length) {
+			throw new IndexOutOfBoundsException("The in-array is larger than the out-array + offset!");
+		}
+
+		System.arraycopy(in, 0, out, offset, in.length);
+
+		return out;
+	}
+
+	public static byte[] getArgument(byte[] m, int al, int offset) {
+		byte[] arg = new byte[al];
+		System.arraycopy(m, offset, arg, 0, al);
+		return arg;
 	}
 
 	public byte[] constructHeader(int body_size) {

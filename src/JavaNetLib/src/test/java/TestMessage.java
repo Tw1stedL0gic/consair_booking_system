@@ -8,6 +8,7 @@ import ospp.bookinggui.networking.messages.HeartbeatMsg;
 import java.io.UnsupportedEncodingException;
 
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class TestMessage {
@@ -23,6 +24,48 @@ public class TestMessage {
 		expected[Message.AL_SIZE - 1] = 12;
 
 		assertArrayEquals(expected, message);
+	}
+
+	@Test
+	public void getALValue() {
+		byte[] m = new byte[] {
+			0x12, 0x12
+		};
+
+		int value = Message.getALValue(m, 0);
+
+		assertEquals(0x1212, value);
+
+		byte[] m2 = new byte[] {
+			0x01, 0x02, 0x03, 0x04, 0x05
+		};
+
+		int value21 = Message.getALValue(m2, 1);
+
+		assertEquals(0x0203, value21);
+
+		int value22 = Message.getALValue(m2, 3);
+
+		assertEquals(0x0405, value22);
+	}
+
+	@Test
+	public void setArgument() {
+		byte[] m = new byte[] {
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+		};
+
+		Message.setArgument(m, new byte[]{0x12, 0x13}, 0);
+
+		assertArrayEquals(new byte[] {0x12, 0x13, 0, 0, 0, 0, 0, 0, 0, 0}, m);
+
+		byte[] m2 = new byte[] {
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+		};
+
+		Message.setArgument(m2, new byte[]{0x12, 0x13}, 3);
+
+		assertArrayEquals(new byte[] {0, 0, 0, 0x12, 0x13, 0, 0, 0, 0, 0}, m2);
 	}
 
 	@Test
