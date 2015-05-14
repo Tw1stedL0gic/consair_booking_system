@@ -41,6 +41,7 @@ public interface Adapter {
 
 	/**
 	 * Retrieves the information of the passenger with the given ID and adds it to the inbox.
+	 *
 	 * @param id
 	 */
 	void getPassengerInfo(Passenger id);

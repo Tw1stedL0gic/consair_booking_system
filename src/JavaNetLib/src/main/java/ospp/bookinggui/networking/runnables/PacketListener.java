@@ -1,7 +1,7 @@
 package ospp.bookinggui.networking.runnables;
 
-import ospp.bookinggui.networking.Mailbox;
 import ospp.bookinggui.Utils;
+import ospp.bookinggui.networking.Mailbox;
 import ospp.bookinggui.networking.Message;
 
 import java.io.BufferedInputStream;
@@ -37,7 +37,7 @@ public class PacketListener implements Runnable {
 		try {
 			while((data = this.input.read()) != -1) {
 
-				logger.fine("Recieved data: " + Utils.bytePresentation(new int[] {data}));
+				logger.fine("Recieved data: " + Utils.bytePresentation(new int[]{data}));
 
 				if(!debug) {
 					// Header - Message Length

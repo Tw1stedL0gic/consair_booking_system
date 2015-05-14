@@ -8,11 +8,11 @@ public class TestUtils {
 
 	@Test
 	public void testConcat() {
-		byte[] one = new byte[] {
-			1,2,3,4,5
+		byte[] one = new byte[]{
+			1, 2, 3, 4, 5
 		};
-		byte[] two = new byte[] {
-			6,7,8,9,10
+		byte[] two = new byte[]{
+			6, 7, 8, 9, 10
 		};
 
 		byte[] con = Utils.concat(one, two);
@@ -21,12 +21,12 @@ public class TestUtils {
 		assertTrue(one.length + two.length == con.length);
 
 		// Test content
-		assertArrayEquals(new byte[] {1,2,3,4,5,6,7,8,9,10}, con);
+		assertArrayEquals(new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, con);
 	}
 
 	@Test
 	public void testIntArrayToByte() {
-		int[] ia1 = new int[] {
+		int[] ia1 = new int[]{
 			1, 2, 3, 4, 5, 6, 7
 		};
 
@@ -36,16 +36,16 @@ public class TestUtils {
 		assertTrue(ia1.length == ba1.length);
 
 		// Test content
-		assertArrayEquals(new byte[] {1,2,3,4,5,6,7}, ba1);
+		assertArrayEquals(new byte[]{1, 2, 3, 4, 5, 6, 7}, ba1);
 
 
-		int[] ia2 = new int[] {
+		int[] ia2 = new int[]{
 			0xffff, 0x12ab, 0x3212, 0xfafa
 		};
 
 		byte[] ba2 = Utils.convertIntArrayToByte(ia2);
 
-		byte[] ba2e = new byte[] {
+		byte[] ba2e = new byte[]{
 			(byte) 0xff, (byte) 0xab, 0x12, (byte) 0xfa
 		};
 
@@ -55,7 +55,7 @@ public class TestUtils {
 
 	@Test
 	public void testBytePresentationByteArg() {
-		byte[] ba = new byte[] {
+		byte[] ba = new byte[]{
 			0x12, 0x53, (byte) 0xff, (byte) 0xfa
 		};
 
@@ -66,7 +66,7 @@ public class TestUtils {
 
 	@Test
 	public void testBytePresentationIntArg() {
-		int[] ia = new int[] {
+		int[] ia = new int[]{
 			0xff1223fa, 0x3421dadd, 0x33333333, 0xffffffff, 0xf0000000, 0x0f000000
 		};
 

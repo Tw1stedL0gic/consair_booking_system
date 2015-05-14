@@ -2,8 +2,8 @@ package runnables;
 
 import org.junit.Before;
 import org.junit.Test;
-import ospp.bookinggui.networking.Mailbox;
 import ospp.bookinggui.Utils;
+import ospp.bookinggui.networking.Mailbox;
 import ospp.bookinggui.networking.Message;
 import ospp.bookinggui.networking.messages.HandshakeMsg;
 import ospp.bookinggui.networking.runnables.PacketSender;
@@ -38,7 +38,8 @@ public class TestPacketSender {
 		// Ugly! But we need to wait for the sender to complete its work
 		try {
 			Thread.sleep(30);
-		} catch(InterruptedException e) {
+		}
+		catch(InterruptedException e) {
 			e.printStackTrace();
 		}
 
@@ -63,7 +64,8 @@ public class TestPacketSender {
 
 		try {
 			Thread.sleep(50);
-		} catch(InterruptedException e) {
+		}
+		catch(InterruptedException e) {
 			e.printStackTrace();
 		}
 

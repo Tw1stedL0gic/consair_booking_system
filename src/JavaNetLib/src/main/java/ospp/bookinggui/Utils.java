@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public class Utils {
 
-	private static final char[] ca = new char[] {
+	private static final char[] ca = new char[]{
 		'0', '1', '2', '3', '4', '5', '6', '7',
 		'8', '9', 'a', 'b', 'c', 'd', 'e', 'f'
 	};
@@ -48,13 +48,13 @@ public class Utils {
 
 		for(int i : ia) {
 			sb.append(ca[(((i & 0xf0000000) >> 28) & 0x0f)]);
-			sb.append(ca[ ((i & 0x0f000000) >> 24)]);
-			sb.append(ca[ ((i & 0x00f00000) >> 20)]);
-			sb.append(ca[ ((i & 0x000f0000) >> 16)]);
-			sb.append(ca[ ((i & 0x0000f000) >> 12)]);
-			sb.append(ca[ ((i & 0x00000f00) >> 8)]);
-			sb.append(ca[ ((i & 0x000000f0) >> 4)]);
-			sb.append(ca[  (i & 0x0000000f)]);
+			sb.append(ca[((i & 0x0f000000) >> 24)]);
+			sb.append(ca[((i & 0x00f00000) >> 20)]);
+			sb.append(ca[((i & 0x000f0000) >> 16)]);
+			sb.append(ca[((i & 0x0000f000) >> 12)]);
+			sb.append(ca[((i & 0x00000f00) >> 8)]);
+			sb.append(ca[((i & 0x000000f0) >> 4)]);
+			sb.append(ca[(i & 0x0000000f)]);
 			sb.append(' ');
 		}
 

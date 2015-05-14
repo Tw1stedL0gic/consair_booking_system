@@ -3,7 +3,10 @@ package ospp.bookinggui.networking.runnables;
 import ospp.bookinggui.networking.Mailbox;
 import ospp.bookinggui.networking.Message;
 
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -11,7 +14,7 @@ public class PacketSender implements Runnable {
 
 	private static final Logger logger = Logger.getLogger(PacketSender.class.getName());
 
-	private final Mailbox<Message> mailbox;
+	private final Mailbox<Message>     mailbox;
 	private final BufferedOutputStream output;
 
 	private volatile boolean keepRunning = true;

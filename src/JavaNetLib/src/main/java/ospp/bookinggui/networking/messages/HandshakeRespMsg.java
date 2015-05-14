@@ -11,6 +11,11 @@ public class HandshakeRespMsg extends Message {
 		this.success = success;
 	}
 
+	public static HandshakeRespMsg parse(int[] body) {
+		boolean success = body[0] == 0x000000ff;
+		return new HandshakeRespMsg(success);
+	}
+
 	public boolean isSuccessful() {
 		return this.success;
 	}
@@ -18,11 +23,6 @@ public class HandshakeRespMsg extends Message {
 	@Override
 	public byte[] constructBody() {
 		byte value = this.success ? (byte) 0xff : 0x00;
-		return new byte[] {value};
-	}
-
-	public static HandshakeRespMsg parse(int[] body) {
-		boolean success = body[0] == 0x000000ff;
-		return new HandshakeRespMsg(success);
+		return new byte[]{value};
 	}
 }

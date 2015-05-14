@@ -4,7 +4,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Mailbox<E> {
 
-	private final ConcurrentLinkedQueue<E> inbox = new ConcurrentLinkedQueue<>();
+	private final ConcurrentLinkedQueue<E> inbox  = new ConcurrentLinkedQueue<>();
 	private final ConcurrentLinkedQueue<E> outbox = new ConcurrentLinkedQueue<>();
 
 	/**

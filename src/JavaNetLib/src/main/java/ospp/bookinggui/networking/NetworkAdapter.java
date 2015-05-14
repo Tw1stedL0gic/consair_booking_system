@@ -16,7 +16,7 @@ public class NetworkAdapter implements Adapter {
 	private static final Logger logger = Logger.getLogger(NetworkAdapter.class.getName());
 
 	private final Mailbox<Message> mailbox;
-	private final Socket socket;
+	private final Socket           socket;
 
 	public NetworkAdapter(Mailbox<Message> box, String host, int port) throws IOException {
 		this.mailbox = box;

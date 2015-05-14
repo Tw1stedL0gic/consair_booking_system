@@ -42,7 +42,7 @@ public class TestMessage {
 		// Test with a zero body size
 		byte[] header = foo.constructHeader(0);
 
-		byte[] expected = new byte[] {
+		byte[] expected = new byte[]{
 			0, 0, 0, 1, Message.Type.HEARTBEAT.ID
 		};
 
@@ -52,7 +52,7 @@ public class TestMessage {
 		// Test with a >zero body size
 		byte[] header2 = foo.constructHeader(0x0f1232fa);
 
-		byte[] expected2 = new byte[] {
+		byte[] expected2 = new byte[]{
 			0x0f, 0x12, 0x32, (byte) 0xfa + 1, Message.Type.HEARTBEAT.ID
 		};
 
@@ -110,11 +110,11 @@ public class TestMessage {
 	@Test
 	public void deconHandshakeResp() throws UnsupportedEncodingException {
 
-		int[] hand_resp_success = new int[] {
+		int[] hand_resp_success = new int[]{
 			0xFF
 		};
 
-		int[] hand_resp_failure = new int[] {
+		int[] hand_resp_failure = new int[]{
 			0x00
 		};
 
