@@ -1,4 +1,3 @@
-import org.junit.Test;
 import ospp.bookinggui.logging.ConsoleFormatter;
 import ospp.bookinggui.networking.Adapter;
 import ospp.bookinggui.networking.Mailbox;
@@ -12,12 +11,11 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class TestStartLib {
+public class InitiateAdapter {
 
 	private static final Logger root_logger = Logger.getLogger("");
 
-	@Test
-	public void start() throws IOException {
+	public static void main(String[] args) throws IOException {
 
 		for(Handler h : root_logger.getHandlers()) {
 			if(h instanceof ConsoleHandler) {
