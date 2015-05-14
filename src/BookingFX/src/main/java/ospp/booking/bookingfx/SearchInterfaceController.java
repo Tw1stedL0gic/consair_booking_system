@@ -7,13 +7,29 @@ package ospp.booking.bookingfx;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import javafx.animation.AnimationTimer;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
+import javafx.geometry.VPos;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
+import javafx.scene.input.InputMethodEvent;
+import javafx.scene.input.MouseEvent;
+import javafx.util.StringConverter;
+import javafx.util.converter.ShortStringConverter;
+
 
 
 
@@ -47,13 +63,24 @@ public class SearchInterfaceController implements Initializable, ControlledScree
     @FXML
     private CheckBox turReturBox;
 
-
     @FXML
-    void disableReturnCalendar(ActionEvent event) {
-
-    }
+    private ComboBox fromComboBox;
     
-
+    @FXML
+    private ComboBox toComboBox;
+    
+    @FXML
+    private TextField fromField;
+    
+    @FXML
+    private TextField toField;
+    
+    @FXML
+    private ListView fromListView;
+    
+    @FXML
+    private ListView toListView;
+    
     @FXML
     void adultDecClick(ActionEvent event) {
         if (adultNr > 0){
@@ -118,6 +145,89 @@ public class SearchInterfaceController implements Initializable, ControlledScree
         updateTotalNr();
         totalLabel.expandedProperty().set(false);
         returnCalendar.disableProperty().bind(turReturBox.selectedProperty().not());
+        //final String[] flygplatser = {"arlanda", "arlunda", "inte arlanda", "inte uppsala", "något annat"};
+        final String[] flygplatser = new String[BigData.airports.length];
+        for(int i=0; i<BigData.airports.length; i++){
+            flygplatser[i] = BigData.airports[i][0] + " " + BigData.airports[i][1];
+        
+        }
+       
+        fromListView.visibleProperty().set(false);
+        toListView.visibleProperty().set(false);
+        
+        new AnimationTimer() {
+
+            @Override
+            public void handle(long now) {
+                String string = (String) toField.getText();
+                if(string == null)
+                    string = "";
+                System.out.println(string);
+                 fromComboBox.show();
+                fromComboBox.getItems().removeAll(flygplatser);
+                fromComboBox.getItems().addAll(flygplatser);
+                for(int i=0; i<string.length();i++){
+                    for(String flygplats : flygplatser){
+                        if(fromComboBox.getItems().contains(flygplats) && flygplats.charAt(i) != string.charAt(i)){
+                            fromComboBox.getItems().remove(flygplats);
+                        }
+                    }
+                }
+                
+               
+                if(string.length() > 0){
+                    for (int i = 0; i<string.length(); i++){
+                        String input = "";
+                        input = input + (string.charAt(i));
+                        if(fromComboBox.getItems().contains(input) && input.charAt(i) != string.charAt(i)){
+                            fromComboBox.getItems().remove(input);
+                        }
+                        fromComboBox.show();
+                        
+                    }
+                }
+            }
+            
+        };
+        fromField.textProperty().addListener(new ChangeListener<String>(){
+
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                System.out.println("Oldvalue " + oldValue + ". Newvalue " + newValue);
+                fromListView.getItems().removeAll(flygplatser);
+                fromListView.getItems().addAll(flygplatser);
+                
+                if (newValue.length() <1){
+                    fromListView.visibleProperty().set(false);
+                }
+                else {
+                    fromListView.visibleProperty().set(true);
+                    String string = newValue;
+                    for(int i=0; i<string.length();i++){
+                    for(String flygplats : flygplatser){
+                        if(fromListView.getItems().contains(flygplats) && flygplats.toLowerCase().charAt(i) != string.toLowerCase().charAt(i)){
+                            fromListView.getItems().remove(flygplats);
+                        }
+                    }
+                }
+                    
+                }
+                
+                
+            }   
+            
+        });
+       
+        fromListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+        @Override
+        public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+        System.out.println("Old click value " 
+                + oldValue + " New Click value = " + newValue);
+        fromField.textProperty().set(newValue);
+        fromListView.getItems().remove(newValue);
+        }
+        });
+        
     }    
 
     private ScreenMaster myScreenMaster;
