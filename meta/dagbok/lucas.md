@@ -86,6 +86,7 @@ Buggtestande, buggtestande, buggtestande.
 ##### Fredag
 
 ## Vecka 20
+Jag har arbetat till och från hela den här och förra veckan, glömde skriva dagbok och minns inte vilka dagar jag arbetade, vad jag gjorde specifikt varje dag eller hur länge jag arbetade.
 
 ##### Måndag
 
@@ -93,7 +94,8 @@ Buggtestande, buggtestande, buggtestande.
 
 ##### Onsdag
 
-##### Torsdag
+##### Torsdag - Arbetstid: ~2 timmar
+Mer arbete på meddelandena.
 
 ##### Fredag
 
