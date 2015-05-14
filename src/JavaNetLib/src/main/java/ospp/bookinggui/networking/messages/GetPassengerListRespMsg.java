@@ -5,7 +5,7 @@ import ospp.bookinggui.networking.Message;
 import java.io.UnsupportedEncodingException;
 
 public class GetPassengerListRespMsg extends Message {
-	protected GetPassengerListRespMsg() {
+	public GetPassengerListRespMsg() {
 		super(Type.GET_PASSENGERS_RESP);
 	}
 

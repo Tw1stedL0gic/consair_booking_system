@@ -3,6 +3,7 @@ import ospp.bookinggui.Utils;
 import ospp.bookinggui.networking.Message;
 import ospp.bookinggui.networking.messages.HandshakeMsg;
 import ospp.bookinggui.networking.messages.HandshakeRespMsg;
+import ospp.bookinggui.networking.messages.HeartbeatMsg;
 
 import java.io.UnsupportedEncodingException;
 
@@ -27,17 +28,7 @@ public class TestMessage {
 	@Test
 	public void constructHeader() {
 
-		Message foo = new Message() {
-			// Initialize the anon class with random message type to avoid NPE's.
-			{
-				this.type = Type.HEARTBEAT;
-			}
-
-			@Override
-			public byte[] constructBody() throws UnsupportedEncodingException {
-				return new byte[0];
-			}
-		};
+		Message foo = new HeartbeatMsg();
 
 		// Test with a zero body size
 		byte[] header = foo.constructHeader(0);

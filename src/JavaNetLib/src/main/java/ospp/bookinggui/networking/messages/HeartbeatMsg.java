@@ -5,7 +5,7 @@ import ospp.bookinggui.networking.Message;
 import java.io.UnsupportedEncodingException;
 
 public class HeartbeatMsg extends Message {
-	protected HeartbeatMsg() {
+	public HeartbeatMsg() {
 		super(Type.HEARTBEAT);
 	}
 

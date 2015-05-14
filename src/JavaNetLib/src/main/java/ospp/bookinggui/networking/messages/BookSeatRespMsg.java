@@ -5,7 +5,7 @@ import ospp.bookinggui.networking.Message;
 import java.io.UnsupportedEncodingException;
 
 public class BookSeatRespMsg extends Message {
-	protected BookSeatRespMsg() {
+	public BookSeatRespMsg() {
 		super(Type.BOOK_SEAT_RESP);
 	}
 
