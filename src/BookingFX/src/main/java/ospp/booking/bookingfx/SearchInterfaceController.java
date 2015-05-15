@@ -145,7 +145,7 @@ public class SearchInterfaceController implements Initializable, ControlledScree
         updateTotalNr();
         totalLabel.expandedProperty().set(false);
         returnCalendar.disableProperty().bind(turReturBox.selectedProperty().not());
-        //final String[] flygplatser = {"arlanda", "arlunda", "inte arlanda", "inte uppsala", "något annat"};
+        //final String[] flygplatser = {"arlanda", "arlunda", "inte arlanda", "inte uppsala", "nÃ¥got annat"};
         final String[] flygplatser = new String[BigData.airports.length];
         for(int i=0; i<BigData.airports.length; i++){
             flygplatser[i] = BigData.airports[i][0] + " " + BigData.airports[i][1];
@@ -228,8 +228,52 @@ public class SearchInterfaceController implements Initializable, ControlledScree
         }
         });
         
+        
+        toField.textProperty().addListener(new ChangeListener<String>(){
+
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                System.out.println("Oldvalue " + oldValue + ". Newvalue " + newValue);
+                toListView.getItems().removeAll(flygplatser);
+                toListView.getItems().addAll(flygplatser);
+                
+                if (newValue.length() <1){
+                    toListView.visibleProperty().set(false);
+                }
+                else {
+                    toListView.visibleProperty().set(true);
+                    String string = newValue;
+                    for(int i=0; i<string.length();i++){
+                    for(String flygplats : flygplatser){
+                        if(toListView.getItems().contains(flygplats) && flygplats.toLowerCase().charAt(i) != string.toLowerCase().charAt(i)){
+                            toListView.getItems().remove(flygplats);
+                        }
+                    }
+                }
+                    
+                }
+                
+                
+            }   
+            
+        });
+       
+        toListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+        @Override
+        public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+        System.out.println("Old click value " 
+                + oldValue + " New Click value = " + newValue);
+        toField.textProperty().set(newValue);
+        toListView.getItems().remove(newValue);
+        }
+        });
+        
     }    
 
+    
+    
+    
+    
     private ScreenMaster myScreenMaster;
     @Override
     public void setScreenParent(ScreenMaster sm) {

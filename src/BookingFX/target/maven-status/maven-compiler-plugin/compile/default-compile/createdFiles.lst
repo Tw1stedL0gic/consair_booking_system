@@ -4,6 +4,7 @@ ospp\booking\bookingfx\ConfirmedInterfaceController.class
 ospp\booking\bookingfx\MainApp.class
 ospp\booking\bookingfx\ConfirmInterfaceController.class
 ospp\booking\bookingfx\SeatBookerController.class
+ospp\booking\bookingfx\SearchInterfaceController$5.class
 ospp\booking\bookingfx\ControlledScreen.class
 ospp\booking\bookingfx\FXMLController.class
 ospp\booking\bookingfx\SearchInterfaceController$3.class
@@ -12,3 +13,4 @@ ospp\booking\bookingfx\ScreenMaster.class
 ospp\booking\bookingfx\BookOptionInterfaceController.class
 ospp\booking\bookingfx\SearchInterfaceController.class
 ospp\booking\bookingfx\AdditionalOptionsInterfaceController.class
+ospp\booking\bookingfx\SearchInterfaceController$4.class
