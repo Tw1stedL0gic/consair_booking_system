@@ -82,6 +82,16 @@ public abstract class Message {
 		return arg;
 	}
 
+	public static byte[] createPaidBlock(long paid) {
+		byte[] block = new byte[8];
+
+		for(int i = 0; i < 8; i++) {
+			block[i] = (byte) ((paid >> (8 * (8 - i - 1))) & 0xff);
+		}
+
+		return block;
+	}
+
 	public byte[] constructHeader(int body_size) {
 		byte[] header = new byte[HEADER_SIZE];
 

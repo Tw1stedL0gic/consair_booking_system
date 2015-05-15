@@ -161,4 +161,37 @@ public class TestMessage {
 		assertTrue(!((HandshakeRespMsg) hand_resp_failure_msg).isSuccessful());
 		assertTrue(((HandshakeRespMsg) hand_resp_success_msg).isSuccessful());
 	}
+
+	@Test
+	public void createPaidBlock() {
+		final long paid = 0x1112131415161718L;
+
+		byte[] block = Message.createPaidBlock(paid);
+
+		byte[] expected = new byte[] {
+			0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18
+		};
+
+		assertArrayEquals(expected, block);
+
+		final long paid2 = 0xff00ff00ff00ff00L;
+
+		byte[] block2 = Message.createPaidBlock(paid2);
+
+		byte[] expected2 = new byte[] {
+			(byte) 0xff, 0x00, (byte) 0xff, 0x00, (byte) 0xff, 0x00, (byte) 0xff, 0x00
+		};
+
+		assertArrayEquals(expected2, block2);
+
+		final long paid3 = 0x00ff00ff00ff00ffL;
+
+		byte[] block3 = Message.createPaidBlock(paid3);
+
+		byte[] expected3 = new byte[] {
+			0x00, (byte) 0xff, 0x00, (byte) 0xff, 0x00, (byte) 0xff, 0x00, (byte) 0xff,
+		};
+
+		assertArrayEquals(expected3, block3);
+	}
 }
