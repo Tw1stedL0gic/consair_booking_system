@@ -1,3 +1,6 @@
+%%This file is to populate the database
+
+
 -module ('test_database').
 -include ("air_database.hrl").
 
