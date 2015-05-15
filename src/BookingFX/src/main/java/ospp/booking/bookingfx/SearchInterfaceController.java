@@ -23,6 +23,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.input.InputMethodEvent;
@@ -64,12 +65,6 @@ public class SearchInterfaceController implements Initializable, ControlledScree
     private CheckBox turReturBox;
 
     @FXML
-    private ComboBox fromComboBox;
-    
-    @FXML
-    private ComboBox toComboBox;
-    
-    @FXML
     private TextField fromField;
     
     @FXML
@@ -80,6 +75,7 @@ public class SearchInterfaceController implements Initializable, ControlledScree
     
     @FXML
     private ListView toListView;
+    
     
     @FXML
     void adultDecClick(ActionEvent event) {
@@ -155,40 +151,6 @@ public class SearchInterfaceController implements Initializable, ControlledScree
         fromListView.visibleProperty().set(false);
         toListView.visibleProperty().set(false);
         
-        new AnimationTimer() {
-
-            @Override
-            public void handle(long now) {
-                String string = (String) toField.getText();
-                if(string == null)
-                    string = "";
-                System.out.println(string);
-                 fromComboBox.show();
-                fromComboBox.getItems().removeAll(flygplatser);
-                fromComboBox.getItems().addAll(flygplatser);
-                for(int i=0; i<string.length();i++){
-                    for(String flygplats : flygplatser){
-                        if(fromComboBox.getItems().contains(flygplats) && flygplats.charAt(i) != string.charAt(i)){
-                            fromComboBox.getItems().remove(flygplats);
-                        }
-                    }
-                }
-                
-               
-                if(string.length() > 0){
-                    for (int i = 0; i<string.length(); i++){
-                        String input = "";
-                        input = input + (string.charAt(i));
-                        if(fromComboBox.getItems().contains(input) && input.charAt(i) != string.charAt(i)){
-                            fromComboBox.getItems().remove(input);
-                        }
-                        fromComboBox.show();
-                        
-                    }
-                }
-            }
-            
-        };
         fromField.textProperty().addListener(new ChangeListener<String>(){
 
             @Override

@@ -41,7 +41,6 @@
                            <children>
                               <VBox prefHeight="200.0" prefWidth="100.0" spacing="6.0">
                                  <children>
-                                    <ComboBox fx:id="fromComboBox" editable="true" maxWidth="1.7976931348623157E308" prefWidth="150.0" promptText="From" />
                                     <VBox>
                                        <children>
                                           <TextField fx:id="fromField" promptText="From" />
@@ -53,7 +52,6 @@
                               </VBox>
                               <VBox prefHeight="200.0" prefWidth="100.0" spacing="6.0" GridPane.columnIndex="1">
                                  <children>
-                                    <ComboBox fx:id="toComboBox" editable="true" maxWidth="1.7976931348623157E308" prefWidth="150.0" promptText="To" />
                                     <VBox>
                                        <children>
                                           <TextField fx:id="toField" promptText="To" />
