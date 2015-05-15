@@ -35,13 +35,15 @@ varje gång du arbetat på projektet.
 ##### Torsdag
 
 ##### Fredag
-
+3h javafx setup
+##### Lördag
+4h gui
 ## Vecka 18
 
 ##### Måndag
-
+1h planering
 ##### Tisdag
-
+1h gui research
 ##### Onsdag
 
 ##### Torsdag
@@ -51,9 +53,10 @@ varje gång du arbetat på projektet.
 ## Vecka 19
 
 ##### Måndag
+6h erlang networking och gui
 
 ##### Tisdag
-
+2h gick igenom networking handleren men andreas och fixa bugar
 ##### Onsdag
 
 ##### Torsdag
@@ -63,14 +66,18 @@ varje gång du arbetat på projektet.
 ## Vecka 20
 
 ##### Måndag
+6h gui växla mellan skärmar
 
 ##### Tisdag
 
 ##### Onsdag
+2.5 gui
 
 ##### Torsdag
+6.5h gui
 
 ##### Fredag
+gui 3h
 
 ## Vecka 21
 
