@@ -75,11 +75,11 @@ Hade möte om vad vi har gjort, jobbade sedan på GUIt med Erik och Wenting. Vi 
 ##### Tisdag
 
 ##### Onsdag
-
+Jobbade med GUIt, vårt största fokus ligger på att försöka få till en funktion som autofyller när man skriver i sökrutan. Tidsåtgång 2h 30 min
 ##### Torsdag
-
+Fortsatte med GUIt, vi jobbade med samma sak som tidigare och lade till en databas med en samling flygplatser och fick autofyllfunktionen att fungera som vi ville. Tidsåtgång 6h 30 min
 ##### Fredag
-
+Fortsatte med GUIt, jobbade med mer design på GUIt och diskuterade om hur vi låg till på de olika delarna. Vårt nästa mål blir att implementera nätverksmodulen så att vi kan börja kommunicera med de andra delarna. Tidsåtgång 3h
 ## Vecka 21
 
 ##### Måndag
