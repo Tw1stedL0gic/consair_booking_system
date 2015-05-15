@@ -17,7 +17,7 @@ public class GetFlightListRespMsg extends Message {
 	}
 
 	public static GetFlightListRespMsg parse(int[] b) throws UnsupportedEncodingException {
-		// TODO improve this algorithm to not use the below line!
+		// TODO improve this algorithm to not use the line below!
 		byte[] body = Utils.convertIntArrayToByte(b);
 
 		ArrayList<Flight> flights = new ArrayList<>();
