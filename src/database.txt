@@ -1,7 +1,7 @@
-hur man installerar och lägger upp databasen i ubunoto.
+hur man installerar och lägger upp databasen i ubuntu.
 1. se till att du har den senaster varrianten av Erlang /otp, MySql-server och amnesia
 2. Installera mysql server och ange root password till 1337 eller dyl (om annat än 1337 används så måste man ändra i raden nedan)
-3. Installera Amnesisa genom att zipa upp filen kör ./configuare, där efter make
+3. Installera Amnesisa genom att zipa upp filen kör ./configure, där efter make
 sedan sudo make install (nu har du uppdaterat datorm med Amnesia paktet)
 4. compelera air_database.erl i erl och kör sedan denna kod i compilern
 amnesia:db_tool(air_database, [{make_hdr, "."},make_db, {dba_user, "root"}, {dba_password, "1337"}]).
