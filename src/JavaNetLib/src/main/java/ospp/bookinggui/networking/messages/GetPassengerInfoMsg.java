@@ -14,6 +14,11 @@ public class GetPassengerInfoMsg extends Message {
 		this.passenger = p;
 	}
 
+	public static GetPassengerInfoMsg parse(int[] body) {
+		//TODO GetPassengerInfoMsg.parse()
+		return null;
+	}
+
 	@Override
 	public byte[] constructBody() throws UnsupportedEncodingException {
 		byte[] msg = new byte[8];
