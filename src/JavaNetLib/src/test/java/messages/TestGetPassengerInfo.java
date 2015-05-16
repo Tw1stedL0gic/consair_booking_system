@@ -17,7 +17,7 @@ public class TestGetPassengerInfo {
 
 	@Test
 	public void constructBody() throws UnsupportedEncodingException {
-		Passenger p = new Passenger(0x0102030405060708L, "Tjenare", null, null, null, null, 0);
+		Passenger p = new Passenger(0x0102030405060708L, null, null, null, null);
 
 		GetPassengerInfoMsg msg = new GetPassengerInfoMsg(p);
 

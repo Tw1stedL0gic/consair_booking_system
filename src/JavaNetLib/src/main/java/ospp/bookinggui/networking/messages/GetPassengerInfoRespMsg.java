@@ -62,7 +62,6 @@ public class GetPassengerInfoRespMsg extends Message {
 		index += Message.AL_SIZE;
 
 		byte[] email_arg = Message.getArgument(body, email_al, index);
-		index += email_al;
 
 		String email = new String(email_arg, Message.ENCODING);
 
