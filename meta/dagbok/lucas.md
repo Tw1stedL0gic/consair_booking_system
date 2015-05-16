@@ -97,7 +97,11 @@ Jag har arbetat till och från hela den här och förra veckan, glömde skriva d
 ##### Torsdag - Arbetstid: ~2 timmar
 Mer arbete på meddelandena.
 
-##### Fredag
+##### Fredag - Arbetstid: ~3 timmar
+Fixade fler meddelanden till biblioteket och tester.
+
+##### Lördag - Arbetstid: ~1 timme
+Samma som ovan.
 
 ## Vecka 21
 
