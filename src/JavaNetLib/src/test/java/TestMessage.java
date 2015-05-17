@@ -1,5 +1,6 @@
 import org.junit.Test;
 import ospp.bookinggui.Utils;
+import ospp.bookinggui.exceptions.MalformedMessageException;
 import ospp.bookinggui.networking.Message;
 import ospp.bookinggui.networking.messages.HandshakeMsg;
 import ospp.bookinggui.networking.messages.HandshakeRespMsg;
@@ -94,7 +95,7 @@ public class TestMessage {
 	}
 
 	@Test
-	public void deconHandshake1() throws UnsupportedEncodingException {
+	public void deconHandshake1() throws UnsupportedEncodingException, MalformedMessageException {
 		String username = "Tjenare";
 		String password = "foobar";
 
@@ -126,7 +127,7 @@ public class TestMessage {
 	}
 
 	@Test
-	public void deconHandshake2() throws UnsupportedEncodingException {
+	public void deconHandshake2() throws UnsupportedEncodingException, MalformedMessageException {
 		HandshakeMsg hand_msg = new HandshakeMsg("Peter", "Salming");
 
 		byte[] hand_msg_ar = hand_msg.constructBody();
@@ -142,7 +143,7 @@ public class TestMessage {
 	}
 
 	@Test
-	public void deconHandshakeResp() throws UnsupportedEncodingException {
+	public void deconHandshakeResp() throws UnsupportedEncodingException, MalformedMessageException {
 
 		int[] hand_resp_success = new int[]{
 			0xFF
