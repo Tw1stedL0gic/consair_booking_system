@@ -11,8 +11,8 @@ public class HandshakeRespMsg extends Message {
 		this.success = success;
 	}
 
-	public static HandshakeRespMsg parse(int[] body) {
-		boolean success = body[0] == 0x000000ff;
+	public static HandshakeRespMsg parse(byte[] body) {
+		boolean success = body[0] == 0xff;
 		return new HandshakeRespMsg(success);
 	}
 

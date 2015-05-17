@@ -116,7 +116,7 @@ public class TestMessage {
 		message[index++] = (byte) (pas.length & 0x00FF);
 		System.arraycopy(pas, 0, message, index, pas.length);
 
-		Message msg = Message.parseMessage((short) 1, Utils.convertByteArrayToInt(message));
+		Message msg = Message.parseMessage((short) 1, message);
 
 		assertTrue(msg instanceof HandshakeMsg);
 
@@ -132,7 +132,7 @@ public class TestMessage {
 
 		byte[] hand_msg_ar = hand_msg.constructBody();
 
-		Message decon = Message.parseMessage((short) 1, Utils.convertByteArrayToInt(hand_msg_ar));
+		Message decon = Message.parseMessage((short) 1, hand_msg_ar);
 
 		assertTrue(decon instanceof HandshakeMsg);
 
@@ -145,11 +145,11 @@ public class TestMessage {
 	@Test
 	public void deconHandshakeResp() throws UnsupportedEncodingException, MalformedMessageException {
 
-		int[] hand_resp_success = new int[]{
-			0xFF
+		byte[] hand_resp_success = new byte[]{
+			(byte) 0xFF
 		};
 
-		int[] hand_resp_failure = new int[]{
+		byte[] hand_resp_failure = new byte[]{
 			0x00
 		};
 

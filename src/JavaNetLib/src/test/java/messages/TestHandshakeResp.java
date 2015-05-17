@@ -18,9 +18,7 @@ public class TestHandshakeResp {
 		HandshakeRespMsg handresp = new HandshakeRespMsg(true);
 		byte[] message = handresp.constructBody();
 
-		int[] con = Utils.convertByteArrayToInt(message);
-
-		Message msg = Message.parseMessage((short) 2, con);
+		Message msg = Message.parseMessage((short) 2, message);
 
 		assertTrue(msg instanceof HandshakeRespMsg);
 
@@ -31,7 +29,7 @@ public class TestHandshakeResp {
 
 	@Test
 	public void parse2() throws UnsupportedEncodingException {
-		int[] msg_array = new int[0];
+		byte[] msg_array = new byte[0];
 
 		try {
 			Message msg = Message.parseMessage((short) 2, msg_array);

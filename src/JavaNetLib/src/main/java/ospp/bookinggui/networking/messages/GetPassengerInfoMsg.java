@@ -14,7 +14,7 @@ public class GetPassengerInfoMsg extends Message {
 		this.passenger = p;
 	}
 
-	public static GetPassengerInfoMsg parse(int[] body) {
+	public static GetPassengerInfoMsg parse(byte[] body) {
 		//TODO GetPassengerInfoMsg.parse()
 		return null;
 	}

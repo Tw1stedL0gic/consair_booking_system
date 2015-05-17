@@ -14,4 +14,9 @@ public class GetFlightListMsg extends Message {
 	public byte[] constructBody() throws UnsupportedEncodingException {
 		return new byte[0];
 	}
+
+	public static GetFlightListMsg parse(byte[] body) {
+		//TODO GetFlightListMsg.parse()
+		return null;
+	}
 }

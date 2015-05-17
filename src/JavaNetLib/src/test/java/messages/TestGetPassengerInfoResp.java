@@ -58,7 +58,7 @@ public class TestGetPassengerInfoResp {
 		Message.setArgument(msg_array, email, index);
 
 
-		GetPassengerInfoRespMsg msg = GetPassengerInfoRespMsg.parse(Utils.convertByteArrayToInt(msg_array));
+		GetPassengerInfoRespMsg msg = GetPassengerInfoRespMsg.parse(msg_array);
 
 		Passenger p = msg.getPassenger();
 
@@ -73,7 +73,7 @@ public class TestGetPassengerInfoResp {
 
 	@Test
 	public void parse2() throws UnsupportedEncodingException {
-		int[] msg_array = new int[] {
+		byte[] msg_array = new byte[] {
 			// PAID
 			0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
 

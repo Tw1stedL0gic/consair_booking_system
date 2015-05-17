@@ -2,8 +2,7 @@ package ospp.bookinggui.networking;
 
 import ospp.bookinggui.Utils;
 import ospp.bookinggui.exceptions.MalformedMessageException;
-import ospp.bookinggui.networking.messages.HandshakeMsg;
-import ospp.bookinggui.networking.messages.HandshakeRespMsg;
+import ospp.bookinggui.networking.messages.*;
 
 import java.io.UnsupportedEncodingException;
 import java.util.logging.Level;
@@ -21,7 +20,7 @@ public abstract class Message {
 		this.type = t;
 	}
 
-	public static Message parseMessage(short id, int[] body) throws UnsupportedEncodingException, MalformedMessageException {
+	public static Message parseMessage(short id, byte[] body) throws UnsupportedEncodingException, MalformedMessageException {
 
 		Type type = Type.getType(id);
 
@@ -32,6 +31,39 @@ public abstract class Message {
 
 				case HANDSHAKE_RESPONSE:
 					return HandshakeRespMsg.parse(body);
+
+				case GET_PASSENGERS:
+					return GetPassengerListMsg.parse(body);
+
+				case GET_PASSENGERS_RESP:
+					return GetPassengerListRespMsg.parse(body);
+
+				case BOOK_SEAT:
+					return BookSeatMsg.parse(body);
+
+				case BOOK_SEAT_RESP:
+					return BookSeatRespMsg.parse(body);
+
+				case DISCONNECT:
+					return new DisconnectMsg();
+
+				case HEARTBEAT:
+					return new HeartbeatMsg();
+
+				case GET_PASSENGER_INFO:
+					return GetPassengerInfoMsg.parse(body);
+
+				case GET_PASSENGER_INFO_RESP:
+					return GetPassengerInfoRespMsg.parse(body);
+
+				case GET_FLIGHT_LIST:
+					return GetFlightListMsg.parse(body);
+
+				case GET_FLIGHT_LIST_RESP:
+					return GetFlightListRespMsg.parse(body);
+
+				case ERROR:
+					return ErrorMessage.parse(body);
 
 				default:
 					logger.severe("Unsupported message id!");

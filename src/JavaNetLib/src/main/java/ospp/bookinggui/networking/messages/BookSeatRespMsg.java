@@ -13,4 +13,9 @@ public class BookSeatRespMsg extends Message {
 	public byte[] constructBody() throws UnsupportedEncodingException {
 		return new byte[0];
 	}
+
+	public static BookSeatRespMsg parse(byte[] body) {
+		//TODO BookSeatRespMsg.parse()
+		return null;
+	}
 }

@@ -23,7 +23,7 @@ public class TestGetFlightListResp {
 		Message.setALValue(body1, arg1.length, 0);
 		Message.setArgument(body1, arg1, Message.AL_SIZE);
 
-		GetFlightListRespMsg msg1 = GetFlightListRespMsg.parse(Utils.convertByteArrayToInt(body1));
+		GetFlightListRespMsg msg1 = GetFlightListRespMsg.parse(body1);
 
 		ArrayList<Flight> flights1 = msg1.getFlightList();
 
@@ -45,7 +45,7 @@ public class TestGetFlightListResp {
 		Message.setALValue(body, arg2.length, Message.AL_SIZE + arg1.length);
 		Message.setArgument(body, arg2, Message.AL_SIZE * 2 + arg1.length);
 
-		GetFlightListRespMsg msg = GetFlightListRespMsg.parse(Utils.convertByteArrayToInt(body));
+		GetFlightListRespMsg msg = GetFlightListRespMsg.parse(body);
 
 		ArrayList<Flight> flights = msg.getFlightList();
 

@@ -16,27 +16,25 @@ public class HandshakeMsg extends Message {
 		this.password = password;
 	}
 
-	public static HandshakeMsg parse(int[] body) throws UnsupportedEncodingException {
-		byte[] m_byte = Utils.convertIntArrayToByte(body);
-
+	public static HandshakeMsg parse(byte[] body) throws UnsupportedEncodingException {
 		int index = 0;
 
 		int al_usr = 0;
-		al_usr |= m_byte[index++] << 8;
-		al_usr |= m_byte[index++];
+		al_usr |= body[index++] << 8;
+		al_usr |= body[index++];
 
 		byte[] usr = new byte[al_usr];
-		System.arraycopy(m_byte, index, usr, 0, al_usr);
+		System.arraycopy(body, index, usr, 0, al_usr);
 		String username = new String(usr, Message.ENCODING);
 
 		index += al_usr;
 
 		int al_pas = 0;
-		al_pas |= m_byte[index++] << 8;
-		al_pas |= m_byte[index++];
+		al_pas |= body[index++] << 8;
+		al_pas |= body[index++];
 
 		byte[] pas = new byte[al_pas];
-		System.arraycopy(m_byte, index, pas, 0, al_pas);
+		System.arraycopy(body, index, pas, 0, al_pas);
 		String password = new String(pas, Message.ENCODING);
 
 		return new HandshakeMsg(username, password);

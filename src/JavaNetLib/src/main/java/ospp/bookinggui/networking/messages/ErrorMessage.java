@@ -14,9 +14,8 @@ public class ErrorMessage extends Message {
 		this.message = msg;
 	}
 
-	public static ErrorMessage parse(int[] body) throws UnsupportedEncodingException {
-		byte[] converted_body = Utils.convertIntArrayToByte(body);
-		return new ErrorMessage(new String(converted_body, Message.ENCODING));
+	public static ErrorMessage parse(byte[] body) throws UnsupportedEncodingException {
+		return new ErrorMessage(new String(body, Message.ENCODING));
 	}
 
 	@Override

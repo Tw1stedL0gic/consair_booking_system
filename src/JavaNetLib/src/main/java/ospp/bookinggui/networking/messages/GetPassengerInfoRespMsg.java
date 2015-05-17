@@ -15,10 +15,7 @@ public class GetPassengerInfoRespMsg extends Message {
 		this.passenger = p;
 	}
 
-	public static GetPassengerInfoRespMsg parse(int[] b) throws UnsupportedEncodingException {
-		//TODO Fix the line below!!
-		byte[] body = Utils.convertIntArrayToByte(b);
-
+	public static GetPassengerInfoRespMsg parse(byte[] body) throws UnsupportedEncodingException {
 		int index = 0;
 
 		// PAID
