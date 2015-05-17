@@ -1,12 +1,15 @@
 package ospp.bookinggui.networking.runnables;
 
 import ospp.bookinggui.Utils;
+import ospp.bookinggui.exceptions.MalformedMessageException;
 import ospp.bookinggui.networking.Mailbox;
 import ospp.bookinggui.networking.Message;
+import ospp.bookinggui.networking.messages.ErrorMessage;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,7 +32,7 @@ public class PacketListener implements Runnable {
 		int data;
 
 		int m_length = 0;
-		int[] message = null;
+		int[] body = null;
 		short id = 0;
 
 		int index = 0;
@@ -48,22 +51,34 @@ public class PacketListener implements Runnable {
 					// Header - Message ID
 					else if(index == Message.HEADER_SIZE - 1) {
 						// We are only interested in storing the body of the message.
-						message = new int[m_length - 1];
+						body = new int[m_length - 1];
 						id = (short) (data & 0xff);
 					}
 
 					// Message body
 					else if(index < m_length + Message.HEADER_SIZE - 1) {
-						message[index - Message.HEADER_SIZE] = data;
+						body[index - Message.HEADER_SIZE] = data;
 
 						// Finished, add message to inbox and reset accumulators!
 						if(index == m_length + Message.HEADER_SIZE - 2) {
-							logger.fine("Added message to inbox! MSG: " + Utils.bytePresentation(message));
-							mailbox.recieve(Message.parseMessage(id, message));
+							logger.fine("Added message to inbox! MSG: " + Utils.bytePresentation(body));
+
+							Message msg;
+							try {
+								msg = Message.parseMessage(id, body);
+								mailbox.recieve(msg);
+							}
+							catch(UnsupportedEncodingException e) {
+								logger.log(Level.SEVERE, e.getMessage(), e);
+							}
+							catch(MalformedMessageException e) {
+								logger.log(Level.SEVERE, e.getMessage(), e);
+								mailbox.send(new ErrorMessage("The received message was malformed!"));
+							}
 
 							index = -1;
 							m_length = 0;
-							message = null;
+							body = null;
 							id = 0;
 						}
 					}
