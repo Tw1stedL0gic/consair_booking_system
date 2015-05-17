@@ -25,35 +25,6 @@ public class TestUtils {
 	}
 
 	@Test
-	public void testIntArrayToByte() {
-		int[] ia1 = new int[]{
-			1, 2, 3, 4, 5, 6, 7
-		};
-
-		byte[] ba1 = Utils.convertIntArrayToByte(ia1);
-
-		// Test length
-		assertTrue(ia1.length == ba1.length);
-
-		// Test content
-		assertArrayEquals(new byte[]{1, 2, 3, 4, 5, 6, 7}, ba1);
-
-
-		int[] ia2 = new int[]{
-			0xffff, 0x12ab, 0x3212, 0xfafa
-		};
-
-		byte[] ba2 = Utils.convertIntArrayToByte(ia2);
-
-		byte[] ba2e = new byte[]{
-			(byte) 0xff, (byte) 0xab, 0x12, (byte) 0xfa
-		};
-
-		// Test content
-		assertArrayEquals(ba2e, ba2);
-	}
-
-	@Test
 	public void testBytePresentationByteArg() {
 		byte[] ba = new byte[]{
 			0x12, 0x53, (byte) 0xff, (byte) 0xfa
