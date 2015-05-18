@@ -52,8 +52,8 @@ public class NetworkAdapter implements Adapter {
 	}
 
 	@Override
-	public void book(Flight flight, BookingInfo booking) {
-		mailbox.send(new BookSeatMsg(flight, booking));
+	public void book(BookingInfo booking) {
+		mailbox.send(new BookSeatMsg(booking));
 	}
 
 	@Override
