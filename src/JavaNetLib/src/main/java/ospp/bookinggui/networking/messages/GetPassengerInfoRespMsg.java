@@ -63,7 +63,6 @@ public class GetPassengerInfoRespMsg extends Message {
 
 		// Finished reading, construct passenger object and return.
 
-		//TODO Fix this object initialization to use what we actually extracted from the packet!
 		Passenger p = new Passenger(paid, pn, adr, pi, email);
 
 		return new GetPassengerInfoRespMsg(p);
