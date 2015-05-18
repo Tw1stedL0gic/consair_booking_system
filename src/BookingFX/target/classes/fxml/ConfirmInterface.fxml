@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.scene.shape.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.chart.*?>
@@ -15,12 +16,28 @@
         <URL value="@/styles/confirminterface.css" />
     </stylesheets>
    <children>
-      <TextArea layoutX="100.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0" promptText="Bokningsinfo" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="14.0">
-         <rotationAxis>
-            <Point3D x="3.0" />
-         </rotationAxis>
-      </TextArea>
-      <Button layoutX="14.0" layoutY="361.0" mnemonicParsing="false" onAction="#backButtonClick" text="Back" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
-      <Button layoutX="534.0" layoutY="367.0" mnemonicParsing="false" onAction="#confirmButtonClick" text="Confirm" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />
+      <VBox minHeight="240.0" minWidth="320.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <AnchorPane maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="128.0" prefWidth="800.0">
+               <children>
+                  <Text layoutX="116.0" layoutY="55.0" rotate="-9.5" scaleX="3.0" scaleY="3.0" scaleZ="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Confirm your flight" AnchorPane.bottomAnchor="58.0" AnchorPane.leftAnchor="155.0" />
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="145.0" prefWidth="798.0" VBox.vgrow="ALWAYS">
+               <padding>
+                  <Insets bottom="8.0" left="8.0" right="8.0" top="12.0" />
+               </padding>
+               <children>
+                  <ListView layoutX="49.0" layoutY="75.0" prefHeight="225.0" prefWidth="483.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </children>
+            </AnchorPane>
+            <AnchorPane maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="48.0" prefWidth="200.0">
+               <children>
+                  <Button layoutX="529.0" mnemonicParsing="false" onAction="#confirmButtonClick" text="Confirm" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />
+                  <Button mnemonicParsing="false" onAction="#backButtonClick" text="Back" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
+               </children>
+            </AnchorPane>
+         </children>
+      </VBox>
    </children>
 </AnchorPane>
