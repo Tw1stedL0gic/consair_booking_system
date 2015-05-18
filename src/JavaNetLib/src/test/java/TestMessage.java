@@ -192,4 +192,21 @@ public class TestMessage {
 
 		assertArrayEquals(expected3, block3);
 	}
+
+	@Test
+	public void testParseRandomData() {
+		byte[] data = new byte[] {
+			0x23, 0x21, 0x65, (byte) 0xf1, (byte) 0x88, 0x76
+		};
+
+		try {
+			Message msg = Message.parseMessage((short) 0, data);
+			fail("Message.parseMessage did not throw the correct exceptions with random data!");
+		}
+		catch(MalformedMessageException ignored) {
+		}
+		catch(UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+	}
 }
