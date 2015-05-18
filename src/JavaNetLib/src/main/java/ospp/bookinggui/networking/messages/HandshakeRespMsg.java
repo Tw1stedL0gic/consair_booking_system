@@ -12,6 +12,7 @@ public class HandshakeRespMsg extends Message {
 	}
 
 	public static HandshakeRespMsg parse(byte[] body) {
+		//TODO fix HandshakeRespMsg.parse() to comply with new network protocol
 		boolean success = body[0] == (byte) 0xff;
 		return new HandshakeRespMsg(success);
 	}
