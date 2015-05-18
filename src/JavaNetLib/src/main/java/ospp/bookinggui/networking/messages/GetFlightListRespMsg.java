@@ -1,7 +1,6 @@
 package ospp.bookinggui.networking.messages;
 
 import ospp.bookinggui.Flight;
-import ospp.bookinggui.Utils;
 import ospp.bookinggui.networking.Message;
 
 import java.io.UnsupportedEncodingException;
@@ -19,7 +18,7 @@ public class GetFlightListRespMsg extends Message {
 	public static GetFlightListRespMsg parse(byte[] body) throws UnsupportedEncodingException {
 		ArrayList<Flight> flights = new ArrayList<>();
 
-		for(int i = 0; i < body.length;) {
+		for(int i = 0; i < body.length; ) {
 			int al = Message.getALValue(body, i);
 			i += Message.AL_SIZE;
 

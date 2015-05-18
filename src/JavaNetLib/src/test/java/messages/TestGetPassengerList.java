@@ -40,7 +40,7 @@ public class TestGetPassengerList {
 
 		assertTrue(m1.length != 0);
 
-		int al1   = Message.getALValue(m1, 0);
+		int al1 = Message.getALValue(m1, 0);
 		byte[] a1 = Message.getArgument(m1, al1, Message.AL_SIZE);
 
 		assertTrue(al1 != 0);

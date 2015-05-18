@@ -2,7 +2,6 @@ package messages;
 
 import org.junit.Test;
 import ospp.bookinggui.Flight;
-import ospp.bookinggui.Utils;
 import ospp.bookinggui.networking.Message;
 import ospp.bookinggui.networking.messages.GetFlightListRespMsg;
 

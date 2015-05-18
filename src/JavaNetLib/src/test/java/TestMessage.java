@@ -1,5 +1,4 @@
 import org.junit.Test;
-import ospp.bookinggui.Utils;
 import ospp.bookinggui.exceptions.MalformedMessageException;
 import ospp.bookinggui.networking.Message;
 import ospp.bookinggui.networking.messages.HandshakeMsg;
@@ -8,9 +7,7 @@ import ospp.bookinggui.networking.messages.HeartbeatMsg;
 
 import java.io.UnsupportedEncodingException;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class TestMessage {
 
@@ -29,7 +26,7 @@ public class TestMessage {
 
 	@Test
 	public void getALValue() {
-		byte[] m = new byte[] {
+		byte[] m = new byte[]{
 			0x12, 0x12
 		};
 
@@ -37,7 +34,7 @@ public class TestMessage {
 
 		assertEquals(0x1212, value);
 
-		byte[] m2 = new byte[] {
+		byte[] m2 = new byte[]{
 			0x01, 0x02, 0x03, 0x04, 0x05
 		};
 
@@ -52,21 +49,21 @@ public class TestMessage {
 
 	@Test
 	public void setArgument() {
-		byte[] m = new byte[] {
+		byte[] m = new byte[]{
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 		};
 
 		Message.setArgument(m, new byte[]{0x12, 0x13}, 0);
 
-		assertArrayEquals(new byte[] {0x12, 0x13, 0, 0, 0, 0, 0, 0, 0, 0}, m);
+		assertArrayEquals(new byte[]{0x12, 0x13, 0, 0, 0, 0, 0, 0, 0, 0}, m);
 
-		byte[] m2 = new byte[] {
+		byte[] m2 = new byte[]{
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 		};
 
 		Message.setArgument(m2, new byte[]{0x12, 0x13}, 3);
 
-		assertArrayEquals(new byte[] {0, 0, 0, 0x12, 0x13, 0, 0, 0, 0, 0}, m2);
+		assertArrayEquals(new byte[]{0, 0, 0, 0x12, 0x13, 0, 0, 0, 0, 0}, m2);
 	}
 
 	@Test
@@ -169,7 +166,7 @@ public class TestMessage {
 
 		byte[] block = Message.createPaidBlock(paid);
 
-		byte[] expected = new byte[] {
+		byte[] expected = new byte[]{
 			0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18
 		};
 
@@ -179,7 +176,7 @@ public class TestMessage {
 
 		byte[] block2 = Message.createPaidBlock(paid2);
 
-		byte[] expected2 = new byte[] {
+		byte[] expected2 = new byte[]{
 			(byte) 0xff, 0x00, (byte) 0xff, 0x00, (byte) 0xff, 0x00, (byte) 0xff, 0x00
 		};
 
@@ -189,7 +186,7 @@ public class TestMessage {
 
 		byte[] block3 = Message.createPaidBlock(paid3);
 
-		byte[] expected3 = new byte[] {
+		byte[] expected3 = new byte[]{
 			0x00, (byte) 0xff, 0x00, (byte) 0xff, 0x00, (byte) 0xff, 0x00, (byte) 0xff,
 		};
 

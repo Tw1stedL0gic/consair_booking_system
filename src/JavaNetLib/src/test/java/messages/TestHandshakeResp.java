@@ -1,7 +1,6 @@
 package messages;
 
 import org.junit.Test;
-import ospp.bookinggui.Utils;
 import ospp.bookinggui.exceptions.MalformedMessageException;
 import ospp.bookinggui.networking.Message;
 import ospp.bookinggui.networking.messages.HandshakeRespMsg;

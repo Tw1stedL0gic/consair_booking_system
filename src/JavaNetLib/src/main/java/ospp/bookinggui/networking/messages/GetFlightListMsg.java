@@ -10,13 +10,13 @@ public class GetFlightListMsg extends Message {
 		super(Type.GET_FLIGHT_LIST);
 	}
 
-	@Override
-	public byte[] constructBody() throws UnsupportedEncodingException {
-		return new byte[0];
-	}
-
 	public static GetFlightListMsg parse(byte[] body) {
 		//TODO GetFlightListMsg.parse()
 		return null;
+	}
+
+	@Override
+	public byte[] constructBody() throws UnsupportedEncodingException {
+		return new byte[0];
 	}
 }

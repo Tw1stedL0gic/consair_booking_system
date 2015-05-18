@@ -2,7 +2,6 @@ package messages;
 
 import org.junit.Test;
 import ospp.bookinggui.Passenger;
-import ospp.bookinggui.Utils;
 import ospp.bookinggui.networking.Message;
 import ospp.bookinggui.networking.messages.GetPassengerInfoRespMsg;
 
@@ -15,7 +14,7 @@ public class TestGetPassengerInfoResp {
 
 	@Test
 	public void parse1() throws UnsupportedEncodingException {
-		byte[] id = new byte[] {
+		byte[] id = new byte[]{
 			0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17
 		};
 
@@ -73,7 +72,7 @@ public class TestGetPassengerInfoResp {
 
 	@Test
 	public void parse2() throws UnsupportedEncodingException {
-		byte[] msg_array = new byte[] {
+		byte[] msg_array = new byte[]{
 			// PAID
 			0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
 

@@ -12,13 +12,13 @@ public class BookSeatMsg extends Message {
 		super(Type.BOOK_SEAT);
 	}
 
-	@Override
-	public byte[] constructBody() throws UnsupportedEncodingException {
-		return new byte[0];
-	}
-
 	public static BookSeatMsg parse(byte[] body) {
 		//TODO BookSeatMsg.parse()
 		return null;
+	}
+
+	@Override
+	public byte[] constructBody() throws UnsupportedEncodingException {
+		return new byte[0];
 	}
 }

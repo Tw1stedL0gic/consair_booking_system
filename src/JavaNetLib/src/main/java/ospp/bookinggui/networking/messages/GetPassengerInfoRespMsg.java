@@ -1,7 +1,6 @@
 package ospp.bookinggui.networking.messages;
 
 import ospp.bookinggui.Passenger;
-import ospp.bookinggui.Utils;
 import ospp.bookinggui.networking.Message;
 
 import java.io.UnsupportedEncodingException;
