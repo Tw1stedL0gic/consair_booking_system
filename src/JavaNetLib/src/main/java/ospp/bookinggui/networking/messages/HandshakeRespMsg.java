@@ -12,7 +12,7 @@ public class HandshakeRespMsg extends Message {
 	}
 
 	public static HandshakeRespMsg parse(byte[] body) {
-		boolean success = body[0] == 0xff;
+		boolean success = body[0] == (byte) 0xff;
 		return new HandshakeRespMsg(success);
 	}
 
