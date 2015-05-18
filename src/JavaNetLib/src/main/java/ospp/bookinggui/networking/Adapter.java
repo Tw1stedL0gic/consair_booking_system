@@ -32,12 +32,11 @@ public interface Adapter {
 	void disconnect();
 
 	/**
-	 * Book a seat at the given flight with the given info.
+	 * Book a seat with the given information.
 	 *
-	 * @param flight
 	 * @param booking
 	 */
-	void book(Flight flight, BookingInfo booking);
+	void book(BookingInfo booking);
 
 	/**
 	 * Retrieves the information of the passenger with the given ID and adds it to the inbox.
