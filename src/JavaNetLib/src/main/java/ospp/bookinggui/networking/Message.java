@@ -1,5 +1,6 @@
 package ospp.bookinggui.networking;
 
+import ospp.bookinggui.Passenger;
 import ospp.bookinggui.Utils;
 import ospp.bookinggui.exceptions.MalformedMessageException;
 import ospp.bookinggui.networking.messages.*;
@@ -140,6 +141,47 @@ public abstract class Message {
 		}
 
 		return block;
+	}
+
+	public static byte[] createUIBlock(Passenger p) throws UnsupportedEncodingException {
+
+		byte[] id = Message.createPaidBlock(p.getIdentification());
+		byte[] pn = p.getName().getBytes(Message.ENCODING);
+		byte[] adr = p.getAddress().getBytes(Message.ENCODING);
+		byte[] pi = p.getPaymentInfo().getBytes(Message.ENCODING);
+		byte[] email = p.getEmail().getBytes(Message.ENCODING);
+
+		byte[] paid_block = new byte[Message.AL_SIZE * 4 + id.length + pn.length + adr.length + pi.length + email.length];
+
+		int index = 0;
+
+		Message.setArgument(paid_block, id, index);
+		index += 8;
+
+		Message.setALValue(paid_block, pn.length, index);
+		index += Message.AL_SIZE;
+
+		Message.setArgument(paid_block, pn, index);
+		index += pn.length;
+
+		Message.setALValue(paid_block, adr.length, index);
+		index += Message.AL_SIZE;
+
+		Message.setArgument(paid_block, adr, index);
+		index += adr.length;
+
+		Message.setALValue(paid_block, pi.length, index);
+		index += Message.AL_SIZE;
+
+		Message.setArgument(paid_block, pi, index);
+		index += pi.length;
+
+		Message.setALValue(paid_block, email.length, index);
+		index += Message.AL_SIZE;
+
+		Message.setArgument(paid_block, email, index);
+
+		return paid_block;
 	}
 
 	public byte[] constructHeader(int body_size) {

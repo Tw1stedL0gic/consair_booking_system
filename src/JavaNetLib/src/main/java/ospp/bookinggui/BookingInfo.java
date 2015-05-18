@@ -4,12 +4,12 @@ public class BookingInfo {
 
 	private final Passenger passenger;
 	private final Flight    flight;
-	private final Seat      seat;
+	private final int       SEAT;
 
-	public BookingInfo(Passenger p, Flight f, Seat s) {
+	public BookingInfo(Passenger p, Flight f, int seat_number) {
 		this.passenger = p;
 		this.flight = f;
-		this.seat = s;
+		this.SEAT = seat_number;
 	}
 
 	public Passenger getPassenger() {
@@ -20,7 +20,7 @@ public class BookingInfo {
 		return this.flight;
 	}
 
-	public Seat getSeat() {
-		return this.seat;
+	public int getSeatNumber() {
+		return this.SEAT;
 	}
 }
