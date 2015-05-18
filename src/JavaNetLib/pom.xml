@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ospp</groupId>
-    <artifactId>bookinggui</artifactId>
+    <artifactId>javanetlib</artifactId>
     <version>0.1-ALPHA</version>
 
     <!-- This is the name of the compiled jar-file -->
-    <name>BookingGUI</name>
+    <name>JavaNetLib</name>
 
     <!-- Source encoding -->
     <properties>
@@ -26,6 +26,12 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>2.0.2-beta</version>
         </dependency>
     </dependencies>
 
@@ -46,47 +52,6 @@
                     <target>1.7</target>
                     <showDeprecation>true</showDeprecation>
                 </configuration>
-            </plugin>
-
-            <!-- Jar -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.3.2</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>ospp.bookinggui.Main</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
-
-            <!-- Shader -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>2.3</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-
-                            <!-- Remove any unused .class files from the output JAR-file -->
-                            <minimizeJar>true</minimizeJar>
-
-                            <filters>
-                            </filters>
-
-                            <relocations>
-                            </relocations>
-
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
 
             <!-- JavaDoc -->

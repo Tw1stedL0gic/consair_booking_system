@@ -1,6 +1,6 @@
 *.swp
 *.idea/
 *.iml
-src/BookingFX/target/classes/ospp/booking/bookingfx/SearchInterfaceController$5.class
-src/BookingFX/target/classes/ospp/booking/bookingfx/SearchInterfaceController$4.class
-src/BookingFX/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
+*target/
+dependency-reduced-pom.xml
+ebin/
