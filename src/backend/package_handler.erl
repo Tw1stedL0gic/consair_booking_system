@@ -1,15 +1,42 @@
 -module(package_handler).
 -export([handle_package/1]).
 
-handle_package(<<"Hello">>) ->
-    <<"Goodbye">>;
-handle_package(<<"Foo">>) ->
-    <<"Baz">>;
-handle_package(<<"exit">>) ->
+handle_package(Package) ->
+    handle_package(translate_package);
+handle_package(1, <<Message>>) -> %% ID 1 - Request passengers
+    <<2>>; %% ID 2 - Send passengers
+handle_package(3, <<Message>>) -> %% ID 3 - Request booking 
+    <<4>>; %% ID 4 - Response to booking
+handle_package(5, <<Message>>) -> %% ID 5 - Request Login
+    <<6>>; %% ID 6 - Response to login
+handle_package(6, <<Message>>) -> %% ID 7 - Disconnect
     exit;
+handle_package(8, <<Message>>) -> %% ID 8 - Heartbeat
+    <<8>>;
+handle_package(9, <<Message>>) -> %% ID 9 - Request passenger info
+    <<10>>; %% ID 10 - Response to passenger info
 handle_package(_) ->
-    <<"I didn't understand that">>.
+    <<11, "">>, %% a string that explains the error.  
+    error(unknownID).
 
+
+%% Translates from a bitstring to a tuple with ID and message
+
+translate_package(<<ID:8/unsigned, Message/binary>>) ->			
+    %% convert Package into a format that 
+    %% message handler can read, also make
+    %% sure that package is correct
+    case message_handler(ID, Message) of
+	{ok, SendData} ->
+	    gen_tcp:send(S,SendData);
+	{err, Reason}  -> tbi
+    end;
+
+translate_package({ID}) ->
+    package;
+translate_package({ID, Message}) ->
+    package.
+    
 
 
 	
@@ -49,16 +76,3 @@ handle_package(_) ->
 %    tbi;
 %message_handler(10,Mess) ->
 %    tbi.
-
-
-
-%		{ok, <<ID:8/unsigned, Mess/binary>>} ->
-%		    %% convert Package into a format that 
-%		    %% message handler can read, also make
-%		    %% sure that package is correct
-%		    case message_handler(ID, Mess) of
-%			{ok, SendData} ->
-%			    gen_tcp:send(S,SendData);
-%			{err, Reason}  -> tbi
-%		    end
-			    
