@@ -210,7 +210,7 @@ public class TestMessage {
 		}
 
 		try {
-			Message.parseMessage((short) 3, data);
+			Message.parseMessage((short) 4, data);
 			fail("Message.parseMessage did not throw the correct exceptions with random data!");
 		}
 		catch(MalformedMessageException ignored) {
