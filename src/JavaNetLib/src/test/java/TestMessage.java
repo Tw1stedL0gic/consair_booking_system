@@ -194,14 +194,38 @@ public class TestMessage {
 	}
 
 	@Test
-	public void testParseRandomData() {
+	public void parseRandomData1() {
 		byte[] data = new byte[] {
 			0x23, 0x21, 0x65, (byte) 0xf1, (byte) 0x88, 0x76
 		};
 
 		try {
-			Message msg = Message.parseMessage((short) 0, data);
+			Message.parseMessage((short) 0, data);
 			fail("Message.parseMessage did not throw the correct exceptions with random data!");
+		}
+		catch(MalformedMessageException ignored) {
+		}
+		catch(UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+
+		try {
+			Message.parseMessage((short) 3, data);
+			fail("Message.parseMessage did not throw the correct exceptions with random data!");
+		}
+		catch(MalformedMessageException ignored) {
+		}
+		catch(UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	public void parseNull() {
+		byte[] data = null;
+
+		try {
+			Message.parseMessage((short) 1982, data);
 		}
 		catch(MalformedMessageException ignored) {
 		}
