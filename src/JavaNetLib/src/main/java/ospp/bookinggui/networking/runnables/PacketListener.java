@@ -39,10 +39,8 @@ public class PacketListener implements Runnable {
 
 		try {
 			while((data = this.input.read()) != -1) {
-
-				logger.fine("Recieved data: " + Utils.bytePresentation(new int[]{data}));
-
 				if(!debug) {
+
 					// Header - Message Length
 					if(index < Message.HEADER_SIZE - 1) {
 						m_length |= (data << (8 * (3 - index)));
@@ -85,6 +83,9 @@ public class PacketListener implements Runnable {
 
 					// Increment index counter
 					++index;
+				}
+				else {
+					logger.info("Received data: " + Utils.bytePresentation(new int[]{data}));
 				}
 			}
 
