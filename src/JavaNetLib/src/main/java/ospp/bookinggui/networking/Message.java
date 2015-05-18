@@ -27,7 +27,7 @@ public abstract class Message {
 		try {
 			type = Type.getType(id);
 		}
-		catch(IllegalArgumentException e) {
+		catch(IllegalArgumentException | ArrayIndexOutOfBoundsException e) {
 			throw new MalformedMessageException("The supplied message ID is not supported!");
 		}
 
