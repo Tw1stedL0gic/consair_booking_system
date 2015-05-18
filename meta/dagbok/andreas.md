@@ -83,7 +83,7 @@ Fortsatte med GUIt, jobbade med mer design på GUIt och diskuterade om hur vi l�
 ## Vecka 21
 
 ##### Måndag
-
+Började med att försöka sy ihop vårt GUI med nätverksadaptern som Lucas skrivit. Vi har gjort så att vi borde kunna ansluta till en server just nu med en ny "anslut till server" startsida. Tidsåtgång 5h 30 min
 ##### Tisdag
 
 ##### Onsdag
