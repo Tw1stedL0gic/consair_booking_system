@@ -23,8 +23,9 @@ public class MainApp extends Application {
         sm.loadScreen("confirminterface", "/fxml/ConfirmInterface.fxml");
         sm.loadScreen("confirmedinterface", "/fxml/ConfirmedInterface.fxml");
         sm.loadScreen("seatbooker", "/fxml/seatBooker.fxml");
+        sm.loadScreen("scene", "/fxml/Scene.fxml");
         
-        sm.setScreen("searchinterface");
+        sm.setScreen("scene");
         
         Parent root = sm;
         
@@ -36,7 +37,6 @@ public class MainApp extends Application {
         scene.getStylesheets().add("/styles/confirminterface.css");
         scene.getStylesheets().add("/styles/confirmedinterface.css");
         scene.getStylesheets().add("/styles/Styles.css");
-        
         
         stage.setTitle("Cons air");
         stage.setScene(scene);

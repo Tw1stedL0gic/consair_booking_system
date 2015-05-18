@@ -104,5 +104,11 @@
             </plugin>
         </plugins>
     </build>
-
+    <dependencies>
+        <dependency>
+            <groupId>ospp</groupId>
+            <artifactId>javanetlib</artifactId>
+            <version>0.1-ALPHA</version>
+        </dependency>
+    </dependencies>
 </project>
