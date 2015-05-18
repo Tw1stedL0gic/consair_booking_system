@@ -22,7 +22,13 @@ public abstract class Message {
 
 	public static Message parseMessage(short id, byte[] body) throws UnsupportedEncodingException, MalformedMessageException {
 
-		Type type = Type.getType(id);
+		Type type;
+		try {
+			type = Type.getType(id);
+		}
+		catch(IllegalArgumentException e) {
+			throw new MalformedMessageException("The supplied message ID is not supported!");
+		}
 
 		try {
 			switch(type) {
