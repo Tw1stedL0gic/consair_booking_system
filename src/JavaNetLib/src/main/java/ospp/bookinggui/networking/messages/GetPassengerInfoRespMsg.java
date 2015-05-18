@@ -22,8 +22,8 @@ public class GetPassengerInfoRespMsg extends Message {
 		index += 8;
 
 		long paid = 0;
-		for(int i = 0; i < paid_arg.length; i++) {
-			paid = (paid << 8) | paid_arg[i];
+		for(byte aPaid_arg : paid_arg) {
+			paid = (paid << 8) | aPaid_arg;
 		}
 
 		// PN

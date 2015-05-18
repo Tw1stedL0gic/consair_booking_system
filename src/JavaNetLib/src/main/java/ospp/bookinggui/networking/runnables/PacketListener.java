@@ -64,7 +64,7 @@ public class PacketListener implements Runnable {
 							Message msg;
 							try {
 								msg = Message.parseMessage(id, body);
-								mailbox.recieve(msg);
+								mailbox.receive(msg);
 							}
 							catch(UnsupportedEncodingException e) {
 								logger.log(Level.SEVERE, e.getMessage(), e);
