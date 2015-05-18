@@ -33,6 +33,10 @@ public class BookSeatRespMsg extends Message {
 		return new byte[0];
 	}
 
+	public BookSeatRespType getType() {
+		return this.TYPE;
+	}
+
 	public enum BookSeatRespType {
 		SUCCESS,
 		LOCKED,
