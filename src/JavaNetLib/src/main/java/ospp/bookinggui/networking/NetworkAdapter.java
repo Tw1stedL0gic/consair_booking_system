@@ -9,6 +9,8 @@ import java.util.logging.Logger;
 
 public class NetworkAdapter {
 
+	public static int so_timeout_millis = 30000;
+
 	private static final Logger logger = Logger.getLogger(NetworkAdapter.class.getName());
 
 	private final Mailbox<Message> mailbox;
@@ -19,6 +21,9 @@ public class NetworkAdapter {
 		logger.info("Attempting to connect to host!");
 
 		Socket socket = new Socket(host, port);
+
+		// Set a timeout on read calls.
+		socket.setSoTimeout(NetworkAdapter.so_timeout_millis);
 
 		logger.info("Connection established!");
 
