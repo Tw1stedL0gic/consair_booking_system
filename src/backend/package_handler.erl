@@ -1,78 +1,96 @@
--module(package_handler).
+-module(package_handler).			
 -export([handle_package/1]).
+
+%% Package IDs
+%% REQ = Request, RESP = Respond
+-define(ClientHandshake,        1)
+-define(ServerHandshake,        2)
+-define(Heartbeat,              3)
+-define(Disconnect,             4)
+-define(REQAirportList,         5)
+-define(RESPAirportList,        6)
+-define(REQRouteSearch,         7)
+-define(RESPRouteSearch,        8)
+-define(REQFlightDetails,       9)
+-define(RESPFlightDetails,     10)
+-define(REQSeatSuggestion,     11)
+-define(RESPSeatSuggestion,    12)
+-define(REQStartBooking,       13)
+-define(RESPStartBooking,      14)
+-define(REQFinalizeBooking,    15)
+-define(RESPFinalizeBooking,   16)
+-define(REQReceipt,            17)
+-define(RESPReceipt,           18)
+-define(AbortBooking,          19)
+-define(Error,                 20)
+
+
+%% @doc - A package handler which translates the received package from
+%% bitstring to a tuple, calls the appropriate function, and
+%% translates the answer back to bitstring.
 
 handle_package(Package) ->
     handle_package(translate_package);
-handle_package(1, <<Message>>) -> %% ID 1 - Request passengers
-    <<2>>; %% ID 2 - Send passengers
-handle_package(3, <<Message>>) -> %% ID 3 - Request booking 
-    <<4>>; %% ID 4 - Response to booking
-handle_package(5, <<Message>>) -> %% ID 5 - Request Login
-    <<6>>; %% ID 6 - Response to login
-handle_package(6, <<Message>>) -> %% ID 7 - Disconnect
-    exit;
-handle_package(8, <<Message>>) -> %% ID 8 - Heartbeat
-    <<8>>;
-handle_package(9, <<Message>>) -> %% ID 9 - Request passenger info
-    <<10>>; %% ID 10 - Response to passenger info
-handle_package(_) ->
-    <<11, "">>, %% a string that explains the error.  
-    error(unknownID).
+handle_package({?ClientHandshake, Message}) -> %% ID 1 - Handshake
+    %% grants either user or admin privilege alternatively a failure message in case handshake didn't work. 
+    %% failed if username or password is incorrect. 
+    
+    %% 0x00 - user
+    %% 0x10 - admin
+    %% 0xff - failed
 
+    <<?ServerHandshake>>;
+handle_package({?Heartbeat, Message}) -> %% ID 7 - Disconnect
+    ok; 
+handle_package({?Disconnect, Message}) -> %% ID N - Request airport list
+    booking_agent:airport_list();
+handle_package({?REQAirportList, Message}) -> %% ID N - Request route search
+    booking_agent:route_search(Message),
+    <<?RESPAirportList>>
+handle_package({?REQFlightDetailst, Message}) -> %% ID N - Request flight details
+    booking_agent:flight_details(Message),
+    <<?RESPFlightDetails>>; %% ID 2 - Respond flight details
+handle_package({?REQSeatAvailability, Message}) -> %% ID N - Request seat availability
+    booking_agent:seat_availability(Message),
+    <<?RESPSeatAvailability>>; %% ID 4 - Response to booking
+handle_package({?REQSeatSuggestion, Message}) -> %% ID N - Request seat suggestion
+    booking_agent:suggest_seat(),
+    <<?RESPSeatSuggestion>>; %% ID 6 - Response to login
+handle_package({?REQStartBooking, Message}) -> %% ID N - Request start booking
+    booking_agent:start_booking(),
+    <<?RESPStartBooking>>;
+handle_package({?REQFinalizeBooking, Message}) -> %% ID N - Request finalize booking
+    booking_agent:finalize_booking(),
+    <<?RESPFinalizeBooking>>;
+handle_package({?REQReceipt, Message}) -> %% ID N - Request receipt
+    booking_agent:receipt() ->
+    <<?SENDReceipt>>;
+handle_package({?AbortBooking, Message}) -> %% ID N - Abort booking
+    ok.
 
 %% Translates from a bitstring to a tuple with ID and message
 
+translate_package(<<ID:8/unsigned>>) ->
+    {ID};
 translate_package(<<ID:8/unsigned, Message/binary>>) ->			
     %% convert Package into a format that 
     %% message handler can read, also make
     %% sure that package is correct
-    case message_handler(ID, Message) of
-	{ok, SendData} ->
-	    gen_tcp:send(S,SendData);
-	{err, Reason}  -> tbi
+    {ID, Message},
     end;
 
 translate_package({ID}) ->
     package;
 translate_package({ID, Message}) ->
     package.
-    
-
-
 	
-%%	    %% 1: Hämta passagerare (front-end to back-end)
-%%	    %% 2: Passagerarlista (back-end to front-end)
-%%	    %% 3: Boka plats
-%%	    %% 4: Response to #3 (lyckat / misslyckat)
-%%	    %% 5: Login
-%%	    %% 6: Response #5
-%%	    %% 7: Disconnect / Terminera Anslutning
-%%	    %% 8: Heartbeat
-%%	    %% 9: Get passenger info (front-end -> back-end)
-%%	    %% 10: Response #9
-
-
-%%Kan vara många fel här, under grov bearbetning. Ska bytas ut mot funktionen loop ovan
-%message_handler(1,Mess) ->
-%    tbi;
-%message_handler(2,Mess) ->
-%    tbi;
-%message_handler(3,Mess) -> %% Get passengerlist
-%    tbi;
-%
-%    <<AL:16/unsigned, FN/binary>> = Mess
-%    {ok, createMessage(4,getPassengerlist(AL,FN))};
-%message_handler(4,Mess) ->
-%    {err, unsupported};
-%message_handler(5,Mess) ->
-%    tbi;
-%message_handler(6,Mess) ->
-%    tbi;
-%message_handler(7,Mess) ->
-%    tbi;
-%message_handler(8,Mess) ->
-%    tbi;
-%message_handler(9,Mess) ->
-%    tbi;
-%message_handler(10,Mess) ->
-%    tbi.
+%% 1: Hämta passagerare (front-end to back-end)
+%% 2: Passagerarlista (back-end to front-end)
+%% 3: Boka plats
+%% 4: Response to #3 (lyckat / misslyckat)
+%% 5: Login
+%% 6: Response #5
+%% 7: Disconnect / Terminera Anslutning
+%% 8: Heartbeat
+%% 9: Get passenger info (front-end -> back-end)
+%% 10: Response #9

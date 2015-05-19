@@ -8,31 +8,40 @@
 %% @end
 %% ------------------------
 
--module(book).
+-module(booking_agent).
 %%-export([loop/1, get/1, login/1, validate/1, heartbeat/1, disconnect/1]).
 -export([]).
-%%---------------------------------------------------------------------%%
+
 
 
 	%flight_info_by_flightId
 	%passenger_info_by_flightNr
 	%number_seat_avail
 	%book_rate
-	
-%% COMMENT: Remember that an atom is as large as an integer in Erlang, 
-%% so to make it clearer we might want to change the numbers 1-10 to 
-%% atoms. Atoms take up space in the atom table, but a constant 10
-%% atoms will not take up too much space. 
-%%
-%% This is because I was not there to write this, but why does
-%% each case need the validate({X, Package}) part? Surely, if the
-%% input manages to pass the pattern matching then we shouldn't need
-%% to validate. (Also I can't find what the validate() function does. 
-%% Have we written it ourselves?
-%%
-%% We should also add comments to each case so we know what each 
-%% case is handling. 
-%% - Carl
+
+
+%%---------------------------------------------------------------------%%
+
+airport_list() ->
+    ok. 
+
+%%---------------------------------------------------------------------%%
+
+%% @doc - Returns a list of all available flights
+
+flight_list() ->
+    %% return list of flights with departure time that has not passed
+    ok.
+
+%%---------------------------------------------------------------------%%
+
+route_search(route) ->
+    %% search through database for route
+    %% check if route exists
+    %% check if date fits
+    %% check if not full
+    %% potential pathfinding
+    ok.
 
 %%---------------------------------------------------------------------%%
 
@@ -40,36 +49,43 @@
 %%-spec set() -> ok when 
 %%      Ref::{integer(),string()}.
 
-
-set(Ref) ->
-	%(same as loop)
-	%passenger_info: preference
-	tbi.
+flight_details(Flight) ->
+    %% return information about flight 
+    ok.
 
 %%---------------------------------------------------------------------%%
 
-%% @doc TODO: add documentation
--spec seat(Flight,Date) -> ok when 
-      Flight::string(),
-      Date::integer().
-
-
-seat(Flight,Date) ->
-	%by_preference
-	%by_random
-	%user_choice
-	tbi.
+seat_avaiability(Seat) ->
+    ok. 
 
 %%---------------------------------------------------------------------%%
 
-%% @doc TODO: add documentation
--spec login(User,Key) -> ok when 
-      User::integer(),
-      Key::string().
+suggest_seat() ->
+    %% implement preferences
+    ok. 
 
+%%---------------------------------------------------------------------%%
 
-login(User,Key) ->
-	%username/loyalprogramnr ? password
-	tbi.
+start_booking() ->
+    
+
+start_booking(Flight, seat) ->
+    %% record time of seat locking so that in case of crash, it can be cleared
+    ok.
+
+%%---------------------------------------------------------------------%%
+
+finalize_booking() ->
+    ok.
+
+%%---------------------------------------------------------------------%%
+
+receipt() ->
+    ok.
+
+%%---------------------------------------------------------------------%%
+
+abort_booking() ->
+    ok. 
 
 %%---------------------------------------------------------------------%%

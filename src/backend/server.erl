@@ -14,7 +14,7 @@
 
 -module(server).
 -export([start/0, start/1, connector_spawner/2, connector/4]).
--define(PORT, 33333).
+-define(PORT, 53535).
 -define(CONNECTIONOPTIONS, [binary, {packet, 4}, {active, false}]).
 -define(ALLOWEDTIMEOUTS, 10). %% Amount of minutes allowed before conenction is terminated
 
@@ -108,7 +108,7 @@ connector(Sock, ID, Timeouts, ParentPID) ->
 	    %% after 10 minutes it will break the connection.
 	    io:fwrite("C~p: Timeout ~p, ~p tries remaining~n", [ID, Timeouts, ?ALLOWEDTIMEOUTS-Timeouts]), 
 	    connector(Sock, ID, Timeouts+1, ParentPID);
-	{error, closed} -> %% in case of connection closed, tell parent
+	{error, closed} -> %% in case of connection closed, tell parent. RECODE THIS TO IMPLEMENT HEARTBEAT
 	    io:fwrite("C~p: Connection closed, terminating.~n", [ID]),
 	    ParentPID ! terminated;
 	{error, Error} -> %% In case of error, print error and announce termination to parent
