@@ -6,12 +6,14 @@ import ospp.bookinggui.networking.Message;
 import ospp.bookinggui.networking.MessageType;
 import ospp.bookinggui.networking.messages.LoginMsg;
 
+import java.io.UnsupportedEncodingException;
+
 import static org.junit.Assert.*;
 
 public class TestLogin {
 
 	@Test
-	public void parseCorrectData() throws MalformedMessageException {
+	public void parseCorrectData() throws MalformedMessageException, UnsupportedEncodingException {
 		String data = "1&1337&yo&lo&";
 
 		Message msg = Message.parseMessage(data);
@@ -23,7 +25,7 @@ public class TestLogin {
 	}
 
 	@Test
-	public void parseIncorrectData1() {
+	public void parseIncorrectData1() throws UnsupportedEncodingException {
 		String data = "1&1337&";
 
 		try {
@@ -36,7 +38,7 @@ public class TestLogin {
 	}
 
 	@Test
-	public void parseIncorrectData2() {
+	public void parseIncorrectData2() throws UnsupportedEncodingException {
 		String data = "1&1337&yolo";
 
 		try {

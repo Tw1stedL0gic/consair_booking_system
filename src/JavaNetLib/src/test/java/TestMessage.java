@@ -4,12 +4,14 @@ import ospp.bookinggui.networking.Message;
 import ospp.bookinggui.networking.MessageType;
 import ospp.bookinggui.networking.messages.LoginMsg;
 
+import java.io.UnsupportedEncodingException;
+
 import static org.junit.Assert.*;
 
 public class TestMessage {
 
 	@Test
-	public void parseRandomData1() {
+	public void parseRandomData1() throws UnsupportedEncodingException {
 		byte[] data = new byte[]{
 			0x23, 0x21, 0x65, (byte) 0xf1, (byte) 0x88, 0x76
 		};
@@ -23,7 +25,7 @@ public class TestMessage {
 	}
 
 	@Test
-	public void testParseLogin() throws MalformedMessageException {
+	public void testParseLogin() throws MalformedMessageException, UnsupportedEncodingException {
 		String data = "1&100203002&tjenare&yolo&";
 
 		Message msg = Message.parseMessage(data);
@@ -37,7 +39,7 @@ public class TestMessage {
 	}
 
 	@Test
-	public void constructMessage1() {
+	public void constructMessage1() throws UnsupportedEncodingException {
 
 		long timestamp = 1337L;
 
@@ -45,11 +47,11 @@ public class TestMessage {
 
 		String data = loginMsg.createMessage();
 
-		assertEquals("1&1337&göran&persson&", data);
+		assertEquals("1&1337&g%C3%B6ran&persson&", data);
 	}
 
 	@Test
-	public void constructMessage2() {
+	public void constructMessage2() throws UnsupportedEncodingException {
 		long timestamp = 1338L;
 
 		Message msg = new Message(MessageType.LOGIN, timestamp, "arg1", "arg2", "arg3");
@@ -60,7 +62,7 @@ public class TestMessage {
 	}
 
 	@Test
-	public void parseIncorrectData() {
+	public void parseIncorrectData() throws UnsupportedEncodingException {
 		String data = "asddisfuhs839i2no34";
 
 		try {
@@ -73,7 +75,7 @@ public class TestMessage {
 	}
 
 	@Test
-	public void parseIncorrectID() {
+	public void parseIncorrectID() throws UnsupportedEncodingException {
 		String data = "sdflk&lkaksjd&";
 
 		try {
@@ -86,7 +88,7 @@ public class TestMessage {
 	}
 
 	@Test
-	public void parseIncorrectID2() {
+	public void parseIncorrectID2() throws UnsupportedEncodingException {
 		String data = "1231241422&1231243245&";
 
 		try {
@@ -99,7 +101,7 @@ public class TestMessage {
 	}
 
 	@Test
-	public void parseIncorrectTimestamp() {
+	public void parseIncorrectTimestamp() throws UnsupportedEncodingException {
 		String data = "1&234234jkj24&";
 
 		try {
@@ -109,5 +111,28 @@ public class TestMessage {
 		catch(MalformedMessageException e) {
 			assertEquals("The timestamp is not a valid long!", e.getMessage());
 		}
+	}
+
+	@Test
+	public void constructSpecialChars() throws UnsupportedEncodingException {
+
+		String arg1 = "&&&&";
+		String arg2 = "(/&(¤%$";
+
+		Message msg = new Message(MessageType.DISCONNECT, 1337L, arg1, arg2);
+
+		String data = msg.createMessage();
+
+		assertEquals("3&1337&%26%26%26%26&%28%2F%26%28%C2%A4%25%24&", data);
+	}
+
+	@Test
+	public void parseSpecialChars() throws UnsupportedEncodingException, MalformedMessageException {
+		String data = "1&1337&%26%26%26%26&%28%2F%26%28%C2%A4%25%24&";
+
+		Message msg = Message.parseMessage(data);
+
+		assertTrue(msg instanceof LoginMsg);
+		assertArrayEquals(new String[]{"&&&&", "(/&(¤%$"}, msg.getBody());
 	}
 }

@@ -6,6 +6,9 @@ import ospp.bookinggui.networking.messages.ErrorMsg;
 import ospp.bookinggui.networking.messages.LoginMsg;
 import ospp.bookinggui.networking.messages.LoginRespMsg;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.logging.Logger;
 
 public class Message {
@@ -55,9 +58,14 @@ public class Message {
 	 * @return The message if successful.
 	 * @throws MalformedMessageException If any problems occur during parsing.
 	 */
-	public static Message parseMessage(String data) throws MalformedMessageException {
+	public static Message parseMessage(String data) throws MalformedMessageException, UnsupportedEncodingException {
 
 		String[] parts = data.split(Message.SEPARATOR);
+
+		// Remove the URL encoding from the message, we no longer need it.
+		for(int i = 0; i < parts.length; i++) {
+			parts[i] = URLDecoder.decode(parts[i], "UTF8");
+		}
 
 		if(parts.length < Message.HEADER_SIZE) {
 			throw new MalformedMessageException("Could not parse message! The message is too small!");
@@ -173,14 +181,14 @@ public class Message {
 	 *
 	 * @return The created message.
 	 */
-	public String createMessage() {
+	public String createMessage() throws UnsupportedEncodingException {
 		StringBuilder message = new StringBuilder();
 
 		message.append(this.TYPE.ID).append(Message.SEPARATOR);
 		message.append(this.TIMESTAMP).append(Message.SEPARATOR);
 
 		for(String arg : this.BODY) {
-			message.append(arg).append(Message.SEPARATOR);
+			message.append(URLEncoder.encode(arg, "UTF8")).append(Message.SEPARATOR);
 		}
 
 		return message.toString();

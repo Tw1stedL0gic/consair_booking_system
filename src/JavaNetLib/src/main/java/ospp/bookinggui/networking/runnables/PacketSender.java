@@ -38,8 +38,13 @@ public class PacketSender implements Runnable {
 				}
 			}
 
-			output.println(m.createMessage());
-			output.flush();
+			try {
+				output.println(m.createMessage());
+				output.flush();
+			}
+			catch(UnsupportedEncodingException e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
+			}
 		}
 	}
 
