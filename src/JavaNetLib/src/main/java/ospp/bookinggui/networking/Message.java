@@ -158,7 +158,6 @@ public class Message {
 
 				case REQ_SEAT_MAP_ADMIN_RESP:
 					break;
-
 			}
 		}
 		catch(NullPointerException | IndexOutOfBoundsException e) {
@@ -198,6 +197,4 @@ public class Message {
 	public String[] getBody() {
 		return this.BODY;
 	}
-
-
 }
