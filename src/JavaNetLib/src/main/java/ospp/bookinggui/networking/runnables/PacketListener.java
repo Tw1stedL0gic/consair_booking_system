@@ -38,7 +38,7 @@ public class PacketListener implements Runnable {
 					catch(MalformedMessageException e) {
 						logger.log(Level.SEVERE, "PacketListener received malformed message! " +
 							"Message: \"" + e.getMessage() + "\"", e);
-						mailbox.send(new ErrorMsg(e.getMessage()));
+						mailbox.send(new ErrorMsg(System.currentTimeMillis(), e.getMessage()));
 					}
 				}
 				else {

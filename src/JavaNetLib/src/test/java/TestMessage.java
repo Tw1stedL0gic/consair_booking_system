@@ -1,10 +1,9 @@
 import org.junit.Test;
 import ospp.bookinggui.exceptions.MalformedMessageException;
 import ospp.bookinggui.networking.Message;
+import ospp.bookinggui.networking.MessageType;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class TestMessage {
 
@@ -28,7 +27,7 @@ public class TestMessage {
 
 		Message msg = Message.parseMessage(data);
 
-		assertEquals(Message.Type.LOGIN, msg.getType());
+		assertEquals(MessageType.LOGIN, msg.getType());
 		assertEquals(100203002L, msg.getTimestamp());
 
 		String[] body = msg.getBody();

@@ -3,6 +3,7 @@ package runnables;
 import org.junit.Test;
 import ospp.bookinggui.networking.Mailbox;
 import ospp.bookinggui.networking.Message;
+import ospp.bookinggui.networking.MessageType;
 import ospp.bookinggui.networking.runnables.PacketSender;
 
 import java.io.ByteArrayOutputStream;
@@ -20,7 +21,7 @@ public class TestPacketSender {
 
 		long timestamp = System.currentTimeMillis();
 
-		mailbox.send(new Message(Message.Type.LOGIN, timestamp, "yo", "lo"));
+		mailbox.send(new Message(MessageType.LOGIN, timestamp, "yo", "lo"));
 
 		PacketSender sender = new PacketSender(mailbox, output);
 		new Thread(sender).start();

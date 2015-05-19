@@ -3,6 +3,7 @@ package runnables;
 import org.junit.Test;
 import ospp.bookinggui.networking.Mailbox;
 import ospp.bookinggui.networking.Message;
+import ospp.bookinggui.networking.MessageType;
 import ospp.bookinggui.networking.runnables.PacketListener;
 
 import java.io.ByteArrayInputStream;
@@ -28,7 +29,7 @@ public class TestPacketListener {
 
 		assertNotEquals(null, msg);
 
-		assertEquals(Message.Type.LOGIN, msg.getType());
+		assertEquals(MessageType.LOGIN, msg.getType());
 		assertEquals(1337L, msg.getTimestamp());
 
 		assertArrayEquals(new String[]{"yo", "lo"}, msg.getBody());

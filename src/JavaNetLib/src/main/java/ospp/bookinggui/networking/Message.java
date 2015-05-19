@@ -26,16 +26,35 @@ public class Message {
 
 	private static final Logger logger = Logger.getLogger(Message.class.getName());
 
-	private final Type     TYPE;
-	private final long     TIMESTAMP;
-	private final String[] BODY;
+	private final MessageType TYPE;
+	private final long        TIMESTAMP;
+	private final String[]    BODY;
 
-	public Message(Type type, long timestamp, String... body) {
+	/**
+	 * Creates a message with the given parameters.
+	 *
+	 * WARNING! If this constructor is called manually and not from
+	 * a child message constructor, you need to make absolutely sure that the way you call
+	 * it complies with the defined protocol!
+	 *
+	 * @param type The type of the message.
+	 * @param timestamp The timestamp of the message.
+	 * @param body The body of the message.
+	 */
+	public Message(MessageType type, long timestamp, String... body) {
 		this.TYPE = type;
 		this.TIMESTAMP = timestamp;
 		this.BODY = body;
 	}
 
+	/**
+	 * Attempts to parse the given string according to the defined protocol.
+	 * Throws MalformedMessageException with a description of the problem if any error occurs during parsing.
+	 *
+	 * @param data The string to parse to a message.
+	 * @return The message if successful.
+	 * @throws MalformedMessageException If any problems occur during parsing.
+	 */
 	public static Message parseMessage(String data) throws MalformedMessageException {
 
 		String[] parts = data.split(Message.SEPARATOR);
@@ -44,9 +63,9 @@ public class Message {
 			throw new MalformedMessageException("Could not parse message! The message is too small!");
 		}
 
-		Type type;
+		MessageType type;
 		try {
-			type = Type.getType(Integer.valueOf(parts[0]));
+			type = MessageType.getType(Integer.valueOf(parts[0]));
 		}
 		catch(NumberFormatException e) {
 			throw new MalformedMessageException("The message ID is not an integer!");
@@ -150,6 +169,11 @@ public class Message {
 		throw new MalformedMessageException("Something went horribly wrong during parsing!");
 	}
 
+	/**
+	 * Creates the message.
+	 *
+	 * @return The created message.
+	 */
 	public String createMessage() {
 		StringBuilder message = new StringBuilder();
 
@@ -163,7 +187,7 @@ public class Message {
 		return message.toString();
 	}
 
-	public Type getType() {
+	public MessageType getType() {
 		return this.TYPE;
 	}
 
@@ -175,61 +199,5 @@ public class Message {
 		return this.BODY;
 	}
 
-	public enum Type {
 
-		/*
-		 * IMPORTANT! The order of these types determine the ID of the message!
-		 * The first type in the constants below is thus the ID #1 etc.
-		 */
-
-		// General types
-		LOGIN,
-		LOGIN_RESP,
-		DISCONNECT,
-		ERROR,
-
-		// User commands
-		INIT_BOOK,
-		INIT_BOOK_RESP,
-
-		FIN_BOOK,
-		FIN_BOOK_RESP,
-
-		ABORT_BOOK,
-
-		REQ_AIRPORTS,
-		REQ_AIRPORTS_RESP,
-
-		SEARCH_ROUTE,
-		SEARCH_ROUTE_RESP,
-
-		REQ_FLIGHT_DETAILS,
-		REQ_FLIGHT_DETAILS_RESP,
-
-		REQ_SEAT_SUGGESTION,
-		REQ_SEAT_SUGGESTION_RESP,
-
-		REQ_SEAT_MAP,
-		REQ_SEAT_MAP_RESP,
-
-		// Admin commands
-		REQ_PASSENGER_LIST,
-		REQ_PASSENGER_LIST_RESP,
-
-		REQ_SEAT_MAP_ADMIN,
-		REQ_SEAT_MAP_ADMIN_RESP;
-
-		public final byte ID;
-
-		Type() {
-			this.ID = (byte) ((this.ordinal() + 1) & 0xFF);
-		}
-
-		public static Type getType(int id) {
-			if(id > Type.values().length) {
-				throw new IllegalArgumentException("Incorrect ID! ID is too large!");
-			}
-			return Type.values()[id - 1];
-		}
-	}
 }
