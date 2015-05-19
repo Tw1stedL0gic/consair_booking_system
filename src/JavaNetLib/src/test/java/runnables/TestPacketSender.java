@@ -39,6 +39,9 @@ public class TestPacketSender {
 
 		String sent = output.toString();
 
+		// WARNING! This doesn't work on windows!
+		// Windows uses the "\r\n" line break char instead of the standard UNIX "\n"
+		// "Fuck you! Thats why!" -- Bill Gates
 		String expected = "1&" + timestamp + "&yo&lo&\n";
 
 		assertEquals(expected, sent);

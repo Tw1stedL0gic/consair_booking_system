@@ -48,7 +48,7 @@
                 <version>2.12.4</version>
                 <configuration>
                     <includes>
-                        <include>MainTestSuite.java</include>
+                        <include>**/*TestSuite.java</include>
                     </includes>
                 </configuration>
             </plugin>

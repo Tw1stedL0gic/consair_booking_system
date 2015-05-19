@@ -9,7 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({TestMessage.class, MessageTestSuite.class, RunnableTestSuite.class})
+@Suite.SuiteClasses({TestMessage.class})
 public class MainTestSuite extends TestSuite {
 
 	@BeforeClass
