@@ -9,3 +9,7 @@
 %% ------------------------
 
 
+%% Create flights
+%% Randomly connect two airports
+%% Check distance and calculate approximate time
+%% Start time is appropriate for starting destination
