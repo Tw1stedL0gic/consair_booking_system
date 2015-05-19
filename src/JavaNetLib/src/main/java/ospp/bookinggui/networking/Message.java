@@ -1,6 +1,10 @@
 package ospp.bookinggui.networking;
 
 import ospp.bookinggui.exceptions.MalformedMessageException;
+import ospp.bookinggui.networking.messages.DisconnectMsg;
+import ospp.bookinggui.networking.messages.ErrorMsg;
+import ospp.bookinggui.networking.messages.LoginMsg;
+import ospp.bookinggui.networking.messages.LoginRespMsg;
 
 import java.util.logging.Logger;
 
@@ -59,14 +63,91 @@ public class Message {
 			throw new MalformedMessageException("The timestamp is not a valid long!");
 		}
 
+		String[] body = null;
 		if(parts.length > Message.HEADER_SIZE) {
-			String[] body = new String[parts.length - Message.HEADER_SIZE];
+			body = new String[parts.length - Message.HEADER_SIZE];
 			System.arraycopy(parts, 2, body, 0, parts.length - Message.HEADER_SIZE);
-			return new Message(type, timestamp, body);
 		}
-		else {
-			return new Message(type, timestamp);
+
+		try {
+			switch(type) {
+				case LOGIN:
+					return new LoginMsg(timestamp, body[0], body[1]);
+
+				case LOGIN_RESP:
+					return new LoginRespMsg(timestamp, body[0]);
+
+				case DISCONNECT:
+					return new DisconnectMsg(timestamp);
+
+				case ERROR:
+					return new ErrorMsg(timestamp, body[0]);
+
+				case INIT_BOOK:
+					break;
+
+				case INIT_BOOK_RESP:
+					break;
+
+				case FIN_BOOK:
+					break;
+
+				case FIN_BOOK_RESP:
+					break;
+
+				case ABORT_BOOK:
+					break;
+
+				case REQ_AIRPORTS:
+					break;
+
+				case REQ_AIRPORTS_RESP:
+					break;
+
+				case SEARCH_ROUTE:
+					break;
+
+				case SEARCH_ROUTE_RESP:
+					break;
+
+				case REQ_FLIGHT_DETAILS:
+					break;
+
+				case REQ_FLIGHT_DETAILS_RESP:
+					break;
+
+				case REQ_SEAT_SUGGESTION:
+					break;
+
+				case REQ_SEAT_SUGGESTION_RESP:
+					break;
+
+				case REQ_SEAT_MAP:
+					break;
+
+				case REQ_SEAT_MAP_RESP:
+					break;
+
+				case REQ_PASSENGER_LIST:
+					break;
+
+				case REQ_PASSENGER_LIST_RESP:
+					break;
+
+				case REQ_SEAT_MAP_ADMIN:
+					break;
+
+				case REQ_SEAT_MAP_ADMIN_RESP:
+					break;
+
+			}
 		}
+		catch(NullPointerException | IndexOutOfBoundsException e) {
+			throw new MalformedMessageException("Could not parse message! The body is not correctly formed!");
+		}
+
+		// This line should never be reached!
+		throw new MalformedMessageException("Something went horribly wrong during parsing!");
 	}
 
 	public String createMessage() {

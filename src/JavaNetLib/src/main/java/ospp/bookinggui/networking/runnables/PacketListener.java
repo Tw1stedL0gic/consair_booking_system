@@ -3,7 +3,7 @@ package ospp.bookinggui.networking.runnables;
 import ospp.bookinggui.exceptions.MalformedMessageException;
 import ospp.bookinggui.networking.Mailbox;
 import ospp.bookinggui.networking.Message;
-import ospp.bookinggui.networking.messages.ErrorMessage;
+import ospp.bookinggui.networking.messages.ErrorMsg;
 
 import java.io.*;
 import java.util.logging.Level;
@@ -38,7 +38,7 @@ public class PacketListener implements Runnable {
 					catch(MalformedMessageException e) {
 						logger.log(Level.SEVERE, "PacketListener received malformed message! " +
 							"Message: \"" + e.getMessage() + "\"", e);
-						mailbox.send(new ErrorMessage(e.getMessage()));
+						mailbox.send(new ErrorMsg(e.getMessage()));
 					}
 				}
 				else {
