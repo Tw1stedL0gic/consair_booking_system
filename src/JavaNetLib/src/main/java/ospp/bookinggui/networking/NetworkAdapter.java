@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.logging.Logger;
 
-public class NetworkAdapter implements Adapter {
+public class NetworkAdapter {
 
 	private static final Logger logger = Logger.getLogger(NetworkAdapter.class.getName());
 
@@ -28,35 +28,5 @@ public class NetworkAdapter implements Adapter {
 
 		new Thread(new PacketListener(box, socket.getInputStream()), "PacketListener").start();
 		new Thread(new PacketSender(box, socket.getOutputStream()), "PacketSender").start();
-	}
-
-	@Override
-	public void getPassengerList(Flight flight) {
-		mailbox.send(new GetPassengerListMsg(flight));
-	}
-
-	@Override
-	public void getFlightList() {
-		mailbox.send(new GetFlightListMsg());
-	}
-
-	@Override
-	public void login(String username, String password) {
-		mailbox.send(new HandshakeMsg(username, password));
-	}
-
-	@Override
-	public void disconnect() {
-		mailbox.send(new DisconnectMsg());
-	}
-
-	@Override
-	public void book(BookingInfo booking) {
-		mailbox.send(new BookSeatMsg(booking));
-	}
-
-	@Override
-	public void getPassengerInfo(Passenger id) {
-		mailbox.send(new GetPassengerInfoMsg(id));
 	}
 }

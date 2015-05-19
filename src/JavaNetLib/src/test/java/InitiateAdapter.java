@@ -1,5 +1,4 @@
 import ospp.bookinggui.logging.ConsoleFormatter;
-import ospp.bookinggui.networking.Adapter;
 import ospp.bookinggui.networking.Mailbox;
 import ospp.bookinggui.networking.Message;
 import ospp.bookinggui.networking.NetworkAdapter;
@@ -30,9 +29,7 @@ public class InitiateAdapter {
 
 		Mailbox<Message> mailbox = new Mailbox<>();
 
-		Adapter adapter = new NetworkAdapter(mailbox, "localhost", 3333);
-
-		adapter.disconnect();
+		NetworkAdapter adapter = new NetworkAdapter(mailbox, "localhost", 3333);
 
 		while(true) {
 
