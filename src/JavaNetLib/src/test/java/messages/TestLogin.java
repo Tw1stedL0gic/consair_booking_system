@@ -28,7 +28,7 @@ public class TestLogin {
 
 		try {
 			Message.parseMessage(data);
-			fail("parseIncorrectData1() did not receive correct exception!");
+			fail("Parsing Login message with no body did not throw an exception!");
 		}
 		catch(MalformedMessageException e) {
 			assertEquals("Could not parse message! The body is not correctly formed!", e.getMessage());
@@ -41,7 +41,7 @@ public class TestLogin {
 
 		try {
 			Message.parseMessage(data);
-			fail("parseIncorrectData2() did not receive correct exception!");
+			fail("Parsing Login message with a too small body did not throw an exception!");
 		}
 		catch(MalformedMessageException e) {
 			assertEquals("Could not parse message! The body is not correctly formed!", e.getMessage());
