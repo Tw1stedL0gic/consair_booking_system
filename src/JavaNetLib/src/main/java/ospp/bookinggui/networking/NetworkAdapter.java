@@ -1,9 +1,5 @@
 package ospp.bookinggui.networking;
 
-import ospp.bookinggui.BookingInfo;
-import ospp.bookinggui.Flight;
-import ospp.bookinggui.Passenger;
-import ospp.bookinggui.networking.messages.*;
 import ospp.bookinggui.networking.runnables.PacketListener;
 import ospp.bookinggui.networking.runnables.PacketSender;
 
