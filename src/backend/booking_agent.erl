@@ -22,8 +22,16 @@
 
 %%---------------------------------------------------------------------%%
 
+%% Returns a list of all airports. 
+
 airport_list() ->
     ok. 
+
+%% In case of entering airport, return all airports which that airport
+%% has a route to
+
+airport_list(Airport) ->
+    ok.
 
 %%---------------------------------------------------------------------%%
 
@@ -35,30 +43,35 @@ flight_list() ->
 
 %%---------------------------------------------------------------------%%
 
-route_search(route) ->
+%% @doc - Returns a list of flights between the two airports on that day. 
+
+route_search(AirportDeparture, AirportArrival, Date) ->
     %% search through database for route
     %% check if route exists
     %% check if date fits
-    %% check if not full
-    %% potential pathfinding
     ok.
 
 %%---------------------------------------------------------------------%%
 
-%% @doc TODO: add documentation
-%%-spec set() -> ok when 
-%%      Ref::{integer(),string()}.
+%% @doc Returns all information about flight. 
 
 flight_details(Flight) ->
-    %% return information about flight 
+    %% return all information about flight 
     ok.
 
 %%---------------------------------------------------------------------%%
+
+%% @doc Returns whether a seat is booked, locked or avaliable. 
 
 seat_avaiability(Seat) ->
     ok. 
 
 %%---------------------------------------------------------------------%%
+
+%% @doc An algorithmic solution to finding a good seat depending on
+%% preferences. Preferences can include class (first, business,
+%% economy), seat type (window, middle, aisle), group size, location
+%% in plane (front, back, emergency exit)
 
 suggest_seat() ->
     %% implement preferences
@@ -66,26 +79,29 @@ suggest_seat() ->
 
 %%---------------------------------------------------------------------%%
 
-start_booking() ->
-    
+%% @doc Start the booking process. This will lock the seat(s) to be
+%% booked and wait for payment. Time of seat locking will be recorded
+%% to make sure that a crash does not mean a endlessly locked seat.
 
-start_booking(Flight, seat) ->
+start_booking(User, Flight, seat) ->
     %% record time of seat locking so that in case of crash, it can be cleared
     ok.
 
 %%---------------------------------------------------------------------%%
 
-finalize_booking() ->
+%% @doc Finalize the booking process. Accept payment and change seat from locked to book. 
+
+finalize_booking(User, Flight, seat) ->
     ok.
 
 %%---------------------------------------------------------------------%%
 
-receipt() ->
+receipt(User) ->
     ok.
 
 %%---------------------------------------------------------------------%%
 
-abort_booking() ->
+abort_booking(User, Flight, seat) ->
     ok. 
 
 %%---------------------------------------------------------------------%%
