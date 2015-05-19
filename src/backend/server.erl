@@ -15,7 +15,7 @@
 -module(server).
 -export([start/0, start/1, connector_spawner/2, connector/4]).
 -define(PORT, 53535).
--define(CONNECTIONOPTIONS, [binary, {packet, 4}, {active, false}]).
+-define(CONNECTIONOPTIONS, [binary, {packet, 0}, {active, false}]).
 -define(ALLOWEDTIMEOUTS, 10). %% Amount of minutes allowed before conenction is terminated
 
 %%--------------------------------------------------------------%%
