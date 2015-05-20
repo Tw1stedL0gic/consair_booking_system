@@ -19,24 +19,45 @@
 
 %%---------------------------------------------------------------------%%
 
-login() ->
-    ok.
+%% @doc - Login to server. 
+%% Input: Username, password
+%% Example: sk8erboi, iluvmileycyrus
+%% Ouput: Failed or user level (error, user, admin)
+
+login(Username, Password) ->
+    case Username =:= Password of
+	true ->
+	    admin;
+	_ ->
+	    user
+    end.
 
 %%---------------------------------------------------------------------%%
 
-disconnect(User) ->
+%% @doc - Disconnect user from server. Unlock any seats being locked by 
+%% this user. 
+%% Input: Username
+%% Output: ok / {error, Error} 
+
+disconnect(Username) ->
     %% check if User is currently locking a seat and unlock it. 
-    ok.
+    %% Potential error: Database could not unlock?
+    ok.	    
 
 %%---------------------------------------------------------------------%%
 
 %% Returns a list of all airports. 
-%% Output: List of airport tuples. 
+%% Output: List of airport tuples or error.
 %% Example: [{100, "ARN", "Arlanda"}, 
 %%           {101, "LAX", "Los Angeles International Airport"}]
 
 airport_list() ->
-    ok. 
+    case
+	ok ->
+	    ok;
+	error ->
+	    {error, errorReason}
+    end;
 
 %% In case of departure airport, return all airports which that airport
 %% has a route to. 
@@ -51,18 +72,20 @@ airport_list(Airport) ->
 %%---------------------------------------------------------------------%%
 
 %% @doc - Returns a list of flights between the two airports on that day. 
+%% Input: Departure airport ID, arrival airport ID, departure date.
+%% Example: 100, 101, {{2015,12,30},{10,10,10}}
 %% Output: List of fligth tuples excluding arrival_date, flight_id and price. 
 %% ({id, airport, arrival_point, departure_date, flight_id, price})
 %% Example: [{1111,
 %%            {100, "ARN", "Arlanda"},
 %%            {101, "LAX", "Los Angeles International Airport"},
-%%            {2015,12,30},{11,59,59}}},
+%%            {{2015,12,30},{11,59,59}}},
 %%           {1112,
 %%            {100, "ARN", "Arlanda"},
 %%            {101, "LAX", "Los Angeles International Airport"},
 %%            {{2015,12,30},{20,10,08}}}]
 
-route_search(airport, arrival_point, departure_date) ->
+route_search(airport, arrival_point, {{Year, Month, Day},_}) ->
     %% search through database for route
     %% check if route exists
     %% check if date fits
@@ -113,8 +136,8 @@ flight_details(Flight) ->
 %%            23,
 %%            2}, ... ]
 
-seat_avaiability({Flight, Seat}, user) ->
-    ok. 
+seat_avaiability({Flight, Seat}) ->
+    ok;
 
 %% @doc Returns information about seat(s), including admin info. 
 %% When inputting a list of seat IDs, the output will be about the included seats. When inputting a row id, all seats in that row will be returned. When inputting a column id, all the seats in that column will be returned. 

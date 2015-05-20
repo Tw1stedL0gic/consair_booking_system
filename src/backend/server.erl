@@ -16,7 +16,8 @@
 -export([start/0, start/1, connector_spawner/2, connector/4]).
 -define(PORT, 53535).
 -define(CONNECTIONOPTIONS, [binary, {packet, 0}, {active, false}]).
--define(ALLOWEDTIMEOUTS, 10). %% Amount of minutes allowed before conenction is terminated
+-define(ALLOWEDTIMEOUTS, 10). %% Amount of minutes allowed before connection is terminated
+-define(ADMIN_ALLOWEDTIMEOUTS, 20). %% Amount of minutes allowed before admin connection is terminated
 
 %%--------------------------------------------------------------%%
 
@@ -91,7 +92,7 @@ connector_spawner(LSock, N) ->
 %% In the case of a message it will handle it accordingl
 
 %% Connection timed out (10 timeouts).
-connector(_, ID, 10, ParentPID) ->
+connector(_, ID, ?ALLOWEDTIMEOUTS, ParentPID) ->
     io:fwrite("C~p: ~p timeouts reached, connection terminated~n", [ID, ?ALLOWEDTIMEOUTS]),
     ParentPID ! terminated;
     %% send message to client that it is timed out
@@ -119,11 +120,64 @@ connector(Sock, ID, Timeouts, ParentPID) ->
 	    %% case to handle package
 	    case package_handler:handle_package(Package) of
 		exit ->
-		    ParentPID ! exit;	    
+		    ParentPID ! exit;
+		{admin, Response} ->
+		    gen_tcp:send(Sock, Response),
+		    admin_connector(Sock, ID, 0, ParentPID);
 		Response ->
-		    gen_tcp:send(Sock, Response)
+		    gen_tcp:send(Sock, Response);
+		{error, Error} ->
+		    error
 	    end,
 	    %% reloop and reset timeouts
 	    connector(Sock, ID, 0, ParentPID)
+    end.	  
+
+%% @doc Admin connector, which communicates with the client. 
+%% it waits 60 seconds for a message, then issues a 
+%% timeout. After the defined allowed timeouts it will
+%% terminate the communication. 
+%% In the case of a message it will handle it accordingl
+
+%% Connection timed out (10 timeouts).
+admin_connector(_, ID, ?ADMIN_ALLOWEDTIMEOUTS, ParentPID) ->
+    io:fwrite("C~p: ~p timeouts reached, connection terminated~n", [ID, ?ADMIN_ALLOWEDTIMEOUTS]),
+    ParentPID ! terminated;
+    %% send message to client that it is timed out
+    %% revert all database changes
+
+admin_connector(Sock, ID, Timeouts, ParentPID) ->
+    %% announce established connection to client and terminal
+    gen_tcp:send(Sock, <<ID>>),
+    io:fwrite("C~p: Connection established~n", [ID]),
+    
+    case gen_tcp:recv(Sock, 0, 60000) of
+	{error, timeout} -> %% in case of timeout, reloop.
+	    %% iterate a counter, which will warn client when timeouting too much
+	    %% after 10 minutes it will break the connection.
+	    io:fwrite("C~p: Timeout ~p, ~p tries remaining~n", [ID, Timeouts, ?ADMIN_ALLOWEDTIMEOUTS-Timeouts]), 
+	    admin_connector(Sock, ID, Timeouts+1, ParentPID);
+	{error, closed} -> %% in case of connection closed, tell parent. RECODE THIS TO IMPLEMENT HEARTBEAT
+	    io:fwrite("C~p: Connection closed, terminating.~n", [ID]),
+	    ParentPID ! terminated;
+	{error, Error} -> %% In case of error, print error and announce termination to parent
+	    io:fwrite("C~p: {error, ~p}~n", [ID, Error]),
+	    ParentPID ! terminated;	
+	{ok, Package} -> %% In case of random package, print and send back "Thanks"
+	    io:fwrite("C~p: Message received: ~p~n", [ID, Package]),
+	    %% case to handle package
+	    case package_handler:admin_handle_package(Package) of
+		exit ->
+		    ParentPID ! exit;
+		{admin, Response} ->
+		    gen_tcp:send(Sock, Response),
+		    admin_connector(Sock, ID, 0, ParentPID);
+		Response ->
+		    gen_tcp:send(Sock, Response);
+		{error, Error} ->
+		    error
+	    end,
+	    %% reloop and reset timeouts
+	    admin_connector(Sock, ID, 0, ParentPID)
     end.	  
 
