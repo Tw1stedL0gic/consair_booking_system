@@ -10,10 +10,12 @@
 
 %%Handles the server io for the booking. This is the abstraction layer for java / erlang%%
 
+%% here is a change
+
 -module(server).
 -export([start/0, start/1, connector_spawner/2, connector/4]).
--define(PORT, 33333).
--define(CONNECTIONOPTIONS, [binary, {packet, 4}, {active, false}]).
+-define(PORT, 53535).
+-define(CONNECTIONOPTIONS, [binary, {packet, 0}, {active, false}]).
 -define(ALLOWEDTIMEOUTS, 10). %% Amount of minutes allowed before conenction is terminated
 
 %%--------------------------------------------------------------%%
@@ -64,7 +66,7 @@ connector_spawner(LSock, N) ->
 	exit ->        %% if received exit -> exit the loop (connection processes are still alive)
 	    io:fwrite("Number of connections: ~p  Exit called~n", [N]),
 	    connector_spawner(LSock, -1);
-	terminated ->  %% if received terminated -> reduce amount of connections
+	disconnect ->  %% if received terminated -> reduce amount of connections
 	    io:fwrite("Number of Connections: ~p  Process terminated~n", [N-1]),
 	    connector_spawner(LSock, N-1)
     after 100 ->
@@ -106,7 +108,7 @@ connector(Sock, ID, Timeouts, ParentPID) ->
 	    %% after 10 minutes it will break the connection.
 	    io:fwrite("C~p: Timeout ~p, ~p tries remaining~n", [ID, Timeouts, ?ALLOWEDTIMEOUTS-Timeouts]), 
 	    connector(Sock, ID, Timeouts+1, ParentPID);
-	{error, closed} -> %% in case of connection closed, tell parent
+	{error, closed} -> %% in case of connection closed, tell parent. RECODE THIS TO IMPLEMENT HEARTBEAT
 	    io:fwrite("C~p: Connection closed, terminating.~n", [ID]),
 	    ParentPID ! terminated;
 	{error, Error} -> %% In case of error, print error and announce termination to parent
