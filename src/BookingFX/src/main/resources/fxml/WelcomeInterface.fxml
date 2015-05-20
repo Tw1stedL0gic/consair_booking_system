@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.net.*?>
+
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ospp.booking.bookingfx.WelcomeInterfaceController">
+    <stylesheets>
+        <URL value="@styles/Styles.css" />
+    </stylesheets>
+    <children>
+      <StackPane layoutX="200.0" layoutY="125.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <ImageView fx:id="consAir" fitHeight="500.0" fitWidth="800.0" layoutX="200.0" layoutY="125.0" pickOnBounds="true" preserveRatio="true" scaleX="0.0" scaleY="0.0" scaleZ="0.0">
+               <image>
+                  <Image url="@../img/Cons-Air.png" />
+               </image>
+               <rotationAxis>
+                  <Point3D y="1.0" />
+               </rotationAxis>
+            </ImageView>
+         </children>
+      </StackPane>
+   </children>
+</AnchorPane>

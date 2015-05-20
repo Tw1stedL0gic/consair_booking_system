@@ -5,6 +5,7 @@
  */
 package ospp.booking.bookingfx;
 
+import com.sun.javafx.tk.ScreenConfigurationAccessor;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -20,8 +21,11 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import static javafx.scene.input.KeyCode.T;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import ospp.bookinggui.networking.Mailbox;
 import ospp.bookinggui.networking.Adapter;
@@ -40,7 +44,9 @@ public class ScreenMaster extends StackPane {
     private Timeline timeline;
     private ObservableList<Message> observeMailbox;
     
-    private HashMap<String, Node> screens = new HashMap<>();
+    private String activeScreen = null;
+    private HashMap<String, Parent> screens = new HashMap();
+    private HashMap<String, ControlledScreen> controllers = new HashMap();
     
     public Adapter getAdapter() { return this.networkAdapter; }
     
@@ -53,6 +59,7 @@ public class ScreenMaster extends StackPane {
     
     public ScreenMaster() {
         super();
+        this.backgroundProperty().set(Background.EMPTY);
         mailbox = new Mailbox<>();
         observeMailbox = FXCollections.observableList(new LinkedList<Message>());
         
@@ -92,21 +99,22 @@ public class ScreenMaster extends StackPane {
                 */
     }
     
-    public void addScreen(String name, Node screen){
+    public void addScreen(String name, Parent screen, ControlledScreen cont){
         screens.put(name, screen);
+        controllers.put(name, cont);
     }
     
-    public Node getScreen(String name){
+    public Parent getScreen(String name){
         return screens.get(name);
     }
     
     public boolean loadScreen(String name, String resource){
         try {
             FXMLLoader myLoader = new FXMLLoader(getClass().getResource(resource));
-            Parent loadScreen = (Parent) myLoader.load();
-            ControlledScreen myScreenControler = ((ControlledScreen) myLoader.getController());
+            Parent loadScreen = myLoader.load();
+            ControlledScreen myScreenControler = (myLoader.getController());
             myScreenControler.setScreenParent(this);
-            addScreen(name, loadScreen);
+            addScreen(name, loadScreen,myScreenControler);
             return true;
         } catch (Exception e) {
             System.err.println(e.getMessage());
@@ -115,18 +123,24 @@ public class ScreenMaster extends StackPane {
     }
     
     public boolean setScreen(final String name){
+        String oldActiveScreen = activeScreen;
+        activeScreen = name;
         if (screens.get(name) != null){
             if(!getChildren().isEmpty()){
+                controllers.get(oldActiveScreen).offScreen();
                 getChildren().remove(0);
                 getChildren().add(0, screens.get(name));
+                
             } else {
                 getChildren().add(screens.get(name));
             }
-        
+            controllers.get(name).onScreen();
             return true;
         } else { 
             System.err.println("screen has not been loaded \n");
             return false;
         }
     }
+
+    
 }

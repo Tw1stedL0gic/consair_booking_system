@@ -12,27 +12,30 @@
 
 <AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ospp.booking.bookingfx.BookOptionInterfaceController">
     <stylesheets>
-        <URL value="@/styles/bookoptioninterface.css" />
+        <URL value="@styles/Styles.css" />
     </stylesheets>
     
     <children>
       <VBox minHeight="240.0" minWidth="320.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <AnchorPane maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="128.0" prefWidth="800.0">
+            <AnchorPane maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="128.0" prefWidth="800.0" styleClass="headerPane" stylesheets="@../styles/Styles.css">
                <children>
-                  <Text layoutX="155.0" layoutY="67.0" rotate="-9.5" scaleX="3.0" scaleY="3.0" scaleZ="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Available flights" wrappingWidth="133.40625" AnchorPane.bottomAnchor="57.98828125" AnchorPane.leftAnchor="155.0" />
+                  <Text fill="WHITE" layoutX="155.0" layoutY="67.0" rotate="-9.5" scaleX="3.0" scaleY="3.0" scaleZ="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Available flights" wrappingWidth="133.40625" AnchorPane.bottomAnchor="57.98828125" AnchorPane.leftAnchor="155.0" />
                </children>
             </AnchorPane>
-            <AnchorPane prefHeight="145.0" prefWidth="798.0" VBox.vgrow="ALWAYS">
+            <AnchorPane prefHeight="145.0" prefWidth="798.0" styleClass="middlePane" stylesheets="@../styles/Styles.css" VBox.vgrow="ALWAYS">
               <children>
-                  <ListView fx:id="planeList" layoutX="49.0" layoutY="75.0" prefHeight="225.0" prefWidth="483.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                        </ListView>
+                  <ScrollPane layoutX="8.0" layoutY="12.0" prefViewportHeight="204.0" prefViewportWidth="584.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <content>
+                        <VBox fx:id="vbox" />
+                     </content>
+                  </ScrollPane>
               </children>
                <padding>
                   <Insets bottom="8.0" left="8.0" right="8.0" top="12.0" />
                </padding>
             </AnchorPane>
-            <AnchorPane maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="48.0" prefWidth="200.0">
+            <AnchorPane maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="48.0" prefWidth="200.0" styleClass="bottomPane" stylesheets="@../styles/Styles.css">
                <children>
                    <Button layoutX="47.0" layoutY="351.0" mnemonicParsing="false" onAction="#backButtonClick" text="Back" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
                    <Button layoutX="479.0" layoutY="351.0" mnemonicParsing="false" onAction="#nextButtonClick" text="Next" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />

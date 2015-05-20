@@ -10,6 +10,8 @@ import javafx.animation.FadeTransitionBuilder;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -70,15 +72,23 @@ public class FXMLController implements Initializable, ControlledScreen {
         Adapter adapter;
 
         Timeline timeline = new Timeline();        
-        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.setCycleCount(1);
         timeline.setAutoReverse(true);
+        
+        EventHandler<ActionEvent> onFinished = new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent t) {
+                myScreenMaster.setScreen("welcome");
+            }
+        };
         
          timeline.getKeyFrames().addAll
             (new KeyFrame(Duration.ZERO,
-                          new KeyValue(rootPane.rotateProperty(), 0)),
-             new KeyFrame(new Duration(4000),
-                          new KeyValue(rootPane.rotateProperty(), 3600)));
-        //timeline.play();
+                          new KeyValue(rootPane.opacityProperty(), 1)),
+             new KeyFrame(new Duration(3000),onFinished,
+                          new KeyValue(rootPane.opacityProperty(), 0)));
+     
+        timeline.play();
         
         try {
             adapter = new NetworkAdapter(mailbox, ip, port);
@@ -103,5 +113,11 @@ public class FXMLController implements Initializable, ControlledScreen {
     public void setScreenParent(ScreenMaster sm) {
         this.myScreenMaster = sm;
     }
-    
+        @Override
+    public void onScreen() {
+    }
+
+    @Override
+    public void offScreen() {
+    }
 }

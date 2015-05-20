@@ -34,6 +34,7 @@ public class AdditionalOptionsInterfaceController implements Initializable, Cont
     }
     @FXML
     void nextButtonClick(ActionEvent event) {
+        //Skicka vidare planet och alternativa specialval via nätverk, gå vidare till confirmInterface
         myScreenMaster.setScreen("confirminterface");
     }
     
@@ -43,5 +44,11 @@ public class AdditionalOptionsInterfaceController implements Initializable, Cont
     public void setScreenParent(ScreenMaster sm) {
         myScreenMaster = sm;
     }
-    
+        @Override
+    public void onScreen() {
+    }
+
+    @Override
+    public void offScreen() {
+    }
 }

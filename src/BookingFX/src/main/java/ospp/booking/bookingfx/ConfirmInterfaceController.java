@@ -26,12 +26,17 @@ public class ConfirmInterfaceController implements Initializable, ControlledScre
         // TODO
     }    
 
+    //Lägg till listView'en och lägg all info från föregående sökningar för att
+    //bekräfta att allt stämmer så bokningen kan bli bekräftad
+    
+    
     @FXML
     void backButtonClick(ActionEvent event) {
         myScreenMaster.setScreen("additionaloptionsinterface");
     }
     @FXML
     void confirmButtonClick(ActionEvent event) {
+        //Bekräfta bokningen med alla val till databasen över nätverket
         myScreenMaster.setScreen("confirmedinterface");
     }
     
@@ -40,5 +45,11 @@ public class ConfirmInterfaceController implements Initializable, ControlledScre
     public void setScreenParent(ScreenMaster sm) {
         myScreenMaster = sm;
     }
-    
+        @Override
+    public void onScreen() {
+    }
+
+    @Override
+    public void offScreen() {
+    }
 }

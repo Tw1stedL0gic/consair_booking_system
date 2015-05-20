@@ -42,5 +42,11 @@ public class ConfirmedInterfaceController implements Initializable, ControlledSc
     public void setScreenParent(ScreenMaster sm) {
         myScreenMaster = sm;
     }
-    
+        @Override
+    public void onScreen() {
+    }
+
+    @Override
+    public void offScreen() {
+    }
 }

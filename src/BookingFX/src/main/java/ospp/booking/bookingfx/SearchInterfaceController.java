@@ -107,6 +107,7 @@ public class SearchInterfaceController implements Initializable, ControlledScree
     
     @FXML
     void searchButtonClick(ActionEvent event) {
+        //Sökning i databasen(nätverk) och visa resultat i bookOptionInterface 
         myScreenMaster.setScreen("bookoptioninterface");
     }
     
@@ -159,20 +160,20 @@ public class SearchInterfaceController implements Initializable, ControlledScree
                 fromListView.getItems().removeAll(flygplatser);
                 fromListView.getItems().addAll(flygplatser);
                 
-                if (newValue.length() <1){
+                if (newValue.length() <1 ){
                     fromListView.visibleProperty().set(false);
                 }
                 else {
                     fromListView.visibleProperty().set(true);
                     String string = newValue;
                     for(int i=0; i<string.length();i++){
-                    for(String flygplats : flygplatser){
-                        if(fromListView.getItems().contains(flygplats) && flygplats.toLowerCase().charAt(i) != string.toLowerCase().charAt(i)){
-                            fromListView.getItems().remove(flygplats);
+                        for(String flygplats : flygplatser){
+                            if(fromListView.getItems().contains(flygplats) && flygplats.toLowerCase().charAt(i) != string.toLowerCase().charAt(i)){
+                                fromListView.getItems().remove(flygplats);
+                            }
                         }
                     }
-                }
-                    
+
                 }
                 
                 
@@ -183,11 +184,12 @@ public class SearchInterfaceController implements Initializable, ControlledScree
         fromListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
         @Override
         public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-        System.out.println("Old click value " 
-                + oldValue + " New Click value = " + newValue);
-        fromField.textProperty().set(newValue);
-        fromListView.getItems().remove(newValue);
-        }
+            System.out.println("Old click value " 
+                    + oldValue + " New Click value = " + newValue);
+            fromField.textProperty().set(newValue);
+            fromListView.getItems().remove(newValue);
+            fromListView.setVisible(false);
+            }
         });
         
         
@@ -206,12 +208,12 @@ public class SearchInterfaceController implements Initializable, ControlledScree
                     toListView.visibleProperty().set(true);
                     String string = newValue;
                     for(int i=0; i<string.length();i++){
-                    for(String flygplats : flygplatser){
-                        if(toListView.getItems().contains(flygplats) && flygplats.toLowerCase().charAt(i) != string.toLowerCase().charAt(i)){
-                            toListView.getItems().remove(flygplats);
+                        for(String flygplats : flygplatser){
+                            if(toListView.getItems().contains(flygplats) && flygplats.toLowerCase().charAt(i) != string.toLowerCase().charAt(i)){
+                                toListView.getItems().remove(flygplats);
+                            }
                         }
                     }
-                }
                     
                 }
                 
@@ -223,11 +225,13 @@ public class SearchInterfaceController implements Initializable, ControlledScree
         toListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
         @Override
         public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-        System.out.println("Old click value " 
-                + oldValue + " New Click value = " + newValue);
-        toField.textProperty().set(newValue);
-        toListView.getItems().remove(newValue);
-        }
+            System.out.println("Old click value " 
+                    + oldValue + " New Click value = " + newValue);
+            toField.textProperty().set(newValue);
+            toListView.getItems().remove(newValue);
+            toListView.setVisible(false);
+            
+            }
         });
         
     }    
@@ -241,5 +245,11 @@ public class SearchInterfaceController implements Initializable, ControlledScree
     public void setScreenParent(ScreenMaster sm) {
         myScreenMaster = sm;
     }
-    
+        @Override
+    public void onScreen() {
+    }
+
+    @Override
+    public void offScreen() {
+    }
 }

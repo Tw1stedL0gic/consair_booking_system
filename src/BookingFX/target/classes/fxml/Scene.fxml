@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.image.*?>
 <?import java.lang.*?>
@@ -7,11 +8,16 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
+<?import java.net.*?>
 
-<AnchorPane id="AnchorPane" fx:id="rootPane" prefHeight="291.0" prefWidth="414.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ospp.booking.bookingfx.FXMLController">
+<AnchorPane id="AnchorPane" fx:id="rootPane" prefHeight="554.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ospp.booking.bookingfx.FXMLController">
+<stylesheets>
+    <URL value="@styles/Styles.css" />
+</stylesheets>
+    
     <children>
-        <Label fx:id="label" layoutX="237.0" layoutY="73.0" minHeight="16" minWidth="69" /><VBox layoutX="14.0" layoutY="14.0" prefHeight="138.0" prefWidth="388.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-<children><Text id="head" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 28;" text="Connect to server" wrappingWidth="244.7109375" /><HBox prefHeight="100.0" prefWidth="457.0">
+        <Label fx:id="label" layoutX="237.0" layoutY="73.0" minHeight="16" minWidth="69" /><VBox layoutX="14.0" layoutY="14.0" prefHeight="138.0" prefWidth="388.0" styleClass="rootPane" stylesheets="@../styles/Styles.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+<children><Text id="head" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 28;" text="Connect to server" wrappingWidth="244.7109375" /><HBox prefHeight="100.0" prefWidth="457.0">
 <children><TextField fx:id="ipField" prefHeight="25.0" prefWidth="178.0" promptText="IP of Erlang server" text="127.0.0.1" HBox.hgrow="ALWAYS" />
                   <Label alignment="CENTER" ellipsisString=":" prefHeight="25.0" prefWidth="18.0" text=":" textAlignment="CENTER" />
                   <TextField fx:id="portField" prefHeight="25.0" prefWidth="83.0" promptText="Port" text="53535" />
@@ -26,7 +32,7 @@
 <VBox.margin>
 <Insets />
 </VBox.margin></HBox>
-            <StackPane>
+            <StackPane stylesheets="@../styles/Styles.css">
                <children>
                   <ImageView fitHeight="300.0" fitWidth="400.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
                      <image>

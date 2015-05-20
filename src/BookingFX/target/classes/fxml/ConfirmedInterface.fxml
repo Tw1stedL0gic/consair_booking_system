@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import java.net.*?>
@@ -8,12 +10,16 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ospp.booking.bookingfx.ConfirmedInterfaceController">
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="rootPane" stylesheets="@../styles/Styles.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ospp.booking.bookingfx.ConfirmedInterfaceController">
     <stylesheets>
-        <URL value="@/styles/confirmedinterface.css" />
-    </stylesheets>
-   <children>
-      <Text layoutX="36.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Thanks for din bokning, ha en trevlig resa!" AnchorPane.leftAnchor="36.0" AnchorPane.topAnchor="16.0" />
+        <URL value="@styles/Styles.css" />
+    </stylesheets> 
+
+    <children>
+      <Text fill="WHITE" layoutY="191.0" rotate="-9.5" strokeType="OUTSIDE" strokeWidth="0.0" text="Thanks for din bokning, ha en trevlig resa!" textAlignment="CENTER" AnchorPane.bottomAnchor="200.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="53.1884765625" AnchorPane.topAnchor="100.0">
+         <font>
+            <Font size="29.0" />
+         </font></Text>
       <Button layoutX="14.0" layoutY="361.0" mnemonicParsing="false" onAction="#startpageButtonClick" text="Back to startpage" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
       <Button layoutX="534.0" layoutY="361.0" mnemonicParsing="false" onAction="#quitButtonClick" text="Quit" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />
    </children>

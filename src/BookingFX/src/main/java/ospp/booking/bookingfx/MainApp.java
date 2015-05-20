@@ -5,7 +5,9 @@ import static javafx.application.Application.launch;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 
 public class MainApp extends Application {
@@ -13,24 +15,25 @@ public class MainApp extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
+        stage.initStyle(StageStyle.TRANSPARENT);
         //Parent root = FXMLLoader.load(getClass().getResource("/fxml/Scene.fxml"));
         //Parent root = FXMLLoader.load(getClass().getResource("/fxml/SearchInterface.fxml"));
         ScreenMaster sm = new ScreenMaster();
+        
         
         sm.loadScreen("searchinterface", "/fxml/SearchInterface.fxml");
         sm.loadScreen("bookoptioninterface", "/fxml/BookOptionInterface.fxml");
         sm.loadScreen("additionaloptionsinterface", "/fxml/AdditionalOptionsInterface.fxml");
         sm.loadScreen("confirminterface", "/fxml/ConfirmInterface.fxml");
         sm.loadScreen("confirmedinterface", "/fxml/ConfirmedInterface.fxml");
-        sm.loadScreen("seatbooker", "/fxml/seatBooker.fxml");
         sm.loadScreen("scene", "/fxml/Scene.fxml");
+        sm.loadScreen("welcome", "/fxml/WelcomeInterface.fxml");
         
         sm.setScreen("scene");
-        
         Parent root = sm;
         
         
-        Scene scene = new Scene(root);
+        Scene scene = new Scene(root,Color.TRANSPARENT);
         scene.getStylesheets().add("/styles/searchinterface.css");
         scene.getStylesheets().add("/styles/bookoptioninterface.css");
         scene.getStylesheets().add("/styles/additionaloptionsinterface.css");
@@ -41,6 +44,7 @@ public class MainApp extends Application {
         stage.setTitle("Cons air");
         stage.setScene(scene);
         stage.show();
+        
     }
 
     /**
