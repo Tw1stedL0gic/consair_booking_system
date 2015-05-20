@@ -9,36 +9,19 @@
 
 -module(get_database).
 
--include ("air_database.hrl").
+-include ("consair_database.hrl").
 
--include_lib("amnesia/include/amnesia_db_def.hrl").
+%%-include_lib("amnesia/include/amnesia_db_def.hrl").
+%%-compile(export_all).
 
+-export ([get_airport_from_db/0, get_airport_from_db_filter/1]).
 
-get_quarry_one () ->
-    {ok,Pid}=amnesia:open(air_database),
-    amnesia:fetch(Pid,flightno).
+get_airport_from_db () ->
+    {ok,Pid}=amnesia:open(consair_database),
+    amnesia:fetch(Pid,airport).
 
-get_quarry_tow () ->
-    {ok,Pid}=amnesia:open(air_database),    
-    amnesia:fetch(Pid,flightno).
+get_airport_from_db_filter (Airport) ->
+    {ok,Pid}=amnesia:open(consair_database),    
+    amnesia:fetch(Pid,airport, {"iata = $1", [Airport]}).
 
-get_quarry_three () ->
-    {ok,Pid}=amnesia:open(air_database),    
-    amnesia:fetch(Pid,flightno).
-
-get_quarry_four () ->
-    {ok,Pid}=amnesia:open(air_database),    
-    amnesia:fetch(Pid,flightno).
-
-get_quarry_five () ->
-    {ok,Pid}=amnesia:open(air_database),    
-    amnesia:fetch(Pid,flightno).
-
-get_quarry_six () ->
-    {ok,Pid}=amnesia:open(air_database),    
-    amnesia:fetch(Pid,flightno).
-
-get_quarry_seven () ->
-    {ok, Pid)=amnesia:open(air_database),
-    amnesia:fetch(Pid,flightno).
 
