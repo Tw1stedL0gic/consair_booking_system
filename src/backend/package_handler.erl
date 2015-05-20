@@ -1,5 +1,5 @@
 -module(package_handler).			
--export([handle_package/1, translate_package/1, list_to_regexp/2]).
+-export([handle_package/1, admin_handle_package/1]).
 
 -define(RegExpSeperator, "&"). %% Needs to be enclosed in quotes.
 
@@ -33,42 +33,81 @@
 
 handle_package(<<Package>>) ->
     handle_package(translate_package(<<Package>>));
-handle_package({?ClientLogin, Message}) -> %% ID 1 - Handshake
+handle_package({?ClientLogin, [Username, Password]}) -> %% ID 1 - Handshake
     %% grants either user or admin privilege alternatively a failure message in case handshake didn't work. 
     %% failed if username or password is incorrect. 
     
     %% 0x00 - user
     %% 0x10 - admin
     %% 0xff - failed
-
-    translate_package({?ServerLogin, booking_agent:login()});
+    
+    case booking_agent:login(Username, Password) of
+	user ->
+	    {ok, translate_package({?ServerLogin, ["User"]})};
+	admin ->
+	    {admin, translate_package({?ServerLogin, ["Admin"]})};
+	error ->
+	    {error, loginError}
+    end;
   
-handle_package({?Heartbeat, _}) -> %% ID 7 - Disconnect
+handle_package({?Heartbeat, _}) -> 
     ok; 
-handle_package({?Disconnect, User}) -> %% ID N - Request airport list
-    booking_agent:disconnect(User);
-handle_package({?REQAirportList, Message}) -> %% ID N - Request route search
-    translate_package({?RESPAirportList, booking_agent:airport_list()});
-handle_package({?REQFlightDetails, Message}) -> %% ID N - Request flight details
-    booking_agent:flight_details(Message),
-    <<?RESPFlightDetails>>; %% ID 2 - Respond flight details
-%handle_package({?REQSeatAvailability, Message}) -> %% ID N - Request seat availability
-%    booking_agent:seat_availability(Message),
-%    <<?RESPSeatAvailability>>; %% ID 4 - Response to booking
-handle_package({?REQSeatSuggestion, Message}) -> %% ID N - Request seat suggestion
+
+handle_package({?Disconnect, User}) -> 
+    case booking_agent:disconnect(User) of
+	ok ->
+	    {ok};
+	{error, Error} ->
+	    {error, Error}
+    end
+
+
+handle_package({?REQAirportList}) ->
+    {ok, translate_package({?RESPAirportList, booking_agent:airport_list()})};
+
+handle_package({?REQAirportList, Airport_ID}) -> 
+    {ok, translate_package({?RESPAirportList, booking_agent:airport_list(AirportID)})};
+
+
+handle_package({?REQRouteSearch, [Airport_A, Airport_B, Year, Month, Day]) ->
+    case booking_agent:flight_details(Airport_A, Airport_B, {Year, Month, Day}) of
+	{ok, FlightList} ->
+	    {ok, map(basic_flight_tuple_to_list, FlightList)}.
+ 
+
+handle_package({?REQSeatAvailability, Message}) ->
+    booking_agent:seat_availability(Message),
+    <<?RESPSeatAvailability>>; 
+
+handle_package({?REQSeatSuggestion, Message}) -> 
     booking_agent:suggest_seat(),
-    <<?RESPSeatSuggestion>>; %% ID 6 - Response to login
-handle_package({?REQInitBooking, Message}) -> %% ID N - Request start booking
+    <<?RESPSeatSuggestion>>; 
+
+handle_package({?REQInitBooking, Message}) ->
     booking_agent:start_booking(),
     <<?RESPInitBooking>>;
-handle_package({?REQFinalizeBooking, Message}) -> %% ID N - Request finalize booking
+
+handle_package({?REQFinalizeBooking, Message}) -> 
     booking_agent:finalize_booking(),
     <<?RESPFinalizeBooking>>;
-handle_package({?REQReceipt, Message}) -> %% ID N - Request receipt
+
+handle_package({?REQReceipt, Message}) -> 
     booking_agent:receipt(),
     <<?RESPReceipt>>;
-handle_package({?AbortBooking, Message}) -> %% ID N - Abort booking
+
+handle_package({?AbortBooking, Message}) -> 
     ok.
+
+
+handle_package({ID, Message}) ->
+    {error, wrongMessageFormat}.
+
+admin_handle_package(<<Package>>) ->
+    admin_handle_package(translate_package(<<Package>>));
+admin_handle_package({?REQFlightDetails, Message}) ->
+    booking_agent:flight_details(Message);
+admin_handle_package({?REQSeatSuggestion, Message}) ->
+    booking_agent:seat_availability(Message, admin).
 
 %% Translates from ID and message or only ID to a regexp
 
@@ -88,14 +127,14 @@ list_to_regexp([Tail | []], _) ->
 list_to_regexp([Head | Tail], Seperator) ->
     string:concat(string:concat(Head, Seperator), list_to_regexp(Tail, Seperator)).
 
-	
-%% 1: Hämta passagerare (front-end to back-end)
-%% 2: Passagerarlista (back-end to front-end)
-%% 3: Boka plats
-%% 4: Response to #3 (lyckat / misslyckat)
-%% 5: Login
-%% 6: Response #5
-%% 7: Disconnect / Terminera Anslutning
-%% 8: Heartbeat
-%% 9: Get passenger info (front-end -> back-end)
-%% 10: Response #9
+
+airport_tuple_to_list({ID, IATA, Name}) ->
+    [ID, IATA, Name].
+
+basic_flight_tuple_to_list({ID, Airport_A, Airport_B, {{Year, Month, Day},{Hour, Minute, Second}}}) ->
+    append(append(append([ID], 
+			 airport_tuple_to_list(Airport_A)), 
+		  airport_tuple_to_list(Airport_B)), 
+	   [Year, Month, Day, Hour, Minute, Second]).
+
+
