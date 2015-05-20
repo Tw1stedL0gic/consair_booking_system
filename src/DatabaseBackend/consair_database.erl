@@ -44,10 +44,9 @@ table (flights) ->
     [ refers_to(airport),
       %%{departuer_point, varchar, not_null}, 
       {arrival_point, varchar, not_null}, 
-      {departuer_date, datetime, not_null}, 
+      {departure_date, datetime, not_null}, 
       {arrival_date, datetime, not_null}, 
-      {flight_id, varchar, not_null}, 
-      {price, {decimal, 10, 2}, not_null}]; 
+      {flight_id, varchar, not_null}]; 
 
 
 table(seats) ->
@@ -56,7 +55,8 @@ table(seats) ->
       %%{user_name, varchar, not_null}, 
       refers_to(user),
       {window, bool, not_null},
-      {ailside, bool, not_null}, 
+      {aisle, bool, not_null}, 
       {row, varchar, not_null},
       {col, varchar, not_null}, 
+      {price, {decimal, 10, 2}, not_null},
       {lock_s, integer, not_null}].

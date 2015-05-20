@@ -15,10 +15,9 @@
 	id = null,
 	airport = null,
 	arrival_point = null,
-	departuer_date = null,
+	departure_date = null,
 	arrival_date = null,
-	flight_id = null,
-	price = null}).
+	flight_id = null}).
 
 -record (seats, {
 	id = null,
@@ -26,8 +25,9 @@
 	class = null,
 	user = null,
 	window = null,
-	ailside = null,
+	aisle = null,
 	row = null,
 	col = null,
+	price = null,
 	lock_s = null}).
 
