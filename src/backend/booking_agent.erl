@@ -34,7 +34,7 @@ disconnect(User) ->
 %% Output: List of airport tuples. 
 %% Example: [{100, "ARN", "Arlanda"}, 
 %%           {101, "LAX", "Los Angeles International Airport"}]
-
+%% DONE SEE get_database:get_airport_from_db()
 airport_list() ->
     ok. 
 
@@ -44,7 +44,7 @@ airport_list() ->
 %% Example: 100
 %% Output: List of airport tuples ({id, iata, airporrt_name}).
 %% Example: [{101, "LAX", "Los Angeles Internation Airport"}]
-
+%% DONE SEE get_database:get_airport_from_db_filter(Airport)
 airport_list(Airport) ->
     ok.
 
