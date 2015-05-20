@@ -17,7 +17,7 @@
 	arrival_point = null,
 	departure_date = null,
 	arrival_date = null,
-	flight_id = null}).
+	flight_nr = null}).
 
 -record (seats, {
 	id = null,

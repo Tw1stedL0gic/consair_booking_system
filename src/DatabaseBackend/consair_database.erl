@@ -46,7 +46,7 @@ table (flights) ->
       {arrival_point, varchar, not_null}, 
       {departure_date, datetime, not_null}, 
       {arrival_date, datetime, not_null}, 
-      {flight_id, varchar, not_null}]; 
+      {flight_nr, varchar, not_null}]; 
 
 
 table(seats) ->
