@@ -162,7 +162,15 @@ Nu har vi en server som svarar på meddelanden. Jag har gjort en seperat fil som
 
 ##### Måndag
 
+10:00 - 16:00
+
+Möte med Karl. Kändes lite tråkigt och omitverat. Men Karl gav oss den spark i röven vi behövde och vi strukturerade vårt arbete på ett sätt som har gjort att det hela känns betydligt bättre. Vi har klippt bort väldigt mycket, men det känns som att det är för vårt eget bästa. 
+
 ##### Tisdag
+
+11:00 - 16:00
+
+Jag och Lucas har nu strukturerat hur våra meddelanden ska se ut. Jag har också dokumenterat hur booking_agent ska formattera sina svar så att jag kan börja översätta dess meddelanden. Kommer kanske brancha ut och använda mig av hårdkodade svar för att testa functionalitet. 
 
 ##### Onsdag
 
