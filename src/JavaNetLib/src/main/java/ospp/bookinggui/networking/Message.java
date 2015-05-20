@@ -47,7 +47,30 @@ public class Message {
 	public Message(MessageType type, long timestamp, String... body) {
 		this.TYPE = type;
 		this.TIMESTAMP = timestamp;
-		this.BODY = body;
+
+		if(isNull(body)) {
+			this.BODY = new String[0];
+		}
+		else {
+			this.BODY = body;
+		}
+	}
+
+	private boolean isNull(String[] a) {
+		if(a == null) {
+			return true;
+		}
+		else if(a.length == 0) {
+			return false;
+		}
+		else {
+			for(String s : a) {
+				if(s == null) {
+					return true;
+				}
+			}
+			return false;
+		}
 	}
 
 	/**

@@ -135,4 +135,48 @@ public class TestMessage {
 		assertTrue(msg instanceof LoginMsg);
 		assertArrayEquals(new String[]{"&&&&", "(/&(¤%$"}, msg.getBody());
 	}
+
+	@Test
+	public void constructWithNullVararg() throws UnsupportedEncodingException {
+		Message msg = new Message(MessageType.LOGIN, 1337L, null);
+
+		String constructed = msg.createMessage();
+
+		String expected = "1&1337&";
+
+		assertEquals(expected, constructed);
+	}
+
+	@Test
+	public void constructWithNullVararg2() throws UnsupportedEncodingException {
+		Message msg = new Message(MessageType.LOGIN, 1337L, null, "tjosan");
+
+		String constructed = msg.createMessage();
+
+		String expected = "1&1337&";
+
+		assertEquals(expected, constructed);
+	}
+
+	@Test
+	public void constructWithNullVararg3() throws UnsupportedEncodingException {
+		Message msg = new Message(MessageType.LOGIN, 1337, "tjosan", null);
+
+		String constructed = msg.createMessage();
+
+		String expected = "1&1337&";
+
+		assertEquals(expected, constructed);
+	}
+
+	@Test
+	public void constructWithEmptyVararg() throws UnsupportedEncodingException {
+		Message msg = new Message(MessageType.LOGIN, 1337);
+
+		String constructed = msg.createMessage();
+
+		String expected = "1&1337&";
+
+		assertEquals(expected, constructed);
+	}
 }
