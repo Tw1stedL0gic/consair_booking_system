@@ -111,69 +111,31 @@ public class Message {
 					return new ErrorMsg(timestamp, body[0]);
 
 				case INIT_BOOK:
-					break;
-
-				case INIT_BOOK_RESP:
-					break;
-
 				case FIN_BOOK:
-					break;
-
 				case FIN_BOOK_RESP:
-					break;
-
 				case ABORT_BOOK:
-					break;
-
 				case REQ_AIRPORTS:
-					break;
-
 				case REQ_AIRPORTS_RESP:
-					break;
-
 				case SEARCH_ROUTE:
-					break;
-
 				case SEARCH_ROUTE_RESP:
-					break;
-
 				case REQ_FLIGHT_DETAILS:
-					break;
-
 				case REQ_FLIGHT_DETAILS_RESP:
-					break;
-
 				case REQ_SEAT_SUGGESTION:
-					break;
-
 				case REQ_SEAT_SUGGESTION_RESP:
-					break;
-
 				case REQ_SEAT_MAP:
-					break;
-
 				case REQ_SEAT_MAP_RESP:
-					break;
-
 				case REQ_PASSENGER_LIST:
-					break;
-
 				case REQ_PASSENGER_LIST_RESP:
-					break;
-
 				case REQ_SEAT_MAP_ADMIN:
-					break;
-
 				case REQ_SEAT_MAP_ADMIN_RESP:
-					break;
+				default:
+					logger.warning("Message.parseMessage() is missing specific parsing for the type: " + type);
+					return new Message(type, timestamp, body);
 			}
 		}
 		catch(NullPointerException | IndexOutOfBoundsException e) {
 			throw new MalformedMessageException("Could not parse message! The body is not correctly formed!");
 		}
-
-		// This line should never be reached!
-		throw new MalformedMessageException("Something went horribly wrong during parsing!");
 	}
 
 	/**
