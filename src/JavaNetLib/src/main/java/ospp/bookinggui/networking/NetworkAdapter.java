@@ -15,6 +15,15 @@ public class NetworkAdapter {
 
 	private final Mailbox<Message> mailbox;
 
+	/**
+	 * Initiates the network adapter.
+	 * It will try to connect to the given host address and port on the calling thread!
+	 *
+	 * @param box The mailbox this network adapter should work with.
+	 * @param host The address of the host.
+	 * @param port The port on the host machine to target.
+	 * @throws IOException If an IOException occurred when attempting to connect to the host machine.
+	 */
 	public NetworkAdapter(Mailbox<Message> box, String host, int port) throws IOException {
 		this.mailbox = box;
 

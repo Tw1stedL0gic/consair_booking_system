@@ -18,6 +18,18 @@ public class PacketListener implements Runnable {
 	private final Mailbox<Message> mailbox;
 	private final BufferedReader   input;
 
+	/**
+	 * Creates a PacketListener.
+	 *
+	 * A PacketListener reads each line of the InputStream and attempts to parse
+	 * them as messages using Message.parseMessage().
+	 *
+	 * If the parsing was successful, the packet listener will add the new message to the inbox of the
+	 * given mailbox and continue on reading the input stream.
+	 *
+	 * @param m The mailbox to add new messages to.
+	 * @param is The InputStream the packet listener should read.
+	 */
 	public PacketListener(Mailbox<Message> m, InputStream is) {
 		this.mailbox = m;
 		this.input = new BufferedReader(new InputStreamReader(is));
@@ -36,8 +48,10 @@ public class PacketListener implements Runnable {
 						mailbox.receive(msg);
 					}
 					catch(MalformedMessageException e) {
+
 						logger.log(Level.SEVERE, "PacketListener received malformed message! " +
 							"Message: \"" + e.getMessage() + "\"", e);
+
 						mailbox.send(new ErrorMsg(System.currentTimeMillis(), e.getMessage()));
 					}
 				}

@@ -16,6 +16,19 @@ public class PacketSender implements Runnable {
 
 	private volatile boolean keepRunning = true;
 
+	/**
+	 * Creates a new PacketSender.
+	 *
+	 * The packet sender polls the mailbox for new outgoing messages.
+	 * If there are no new messages to send, it will sleep for 10 milliseconds then check again.
+	 * This is repeated until it finds a new outgoing message in the mailbox.
+	 *
+	 * Upon retrieving a message, it calls message.createMessage() to form what should be written
+	 * to the output stream. It then writes the message and flushes the buffer to send it.
+	 *
+	 * @param mailbox The mailbox to poll for outgoing messages.
+	 * @param os Where to write the messages.
+	 */
 	public PacketSender(Mailbox<Message> mailbox, OutputStream os) {
 		this.mailbox = mailbox;
 		this.output = new PrintWriter(os);

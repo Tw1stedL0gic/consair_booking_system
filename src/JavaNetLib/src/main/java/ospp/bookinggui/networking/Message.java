@@ -156,14 +156,29 @@ public class Message {
 		return message.toString();
 	}
 
+	/**
+	 * Retrieves the type of the message.
+	 *
+	 * @return
+	 */
 	public MessageType getType() {
 		return this.TYPE;
 	}
 
+	/**
+	 * Retrieves the timestamp of the message.
+	 *
+	 * @return
+	 */
 	public long getTimestamp() {
 		return this.TIMESTAMP;
 	}
 
+	/**
+	 * Retrieves the body of the message.
+	 *
+	 * @return
+	 */
 	public String[] getBody() {
 		return this.BODY;
 	}
