@@ -1,12 +1,12 @@
 -module(package_handler).			
--export([handle_package/1]).
+-export([handle_package/1, translate_package/1, list_to_regexp/2]).
 
 -define(RegExpSeperator, "&"). %% Needs to be enclosed in quotes.
 
 %% Package IDs
 %% REQ = Request, RESP = Respond
--define(ClientLogin,        1).
--define(ServerLogin,        2).
+-define(ClientLogin,            1).
+-define(ServerLogin,            2).
 -define(Heartbeat,              3).
 -define(Disconnect,             4).
 -define(REQAirportList,         5).
@@ -31,8 +31,8 @@
 %% bitstring to a tuple, calls the appropriate function, and
 %% translates the answer back to bitstring.
 
-handle_package(Package) ->
-    handle_package(translate_package);
+handle_package(<<Package>>) ->
+    handle_package(translate_package(<<Package>>));
 handle_package({?ClientLogin, Message}) -> %% ID 1 - Handshake
     %% grants either user or admin privilege alternatively a failure message in case handshake didn't work. 
     %% failed if username or password is incorrect. 
@@ -41,14 +41,14 @@ handle_package({?ClientLogin, Message}) -> %% ID 1 - Handshake
     %% 0x10 - admin
     %% 0xff - failed
 
-    <<?ServerLogin>>;
-handle_package({?Heartbeat, Message}) -> %% ID 7 - Disconnect
+    translate_package({?ServerLogin, booking_agent:login()});
+  
+handle_package({?Heartbeat, _}) -> %% ID 7 - Disconnect
     ok; 
-handle_package({?Disconnect, Message}) -> %% ID N - Request airport list
-    booking_agent:airport_list();
+handle_package({?Disconnect, User}) -> %% ID N - Request airport list
+    booking_agent:disconnect(User);
 handle_package({?REQAirportList, Message}) -> %% ID N - Request route search
-    booking_agent:route_search(Message),
-    <<?RESPAirportList>>;
+    translate_package({?RESPAirportList, booking_agent:airport_list()});
 handle_package({?REQFlightDetails, Message}) -> %% ID N - Request flight details
     booking_agent:flight_details(Message),
     <<?RESPFlightDetails>>; %% ID 2 - Respond flight details
@@ -70,19 +70,20 @@ handle_package({?REQReceipt, Message}) -> %% ID N - Request receipt
 handle_package({?AbortBooking, Message}) -> %% ID N - Abort booking
     ok.
 
-%% Translates from a regexp to a tuple with ID and message
-
-translate_package(Message) ->
-    re:split(Message, ?RegExpSeperator);
-
 %% Translates from ID and message or only ID to a regexp
 
 translate_package({ID}) ->
-    <<integer_to_list(ID)>>;
+    list_to_binary(integer_to_list(ID));
 translate_package({ID, Message}) ->
-    <<list_to_regexp([integer_to_list(ID), Message], ?RegExpSeperator)>>.
+    list_to_binary(list_to_regexp(lists:append([integer_to_list(ID)], Message), ?RegExpSeperator));
 
-list_to_regexp([Tail], _) ->
+%% Translates from a regexp to a tuple with ID and message
+
+translate_package(Message) ->
+    re:split(Message, ?RegExpSeperator).
+
+
+list_to_regexp([Tail | []], _) ->
     string:concat(Tail, "\n");
 list_to_regexp([Head | Tail], Seperator) ->
     string:concat(string:concat(Head, Seperator), list_to_regexp(Tail, Seperator)).

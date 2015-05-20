@@ -66,7 +66,7 @@ connector_spawner(LSock, N) ->
 	exit ->        %% if received exit -> exit the loop (connection processes are still alive)
 	    io:fwrite("Number of connections: ~p  Exit called~n", [N]),
 	    connector_spawner(LSock, -1);
-	terminated ->  %% if received terminated -> reduce amount of connections
+	disconnect ->  %% if received terminated -> reduce amount of connections
 	    io:fwrite("Number of Connections: ~p  Process terminated~n", [N-1]),
 	    connector_spawner(LSock, N-1)
     after 100 ->

@@ -12,17 +12,25 @@
 %%-export([loop/1, get/1, login/1, validate/1, heartbeat/1, disconnect/1]).
 -export([]).
 
-
-
 	%flight_info_by_flightId
 	%passenger_info_by_flightNr
 	%number_seat_avail
 	%book_rate
 
+%%---------------------------------------------------------------------%%
+
+login() ->
+    ok.
 
 %%---------------------------------------------------------------------%%
 
-%% Returns a list of all airports. 
+disconnect(User) ->
+    %% check if User is currently locking a seat and unlock it. 
+    ok.
+
+%%---------------------------------------------------------------------%%
+
+%% Returns a list of all airports. Return list of strings. 
 
 airport_list() ->
     ok. 
@@ -105,3 +113,4 @@ abort_booking(User, Flight, seat) ->
     ok. 
 
 %%---------------------------------------------------------------------%%
+
