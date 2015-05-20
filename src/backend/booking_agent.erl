@@ -38,7 +38,7 @@ disconnect(User) ->
 airport_list() ->
     ok. 
 
-%% In case of entering airport, return all airports which that airport
+%% In case of departure airport, return all airports which that airport
 %% has a route to. 
 %% Input: Airport ID
 %% Example: 100
