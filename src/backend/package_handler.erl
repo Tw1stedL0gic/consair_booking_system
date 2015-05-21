@@ -1,5 +1,7 @@
 -module(package_handler).			
--export([handle_package/1, admin_handle_package/1]).
+%-export([handle_package/2]).
+-compile(export_all).
+-include_lib("eunit/include/eunit.hrl").
 
 -define(RegExpSeperator, "&"). %% Needs to be enclosed in quotes.
 
@@ -15,8 +17,8 @@
 -define(RESPRouteSearch,        8).
 -define(REQFlightDetails,       9).
 -define(RESPFlightDetails,     10).
--define(REQSeatAvailability,  100).
--define(RESPSeatAvailability, 101).
+-define(REQSeatLock,          100).
+-define(RESPSeatLock,         101).
 -define(REQSeatSuggestion,     11).
 -define(RESPSeatSuggestion,    12).
 -define(REQInitBooking,        13).
@@ -64,28 +66,73 @@ handle_package({?Disconnect}, User) ->
     end;
 
 handle_package({?REQAirportList}, User) ->
-    {ok, translate_package({?RESPAirportList, booking_agent:airport_list()})};
-
-handle_package({?REQAirportList, Airport_ID}, User) -> 
-    {ok, translate_package({?RESPAirportList, booking_agent:airport_list(Airport_ID)})};
-
-
-handle_package({?REQRouteSearch, [Airport_A, Airport_B, Year, Month, Day]}, User) ->
-    case booking_agent:flight_details(Airport_A, Airport_B, {Year, Month, Day}) of
-	{ok, FlightList} ->
-	    {ok, lists:map(basic_flight_tuple_to_list, FlightList)};
+    case booking_agent:airport_list() of
+	{ok, AirportList} ->
+	    {ok, translate_package({?RESPAirportList, 
+				    booking_agent:airport_list()})};
 	{error, Error} ->
 	    {error, Error}
     end;
 
-handel_package({?REQFlightDetails, Message}, admin) -> 
-    booking_agent:flight_details(Message);
-handel_package({?REQFlightDetails, Message}, User) -> 
-    booking_agent:flight_details(Message):
+handle_package({?REQAirportList, Airport_ID}, User) -> 
+    case booking_agent:airport_list() of
+	{ok, AirportList} ->
+	    {ok, translate_package({?RESPAirportList, 
+				    booking_agent:airport_list(Airport_ID)})};
+	{error, Error} ->
+	    {error, Error}
+    end;
+	
+handle_package({?REQRouteSearch, [Airport_A, Airport_B, Year, Month, Day]}, User) ->
+    case booking_agent:flight_details(Airport_A, Airport_B, {Year, Month, Day}) of
+	{ok, FlightList} ->
+	    {ok, translate_package({?RESPRouteSearch, 
+				    lists:map(fun basic_flight_tuple_to_list/1, FlightList)})};
+	{error, Error} ->
+	    {error, Error}
+    end;
 
-handle_package({?REQSeatAvailability, Message}, User) ->
-    booking_agent:seat_availability(Message),
-    <<?RESPSeatAvailability>>; 
+handle_package({?REQFlightDetails, Flight_ID}, admin) -> 
+    case booking_agent:flight_details(Flight_ID) of
+	{ok, Flight} ->
+	    {ok, translate_package({?RESPFlightDetails,
+				    admin_flight_tuple_to_list(Flight)})};
+	{error, Error} ->
+	    {error, Error}
+    end;
+
+handle_package({?REQFlightDetails, Flight_ID}, User) -> 
+    case booking_agent:flight_details(Flight_ID) of
+	{ok, Flight} ->
+	    {ok, translate_package({?RESPFlightDetails,
+				    flight_tuple_to_list(Flight)})};
+	{error, Error} ->
+	    {error, Error}
+    end;
+
+
+
+handle_package({?REQSeatLock, Seat_ID, Flight_ID}, User) ->
+    case booking_agent:seat_lock(Seat_ID, Flight_ID) of
+	{ok, Lock} ->
+	    case User of
+		admin ->
+		    {ok, translate_package({?RESPSeatLock, Lock})};
+		_ ->
+		    {ok, translate_package({?RESPSeatLock, (case Lock of 2 -> 1; _ -> Lock end)})}
+	    end;
+	{error, Error} ->
+	    {error, Error}
+    end;
+
+
+handle_package({?REQSeatLock, Seat_ID}, User) ->
+    case booking_agent:seat_lock(Seat_ID, User) of
+	{ok, Lock} ->
+	    {ok, translate_package({?RESPSeatLock, Lock})};
+	{error, Error} ->
+	    {error, Error}
+    end;
 
 handle_package({?REQSeatSuggestion, Message}, User) -> 
     booking_agent:suggest_seat(),
@@ -110,12 +157,12 @@ handle_package({?AbortBooking, Message}, User) ->
 handle_package({ID, Message}, _) ->
     {error, wrongMessageFormat}.
 
-admin_handle_package(<<Package>>) ->
-    admin_handle_package(translate_package(<<Package>>));
-admin_handle_package({?REQFlightDetails, Message}) ->
+%% admin_handle_package(<<Package>>) ->
+%%     admin_handle_package(translate_package(<<Package>>));
+%% admin_handle_package({?REQFlightDetails, Message}) ->
 
-admin_handle_package({?REQSeatSuggestion, Message}) ->
-    booking_agent:seat_availability(Message, admin).
+%% admin_handle_package({?REQSeatSuggestion, Message}) ->
+%%     booking_agent:seat_availability(Message, admin).
 
 %% Translates from ID and message or only ID to a regexp
 
@@ -131,18 +178,106 @@ translate_package(Message) ->
 
 
 list_to_regexp([Tail | []], _) ->
-    string:concat(Tail, "\n");
+    string:concat(
+      case is_integer(Tail) of
+	  true -> integer_to_list(Tail);
+	  _ -> Tail
+      end,
+      "&\n");
 list_to_regexp([Head | Tail], Seperator) ->
-    string:concat(string:concat(Head, Seperator), list_to_regexp(Tail, Seperator)).
+    string:concat(string:concat(
+		    case is_integer(Head) of 
+			true -> integer_to_list(Head); 
+			_ -> Head 
+		    end,
+		    Seperator), list_to_regexp(Tail, Seperator)).
 
 
-airport_tuple_to_list({ID, IATA, Name}) ->
-    [ID, IATA, Name].
+airport_tuple_to_list({Airport_ID, IATA, Name}) ->
+    [Airport_ID, IATA, Name].
 
-basic_flight_tuple_to_list({ID, Airport_A, Airport_B, {{Year, Month, Day},{Hour, Minute, Second}}}) ->
-    lists:append(lists:append(lists:append([ID], 
+basic_flight_tuple_to_list({Flight_ID, Airport_A, Airport_B, {{Year, Month, Day},{Hour, Minute, Second}}}) ->
+    lists:append(lists:append(lists:append([Flight_ID], 
 					   airport_tuple_to_list(Airport_A)), 
 			      airport_tuple_to_list(Airport_B)), 
 		 [Year, Month, Day, Hour, Minute, Second]).
 
+flight_tuple_to_list({Flight_ID, Airport_A, Airport_B, Seat_list, {{Year_D, Month_D, Day_D},{Hour_D, Minute_D, Second_D}}, {{Year_A, Month_A, Day_A},{Hour_A, Minute_A, Second_A}}}) ->
+    lists:append(lists:append(lists:append(lists:append([Flight_ID],
+							airport_tuple_to_list(Airport_A)), 
+					   airport_tuple_to_list(Airport_B)),
+			      lists:foldr(fun lists:append/2, [],
+					  lists:map(fun seat_tuple_to_list/1, Seat_list))),
+		 [Year_D, Month_D, Day_D, Hour_D, Minute_D, Second_D, Year_A, Month_A, Day_A, Hour_A, Minute_A, Second_A]).
+
+admin_flight_tuple_to_list({Flight_ID, Airport_A, Airport_B, Seat_list, {{Year_D, Month_D, Day_D},{Hour_D, Minute_D, Second_D}}, {{Year_A, Month_A, Day_A},{Hour_A, Minute_A, Second_A}}}) ->
+    lists:append(lists:append(lists:append(lists:append([Flight_ID],
+							airport_tuple_to_list(Airport_A)), 
+					   airport_tuple_to_list(Airport_B)),
+			      lists:foldr(fun lists:append/2, [], 
+					  lists:map(fun admin_seat_tuple_to_list/1, Seat_list))),
+		 [Year_D, Month_D, Day_D, Hour_D, Minute_D, Second_D, Year_A, Month_A, Day_A, Hour_A, Minute_A, Second_A]).
+
+seat_tuple_to_list({Seat_ID, Flight_ID, Class, _, Window, Aisle, Row, Col, Price, Lock_s}) ->
+    [Seat_ID, Flight_ID, 
+     Class, Window, Aisle, 
+     Row, Col, Price, 
+     (case Lock_s of 
+	  0 -> 0;
+	  1 -> 1;
+	  2 -> 1 end)];
+seat_tuple_to_list(_) ->
+    {error, wrongFormat}.
+
+admin_seat_tuple_to_list({Seat_ID, Flight_ID, Class, User, Window, Aisle, Row, Col, Price, Lock_s}) ->
+    [Seat_ID, Flight_ID, 
+     Class, User, Window, Aisle, 
+     Row, Col, Price, Lock_s];
+admin_seat_tuple_to_list(_) ->
+    {error, wrongFormat}.
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                         EUnit Test Cases                                  %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+package_handler_test() ->
+    ?assertMatch(true, true).
+
+translate_package_test() ->
+    List_of_strings = ["a", "b", "c", "d", "e", "f"],
+    List_of_numbers = [1, 2, 3, 4, 5, 6, 7, 8],
+    List_of_mixed = ["a", 1, "b", 2, "c", 3, "d", 4],
+
+    ?assertMatch(<<"1&a&b&c&d&e&f&\n">>, translate_package({1, List_of_strings})),
+    ?assertMatch(<<"2&1&2&3&4&5&6&7&8&\n">>, translate_package({2, List_of_numbers})),
+    ?assertMatch(<<"3&a&1&b&2&c&3&d&4&\n">>, translate_package({3, List_of_mixed})).
+
+tuple_to_list_test() ->
+    Airport_A = {2, "ARN", "Arlanda Airport"},
+    Airport_B = {3, "LAX", "Los Angeles International Airport"},
+    Seat_list = [{"A32", 2, 1, "Carl",    1, 0, 32, "A", 500,  2},
+		 {"B32", 2, 1, "Carl",    0, 1, 32, "B", 500,  0},
+		 {"C2",  2, 2, "Andreas", 0, 0, 2,  "C", 1200, 1}],
+
+    ?assertMatch([2, "ARN", "Arlanda Airport"], 
+		 airport_tuple_to_list(Airport_A)),
+
+    ?assertMatch([3, 2, "ARN", "Arlanda Airport", 3, "LAX", "Los Angeles International Airport", 2015, 05, 21, 13, 25, 00],
+		 basic_flight_tuple_to_list({3, Airport_A, Airport_B, {{2015, 05, 21},{13, 25, 00}}})),
+
+
+    ?assertMatch(["A32", 2, 1, 1, 0, 32, "A", 500, 1],
+		 seat_tuple_to_list(hd(Seat_list))),
+
+    ?assertMatch(["A32", 2, 1, "Carl", 1, 0, 32, "A", 500, 2],
+		 admin_seat_tuple_to_list(hd(Seat_list))),
+
+    ?assertMatch([3, 2, "ARN", "Arlanda Airport", 3, "LAX", "Los Angeles International Airport", "A32", 2, 1, 1, 0, 32, "A", 500, 1, "B32", 2, 1, 0, 1, 32, "B", 500, 0, "C2", 2, 2, 0, 0, 2, "C", 1200, 1, 2015, 5, 21, 13, 25, 0, 2015, 5, 22, 1, 21, 12],
+       flight_tuple_to_list({3, Airport_A, Airport_B, Seat_list, {{2015, 05, 21},{13, 25, 00}}, {{2015, 05, 22},{01, 21, 12}}})),
+
+    ?assertMatch([3, 2, "ARN", "Arlanda Airport", 3, "LAX", "Los Angeles International Airport", "A32", 2, 1, "Carl", 1, 0, 32, "A", 500, 2, "B32", 2, 1, "Carl", 0, 1, 32, "B", 500, 0, "C2", 2, 2, "Andreas", 0, 0, 2, "C", 1200, 1, 2015, 5, 21, 13, 25, 0, 2015, 5, 22, 1, 21, 12],
+       admin_flight_tuple_to_list({3, Airport_A, Airport_B, Seat_list, {{2015, 05, 21},{13, 25, 00}}, {{2015, 05, 22},{01, 21, 12}}})).
 

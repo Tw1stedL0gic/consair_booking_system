@@ -13,7 +13,7 @@
 %% here is a change
 
 -module(server).
--export([start/0, start/1, connector_spawner/2, connector/4]).
+-export([start/0, start/1, connector_spawner/2, connector/5]).
 -define(PORT, 53535).
 -define(CONNECTIONOPTIONS, [binary, {packet, 0}, {active, false}]).
 -define(ALLOWEDTIMEOUTS, 10). %% Amount of minutes allowed before connection is terminated
@@ -25,7 +25,7 @@
 %% certain port number.
 -spec start() -> ok.
 
-start () ->
+start() ->
     start(?PORT).
 
 %% @doc Auxilary start function 
@@ -92,7 +92,7 @@ connector_spawner(LSock, N) ->
 %% In the case of a message it will handle it accordingl
 
 %% Connection timed out (10 timeouts).
-connector(_, ID, ?ALLOWEDTIMEOUTS, User, ParentPID) ->
+connector(_, ID, ?ALLOWEDTIMEOUTS, _, ParentPID) ->
     io:fwrite("C~p: ~p timeouts reached, connection terminated~n", [ID, ?ALLOWEDTIMEOUTS]),
     ParentPID ! terminated;
     %% send message to client that it is timed out
