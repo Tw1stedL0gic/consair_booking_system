@@ -1,14 +1,12 @@
 package ospp.bookinggui.networking;
 
 import ospp.bookinggui.exceptions.MalformedMessageException;
-import ospp.bookinggui.networking.messages.DisconnectMsg;
-import ospp.bookinggui.networking.messages.ErrorMsg;
-import ospp.bookinggui.networking.messages.LoginMsg;
-import ospp.bookinggui.networking.messages.LoginRespMsg;
+import ospp.bookinggui.networking.messages.*;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Message {
@@ -94,30 +92,9 @@ public class Message {
 			throw new MalformedMessageException("Could not parse message! The message is too small!");
 		}
 
-		MessageType type;
-		try {
-			type = MessageType.getType(Integer.valueOf(parts[0]));
-		}
-		catch(NumberFormatException e) {
-			throw new MalformedMessageException("The message ID is not an integer!");
-		}
-		catch(IllegalArgumentException | ArrayIndexOutOfBoundsException e) {
-			throw new MalformedMessageException("The supplied message ID is not supported!");
-		}
-
-		long timestamp;
-		try {
-			timestamp = Long.valueOf(parts[1]);
-		}
-		catch(NumberFormatException e) {
-			throw new MalformedMessageException("The timestamp is not a valid long!");
-		}
-
-		String[] body = null;
-		if(parts.length > Message.HEADER_SIZE) {
-			body = new String[parts.length - Message.HEADER_SIZE];
-			System.arraycopy(parts, 2, body, 0, parts.length - Message.HEADER_SIZE);
-		}
+		MessageType type = retrieveType(parts);
+		long timestamp = retrieveTimestamp(parts);
+		String[] body = retrieveBody(parts);
 
 		try {
 			switch(type) {
@@ -133,12 +110,17 @@ public class Message {
 				case ERROR:
 					return new ErrorMsg(timestamp, body[0]);
 
+				case REQ_AIRPORTS:
+					String iata = body == null ? null : body[0];
+					return new RequestAirportsMsg(timestamp, iata);
+
+				case REQ_AIRPORTS_RESP:
+					return new RequestAirportsRespMsg(timestamp, body);
+
 				case INIT_BOOK:
 				case FIN_BOOK:
 				case FIN_BOOK_RESP:
 				case ABORT_BOOK:
-				case REQ_AIRPORTS:
-				case REQ_AIRPORTS_RESP:
 				case SEARCH_ROUTE:
 				case SEARCH_ROUTE_RESP:
 				case REQ_FLIGHT_DETAILS:
@@ -157,7 +139,40 @@ public class Message {
 			}
 		}
 		catch(NullPointerException | IndexOutOfBoundsException e) {
+			logger.log(Level.SEVERE, e.getMessage(), e);
 			throw new MalformedMessageException("Could not parse message! The body is not correctly formed!");
+		}
+	}
+
+	private static String[] retrieveBody(String[] parts) {
+		String[] body = null;
+		if(parts.length > Message.HEADER_SIZE) {
+			body = new String[parts.length - Message.HEADER_SIZE];
+			System.arraycopy(parts, 2, body, 0, parts.length - Message.HEADER_SIZE);
+		}
+		return body;
+	}
+
+	private static long retrieveTimestamp(String[] parts) throws MalformedMessageException {
+		try {
+			long timestamp = Long.valueOf(parts[1]);
+			return timestamp;
+		}
+		catch(NumberFormatException e) {
+			throw new MalformedMessageException("The timestamp is not a valid long!");
+		}
+	}
+
+	private static MessageType retrieveType(String[] parts) throws MalformedMessageException {
+		try {
+			MessageType type = MessageType.getType(Integer.valueOf(parts[0]));
+			return type;
+		}
+		catch(NumberFormatException e) {
+			throw new MalformedMessageException("The message ID is not an integer!");
+		}
+		catch(IllegalArgumentException | ArrayIndexOutOfBoundsException e) {
+			throw new MalformedMessageException("The supplied message ID is not supported!");
 		}
 	}
 
@@ -203,6 +218,6 @@ public class Message {
 	 * @return
 	 */
 	public String[] getBody() {
-		return this.BODY;
+		return this.BODY.clone();
 	}
 }

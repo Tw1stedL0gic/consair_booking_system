@@ -7,7 +7,10 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(value = Suite.class)
 @SuiteClasses(value = {
-	TestLogin.class
+	TestLogin.class,
+	TestDisconnect.class,
+	TestRequestAirports.class,
+	TestRequestAirportsResp.class
 })
 public class MessageTestSuite extends TestSuite {
 }
