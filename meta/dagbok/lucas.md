@@ -103,13 +103,22 @@ Fixade fler meddelanden till biblioteket och tester.
 ##### Lördag - Arbetstid: ~1 timme
 Samma som ovan.
 
+##### Söndag - Arbetstid: ~2 timmar
+Meddelanden.
+
 ## Vecka 21
 
-##### Måndag
+##### Måndag - Arbetstid: ~3 timmar
+Delade upp testerna i test suites.
+Mer jobb på meddelanden och unit-tester.
 
-##### Tisdag
+##### Tisdag - Arbetstid: ~3-4 timmar
+Vi bestämde oss för att göra om hela strukturen kring meddelanden.
+Så jag arbetade på att skriva om 80% av vårt bibliotek.
 
-##### Onsdag
+##### Onsdag - Arbetstid: ~3 timmar
+Arbetade med avtolkning av de nya meddelanden.
+Samt mer tester. Man kan aldrig få för många tester.
 
 ##### Torsdag
 

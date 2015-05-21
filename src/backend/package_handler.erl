@@ -15,6 +15,8 @@
 -define(RESPRouteSearch,        8).
 -define(REQFlightDetails,       9).
 -define(RESPFlightDetails,     10).
+-define(REQSeatAvailability,  100).
+-define(RESPSeatAvailability, 101).
 -define(REQSeatSuggestion,     11).
 -define(RESPSeatSuggestion,    12).
 -define(REQInitBooking,        13).
@@ -31,9 +33,9 @@
 %% bitstring to a tuple, calls the appropriate function, and
 %% translates the answer back to bitstring.
 
-handle_package(<<Package>>) ->
-    handle_package(translate_package(<<Package>>));
-handle_package({?ClientLogin, [Username, Password]}) -> %% ID 1 - Handshake
+handle_package(<<Package>>, User) ->
+    handle_package(translate_package(<<Package>>), User);
+handle_package({?ClientLogin, [Username, Password]}, User) -> %% ID 1 - Handshake
     %% grants either user or admin privilege alternatively a failure message in case handshake didn't work. 
     %% failed if username or password is incorrect. 
     
@@ -43,69 +45,75 @@ handle_package({?ClientLogin, [Username, Password]}) -> %% ID 1 - Handshake
     
     case booking_agent:login(Username, Password) of
 	user ->
-	    {ok, translate_package({?ServerLogin, ["User"]})};
+	    {ok, {user, translate_package({?ServerLogin, ["User"]})}};
 	admin ->
-	    {admin, translate_package({?ServerLogin, ["Admin"]})};
+	    {ok, {admin, translate_package({?ServerLogin, ["Admin"]})}};
 	error ->
 	    {error, loginError}
     end;
   
-handle_package({?Heartbeat, _}) -> 
-    ok; 
+handle_package({?Heartbeat, _}, _) -> 
+    translate_package(?Heartbeat); 
 
-handle_package({?Disconnect, User}) -> 
+handle_package({?Disconnect}, User) -> 
     case booking_agent:disconnect(User) of
 	ok ->
 	    {ok};
 	{error, Error} ->
 	    {error, Error}
-    end
+    end;
 
-
-handle_package({?REQAirportList}) ->
+handle_package({?REQAirportList}, User) ->
     {ok, translate_package({?RESPAirportList, booking_agent:airport_list()})};
 
-handle_package({?REQAirportList, Airport_ID}) -> 
-    {ok, translate_package({?RESPAirportList, booking_agent:airport_list(AirportID)})};
+handle_package({?REQAirportList, Airport_ID}, User) -> 
+    {ok, translate_package({?RESPAirportList, booking_agent:airport_list(Airport_ID)})};
 
 
-handle_package({?REQRouteSearch, [Airport_A, Airport_B, Year, Month, Day]) ->
+handle_package({?REQRouteSearch, [Airport_A, Airport_B, Year, Month, Day]}, User) ->
     case booking_agent:flight_details(Airport_A, Airport_B, {Year, Month, Day}) of
 	{ok, FlightList} ->
-	    {ok, map(basic_flight_tuple_to_list, FlightList)}.
- 
+	    {ok, lists:map(basic_flight_tuple_to_list, FlightList)};
+	{error, Error} ->
+	    {error, Error}
+    end;
 
-handle_package({?REQSeatAvailability, Message}) ->
+handel_package({?REQFlightDetails, Message}, admin) -> 
+    booking_agent:flight_details(Message);
+handel_package({?REQFlightDetails, Message}, User) -> 
+    booking_agent:flight_details(Message):
+
+handle_package({?REQSeatAvailability, Message}, User) ->
     booking_agent:seat_availability(Message),
     <<?RESPSeatAvailability>>; 
 
-handle_package({?REQSeatSuggestion, Message}) -> 
+handle_package({?REQSeatSuggestion, Message}, User) -> 
     booking_agent:suggest_seat(),
     <<?RESPSeatSuggestion>>; 
 
-handle_package({?REQInitBooking, Message}) ->
+handle_package({?REQInitBooking, Message}, User) ->
     booking_agent:start_booking(),
     <<?RESPInitBooking>>;
 
-handle_package({?REQFinalizeBooking, Message}) -> 
+handle_package({?REQFinalizeBooking, Message}, User) -> 
     booking_agent:finalize_booking(),
     <<?RESPFinalizeBooking>>;
 
-handle_package({?REQReceipt, Message}) -> 
+handle_package({?REQReceipt, Message}, User) -> 
     booking_agent:receipt(),
     <<?RESPReceipt>>;
 
-handle_package({?AbortBooking, Message}) -> 
-    ok.
+handle_package({?AbortBooking, Message}, User) -> 
+    ok;
 
 
-handle_package({ID, Message}) ->
+handle_package({ID, Message}, _) ->
     {error, wrongMessageFormat}.
 
 admin_handle_package(<<Package>>) ->
     admin_handle_package(translate_package(<<Package>>));
 admin_handle_package({?REQFlightDetails, Message}) ->
-    booking_agent:flight_details(Message);
+
 admin_handle_package({?REQSeatSuggestion, Message}) ->
     booking_agent:seat_availability(Message, admin).
 
@@ -132,9 +140,9 @@ airport_tuple_to_list({ID, IATA, Name}) ->
     [ID, IATA, Name].
 
 basic_flight_tuple_to_list({ID, Airport_A, Airport_B, {{Year, Month, Day},{Hour, Minute, Second}}}) ->
-    append(append(append([ID], 
-			 airport_tuple_to_list(Airport_A)), 
-		  airport_tuple_to_list(Airport_B)), 
-	   [Year, Month, Day, Hour, Minute, Second]).
+    lists:append(lists:append(lists:append([ID], 
+					   airport_tuple_to_list(Airport_A)), 
+			      airport_tuple_to_list(Airport_B)), 
+		 [Year, Month, Day, Hour, Minute, Second]).
 
 
