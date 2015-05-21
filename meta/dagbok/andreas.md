@@ -85,11 +85,11 @@ Fortsatte med GUIt, jobbade med mer design på GUIt och diskuterade om hur vi l�
 ##### Måndag
 Började med att försöka sy ihop vårt GUI med nätverksadaptern som Lucas skrivit. Vi har gjort så att vi borde kunna ansluta till en server just nu med en ny "anslut till server" startsida. Tidsåtgång 5h 30 min
 ##### Tisdag
-
+Jobbade med GUIts funktionalitet. Tidsåtgång 2h
 ##### Onsdag
-
+Jobbade med färgscheman i css så att GUIt ser mycket bättre ut, samt skrev kommentarer på de stället där vi ska skicka meddelanden till servern. Tidsåtgång 6h
 ##### Torsdag
-
+Började med att skriva på rapporten och gjorde ett skelett för den, samt presentationen. Lade också till i GUIt så att man inte kan söka på flights om man inte har matat in från vart man vill åka, till vart man vill åka, fler än 0 personer och inget valt datum. Tidsåtgång 5h
 ##### Fredag
 
 ## Vecka 22
