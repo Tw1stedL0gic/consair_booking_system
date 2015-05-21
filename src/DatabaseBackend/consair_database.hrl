@@ -4,7 +4,7 @@
 	user_name = null,
 	user_password = null,
 	user_class = null,
-	user_email = []}).
+	user_email = null}).
 
 -record (airport, {
 	id = null,
