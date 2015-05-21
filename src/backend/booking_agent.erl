@@ -126,6 +126,20 @@ flight_details(Flight, admin) ->
 
 %%---------------------------------------------------------------------%%
 
+%% @doc Returns availability of seat in flight. 
+%% Input: Seat_ID, Flight_ID
+%% Example: A21, 102
+%% Output: Lock status
+%% Example: 0, 1 or 2.
+
+seat_lock(Seat_ID, Flight_ID) ->
+    %% return availability of Seat_ID in Flight_ID
+    ok.
+
+
+%%---------------------------------------------------------------------%%
+
+
 %% @doc Returns information about seat(s). 
 %% When inputting a list of seat IDs, the output will be about the included seats. When inputting a row id, all seats in that row will be returned. When inputting a column id, all the seats in that column will be returned. 
 %% User information about lock is 0 = avail, 1 = reserved, 2 = reserved. 
@@ -151,7 +165,7 @@ flight_details(Flight, admin) ->
 %%            23,
 %%            2}, ... ]
 
-seat_avaiability({Flight, Seat}) ->
+seat_details({Flight, Seat}) ->
     ok.
 
 %% @doc Returns information about seat(s), including admin info. 
@@ -162,7 +176,7 @@ seat_avaiability({Flight, Seat}) ->
 %% Output: Seat tuple list ({id, flights, class, user, window, aisle, row, col, lock_s})
 %% Example: Same as above
 
-seat_avaiability({Flight, Seat}, admin) ->
+seat_details({Flight, Seat}, admin) ->
     ok. 
 
 %%---------------------------------------------------------------------%%
