@@ -102,7 +102,7 @@ public class TestRequestAirportsResp {
 	}
 
 	@Test
-	public void testCreat2() throws UnsupportedEncodingException {
+	public void testCreate2() throws UnsupportedEncodingException {
 		String[] body = new String[] {
 			"12", "ARN", "Arlanda",
 			"13", "FUU", "DickButt"
@@ -131,22 +131,5 @@ public class TestRequestAirportsResp {
 		catch(IllegalArgumentException e) {
 			assertEquals("The length of the body is not divisible by three!", e.getMessage());
 		}
-	}
-
-	@Test
-	public void createBody1() {
-		Airport[] airports = new Airport[] {
-			new Airport("12", "ARN", "Arlanda"),
-			new Airport("42", "KanDV", "FooBar")
-		};
-
-		String[] body = RequestAirportsRespMsg.createBody(airports);
-
-		String[] expected = new String[] {
-			"12", "ARN", "Arlanda",
-			"42", "KanDV", "FooBar"
-		};
-
-		assertArrayEquals(expected, body);
 	}
 }

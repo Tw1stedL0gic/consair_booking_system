@@ -9,7 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({TestMessage.class})
+@Suite.SuiteClasses({TestMessage.class, TestAirport.class, TestFlight.class})
 public class MainTestSuite extends TestSuite {
 
 	@BeforeClass
