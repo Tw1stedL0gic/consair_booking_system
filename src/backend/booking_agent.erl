@@ -9,8 +9,9 @@
 %% ------------------------
 
 -module(booking_agent).
+-compile(export_all).
 %%-export([loop/1, get/1, login/1, validate/1, heartbeat/1, disconnect/1]).
--export([]).
+
 
 	%flight_info_by_flightId
 	%passenger_info_by_flightNr
@@ -39,7 +40,7 @@ login(Username, Password) ->
 %% Input: Username
 %% Output: ok / {error, Error} 
 
-disconnect(Username) ->
+disconnect() ->
     %% check if User is currently locking a seat and unlock it. 
     %% Potential error: Database could not unlock?
     ok.	    
@@ -52,12 +53,7 @@ disconnect(Username) ->
 %%           {101, "LAX", "Los Angeles International Airport"}]
 
 airport_list() ->
-    case
-	ok ->
-	    ok;
-	error ->
-	    {error, errorReason}
-    end;
+    ok.
 
 %% In case of departure airport, return all airports which that airport
 %% has a route to. 
@@ -96,7 +92,7 @@ route_search(airport, arrival_point, {{Year, Month, Day},_}) ->
 %% @doc Returns all information about flight.
 %% Input:  Flight ID
 %% Example: 100
-%% Output: Flight tuple
+%% Output: Flight tuple ({Flight id, airport_a_id, airport_b_id, departure_date, arrival_date, seat_table, flight number})
 %% Example: {1112,
 %%           {100, "ARN", "Arlanda"},
 %%           {101, "LAX", "Los Angeles International Airport"},
@@ -107,7 +103,26 @@ route_search(airport, arrival_point, {{Year, Month, Day},_}) ->
 
 flight_details(Flight) ->
     %% return all information about flight 
+    %% In this function, booked and locked seats are both represented by 1, and available by 0. 
     ok.
+
+%% @doc Returns all information about flight.
+%% Input:  Flight ID
+%% Example: 100
+%% Output: Flight tuple ({Flight id, airport_a_id, airport_b_id, departure_date, arrival_date, seat_table, flight number})
+%% Example: {1112,
+%%           {100, "ARN", "Arlanda"},
+%%           {101, "LAX", "Los Angeles International Airport"},
+%%           [carl, oskar, wenting, ...],
+%%           {{2015,12,30},{20,10,08}},
+%%           {{2015,12,31},{10,32,00}},
+%%           SEAT_TABLE,
+%%           ARNLAX120}
+
+flight_details(Flight, admin) ->
+    %% returns all information, including admin info, about flight.
+    %% In this function, seats are shown as available, locked or booked. 
+    ok. 
 
 %%---------------------------------------------------------------------%%
 
@@ -137,7 +152,7 @@ flight_details(Flight) ->
 %%            2}, ... ]
 
 seat_avaiability({Flight, Seat}) ->
-    ok;
+    ok.
 
 %% @doc Returns information about seat(s), including admin info. 
 %% When inputting a list of seat IDs, the output will be about the included seats. When inputting a row id, all seats in that row will be returned. When inputting a column id, all the seats in that column will be returned. 
