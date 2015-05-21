@@ -35,8 +35,8 @@
 %% bitstring to a tuple, calls the appropriate function, and
 %% translates the answer back to bitstring.
 
-handle_package(<<Package>>, User) ->
-    handle_package(translate_package(<<Package>>), User);
+handle_package(Package, User) when is_bitstring(Package) ->
+    handle_package(translate_package(Package), User);
 handle_package({?ClientLogin, [Username, Password]}, User) -> %% ID 1 - Handshake
     %% grants either user or admin privilege alternatively a failure message in case handshake didn't work. 
     %% failed if username or password is incorrect. 
@@ -174,7 +174,8 @@ translate_package({ID, Message}) ->
 %% Translates from a regexp to a tuple with ID and message
 
 translate_package(Message) ->
-    re:split(Message, ?RegExpSeperator).
+    [Message_ID | Message_list] = lists:map(fun binary_to_list/1, lists:droplast(re:split(Message, ?RegExpSeperator))),
+    {list_to_integer(Message_ID), Message_list}.
 
 
 list_to_regexp([Tail | []], _) ->

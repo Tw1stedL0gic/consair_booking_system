@@ -101,8 +101,11 @@ connector(_, ID, ?ALLOWEDTIMEOUTS, _, ParentPID) ->
 connector(Sock, ID, Timeouts, User, ParentPID) ->
     %% announce established connection to client and terminal
     gen_tcp:send(Sock, <<ID>>),
-    io:fwrite("C~p: Connection established~n", [ID]),
-    
+    case User of
+	null -> io:fwrite("C~p: Connection established~n", [ID]);
+	admin -> io:fwrite("C~p: Admin connection established~n", [ID]);
+	User -> io:fwrite("C~p: User (~p) connection established~n", [ID, User])
+    end,    
     case gen_tcp:recv(Sock, 0, 60000) of
 	{error, timeout} -> %% in case of timeout, reloop.
 	    %% iterate a counter, which will warn client when timeouting too much
@@ -130,7 +133,7 @@ connector(Sock, ID, Timeouts, User, ParentPID) ->
 		{ok, Response} ->
 		    gen_tcp:send(Sock, Response);
 		{error, Error} ->
-		    {error, Error}
+		    ParentPID ! {error, Error}
 	    end,
 	    %% reloop and reset timeouts
 	    connector(Sock, ID, 0, User, ParentPID)
