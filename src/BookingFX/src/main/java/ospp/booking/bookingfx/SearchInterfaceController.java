@@ -9,6 +9,9 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import javafx.animation.AnimationTimer;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -28,6 +31,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.input.InputMethodEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.util.Duration;
 import javafx.util.StringConverter;
 import javafx.util.converter.ShortStringConverter;
 
@@ -76,6 +80,12 @@ public class SearchInterfaceController implements Initializable, ControlledScree
     @FXML
     private ListView toListView;
     
+    @FXML
+    private Label errorLabel;
+    
+    @FXML
+    private DatePicker toCalendar;
+    private Timeline errorline;
     
     @FXML
     void adultDecClick(ActionEvent event) {
@@ -107,10 +117,18 @@ public class SearchInterfaceController implements Initializable, ControlledScree
     
     @FXML
     void searchButtonClick(ActionEvent event) {
+        if(!fromField.getText().equals("") && !toField.getText().equals("") &&  toCalendar.getValue() != null && totalNr > 0){
         //Sökning i databasen(nätverk) och visa resultat i bookOptionInterface 
         myScreenMaster.setScreen("bookoptioninterface");
+        }
+        else{
+            
+            errorLabel.setVisible(true);
+            errorline.playFromStart();
+        }
     }
     
+   
     
     void updateTotalNr(){
         
@@ -141,6 +159,7 @@ public class SearchInterfaceController implements Initializable, ControlledScree
     public void initialize(URL url, ResourceBundle rb) {
         updateTotalNr();
         totalLabel.expandedProperty().set(false);
+        errorLabel.setVisible(false);
         returnCalendar.disableProperty().bind(turReturBox.selectedProperty().not());
         //final String[] flygplatser = {"arlanda", "arlunda", "inte arlanda", "inte uppsala", "nÃ¥got annat"};
         final String[] flygplatser = new String[BigData.airports.length];
@@ -234,6 +253,21 @@ public class SearchInterfaceController implements Initializable, ControlledScree
             }
         });
         
+        
+        errorline = new Timeline();
+        errorline.setCycleCount(1);
+        errorline.autoReverseProperty().set(false);
+
+        errorline.getKeyFrames().addAll(
+        new KeyFrame(Duration.ZERO,
+        new KeyValue(errorLabel.opacityProperty(), 1)),
+        
+        new KeyFrame(new Duration(5000),
+        new KeyValue(errorLabel.opacityProperty(), 1)),
+
+        new KeyFrame(new Duration(7000),  
+        new KeyValue(errorLabel.opacityProperty(), 0)));
+        
     }    
 
     
@@ -247,6 +281,12 @@ public class SearchInterfaceController implements Initializable, ControlledScree
     }
         @Override
     public void onScreen() {
+        fromField.setText("");
+        toField.setText("");
+        toCalendar.setValue(null);
+        childNr=0;
+        adultNr=0;
+        updateTotalNr();
     }
 
     @Override

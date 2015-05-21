@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.shape.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.effect.*?>
@@ -51,7 +52,7 @@
                                     <ListView fx:id="fromListView" prefHeight="132.0" prefWidth="200.0" />
                                  </children>
                               </VBox>
-                              <DatePicker maxWidth="1.7976931348623157E308" promptText="Departure" />
+                              <DatePicker fx:id="toCalendar" maxWidth="1.7976931348623157E308" promptText="Departure" />
                            </children>
                         </VBox>
                         <VBox prefHeight="200.0" prefWidth="100.0" spacing="6.0" GridPane.columnIndex="1">
@@ -117,6 +118,11 @@
             <AnchorPane maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="48.0" prefWidth="200.0" styleClass="bottomPane" stylesheets="@../styles/Styles.css">
                <children>
                   <Button layoutX="535.0" layoutY="75.0" mnemonicParsing="false" onAction="#searchButtonClick" text="Search" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />
+                  <Label fx:id="errorLabel" layoutX="14.0" layoutY="9.0" text="Make sure that the searchfields are not empty, a date is chosen and that passengers are not 0" textFill="WHITE">
+                     <font>
+                        <Font size="17.0" />
+                     </font>
+                  </Label>
                </children>
             </AnchorPane>
          </children>
