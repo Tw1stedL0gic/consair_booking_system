@@ -40,6 +40,7 @@ public class TestFlight {
 		Flight f = Flight.parseBody(data, 0);
 
 		assertEquals("TJOFRÄS", f.getFlightID());
+		assertEquals("2", f.getFlightNumber());
 
 		Airport a = f.getAirport();
 		Date d = f.getDate();
