@@ -10,7 +10,7 @@ public class RequestAirportsRespMsg extends Message {
 
 	public RequestAirportsRespMsg(long timestamp, String[] body) {
 		super(MessageType.REQ_AIRPORTS_RESP, timestamp, body);
-		this.airports = Airport.parseBody(body, 0);
+		this.airports = Airport.parseBodyToArray(body, 0);
 	}
 
 	public Airport[] getAirports() {

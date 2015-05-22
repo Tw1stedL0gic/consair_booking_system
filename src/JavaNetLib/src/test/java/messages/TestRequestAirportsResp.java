@@ -129,7 +129,7 @@ public class TestRequestAirportsResp {
 			fail("Creating a RequestAirportRespMsg with incorrect body does not throw an exception!");
 		}
 		catch(IllegalArgumentException e) {
-			assertEquals("The length of the body is not divisible by three!", e.getMessage());
+			assertEquals("Airport.parseBodyToArray() was given an array not divisable by three after subtracting the offset!", e.getMessage());
 		}
 	}
 }

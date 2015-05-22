@@ -29,10 +29,10 @@ public class Airport {
 		return body;
 	}
 
-	public static Airport[] parseBody(String[] body, int offset) {
+	public static Airport[] parseBodyToArray(String[] body, int offset) {
 
 		if((body.length - offset) % 3 != 0) {
-			throw new IllegalArgumentException("Airport.parseBody() was given an array not divisable by three after subtracting the offset!");
+			throw new IllegalArgumentException("Airport.parseBodyToArray() was given an array not divisable by three after subtracting the offset!");
 		}
 
 		Airport[] ports = new Airport[body.length / 3];
@@ -46,6 +46,14 @@ public class Airport {
 		}
 
 		return ports;
+	}
+
+	public static Airport parseBody(String[] body, int offset) {
+		if(body.length - offset < ARG_AMOUNT) {
+			throw new IllegalArgumentException("Airport.parseBody() was given a too small array!");
+		}
+
+		return new Airport(body[offset], body[offset + 1], body[offset + 2]);
 	}
 
 	public String getAirportID() {

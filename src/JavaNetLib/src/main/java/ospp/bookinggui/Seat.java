@@ -26,7 +26,7 @@ public class Seat {
 
 	public static Seat parseBody(String[] parts, int offset) {
 		if(parts.length - offset < ARG_AMOUNT) {
-			throw new IllegalArgumentException("Seat.parseBody() was given a too small array!");
+			throw new IllegalArgumentException("Seat.parseBodyToArray() was given a too small array!");
 		}
 
 		return new Seat(

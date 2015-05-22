@@ -19,13 +19,15 @@ public class Flight {
 	public static Flight parseBody(String[] body, int offset) {
 		String flight_id = body[offset++];
 
-		Airport airport = Airport.parseBody(body, offset)[0];
+		Airport airport = Airport.parseBody(body, offset);
 		offset += Airport.ARG_AMOUNT;
 
 		Date date = Date.parseBody(body, offset);
 		offset += Date.ARG_AMOUNT;
 
+		String flight_nr = body[offset];
 
+		return new Flight(flight_id, airport, date, flight_nr);
 	}
 
 	public String getFlightID() {
@@ -48,15 +50,7 @@ public class Flight {
 		String[] airport_bod = airport.createBody();
 		String[] date_bod = date.createBody();
 
-		int seat_fields = 0;
-
-		String[][] seats = new String[seat_list.length][];
-		for(int i = 0; i < seat_list.length; i++) {
-			seats[i] = seat_list[i].createBody();
-			seat_fields += seats[i].length;
-		}
-
-		String[] body = new String[airport_bod.length + date_bod.length + seat_fields + 2];
+		String[] body = new String[airport_bod.length + date_bod.length + 2];
 
 		int index = 0;
 
@@ -68,12 +62,6 @@ public class Flight {
 
 		for(String s : date_bod) {
 			body[++index] = s;
-		}
-
-		for(String[] sa : seats) {
-			for(String s : sa) {
-				body[++index] = s;
-			}
 		}
 
 		body[++index] = FLIGHT_NR;
