@@ -1,9 +1,5 @@
 package ospp.bookinggui.networking;
 
-import ospp.bookinggui.BookingInfo;
-import ospp.bookinggui.Flight;
-import ospp.bookinggui.Passenger;
-import ospp.bookinggui.networking.messages.*;
 import ospp.bookinggui.networking.runnables.PacketListener;
 import ospp.bookinggui.networking.runnables.PacketSender;
 
@@ -11,53 +7,36 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.logging.Logger;
 
-public class NetworkAdapter implements Adapter {
+public class NetworkAdapter {
+
+	public static int so_timeout_millis = 30000;
 
 	private static final Logger logger = Logger.getLogger(NetworkAdapter.class.getName());
 
 	private final Mailbox<Message> mailbox;
-	private final Socket           socket;
 
+	/**
+	 * Initiates the network adapter.
+	 * It will try to connect to the given host address and port on the calling thread!
+	 *
+	 * @param box The mailbox this network adapter should work with.
+	 * @param host The address of the host.
+	 * @param port The port on the host machine to target.
+	 * @throws IOException If an IOException occurred when attempting to connect to the host machine.
+	 */
 	public NetworkAdapter(Mailbox<Message> box, String host, int port) throws IOException {
 		this.mailbox = box;
 
 		logger.info("Attempting to connect to host!");
 
-		this.socket = new Socket(host, port);
+		Socket socket = new Socket(host, port);
+
+		// Set a timeout on read calls.
+		socket.setSoTimeout(NetworkAdapter.so_timeout_millis);
 
 		logger.info("Connection established!");
 
-		new Thread(new PacketListener(box, this.socket.getInputStream()), "PacketListener").start();
-		new Thread(new PacketSender(box, this.socket.getOutputStream()), "PacketSender").start();
-	}
-
-	@Override
-	public void getPassengerList(Flight flight) {
-		mailbox.send(new GetPassengerListMsg(flight));
-	}
-
-	@Override
-	public void getFlightList() {
-		mailbox.send(new GetFlightListMsg());
-	}
-
-	@Override
-	public void login(String username, String password) {
-		mailbox.send(new HandshakeMsg(username, password));
-	}
-
-	@Override
-	public void disconnect() {
-		mailbox.send(new DisconnectMsg());
-	}
-
-	@Override
-	public void book(BookingInfo booking) {
-		mailbox.send(new BookSeatMsg(booking));
-	}
-
-	@Override
-	public void getPassengerInfo(Passenger id) {
-		mailbox.send(new GetPassengerInfoMsg(id));
+		new Thread(new PacketListener(box, socket.getInputStream()), "PacketListener").start();
+		new Thread(new PacketSender(box, socket.getOutputStream()), "PacketSender").start();
 	}
 }

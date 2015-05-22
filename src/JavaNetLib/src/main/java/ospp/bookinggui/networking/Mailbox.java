@@ -12,7 +12,7 @@ public class Mailbox<E> {
 	 *
 	 * @param o The object to add to the inbox.
 	 */
-	public void recieve(E o) {
+	public void receive(E o) {
 		inbox.add(o);
 	}
 

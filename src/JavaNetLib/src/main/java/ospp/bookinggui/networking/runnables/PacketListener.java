@@ -1,15 +1,11 @@
 package ospp.bookinggui.networking.runnables;
 
-import ospp.bookinggui.Utils;
 import ospp.bookinggui.exceptions.MalformedMessageException;
 import ospp.bookinggui.networking.Mailbox;
 import ospp.bookinggui.networking.Message;
-import ospp.bookinggui.networking.messages.ErrorMessage;
+import ospp.bookinggui.networking.messages.ErrorMsg;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,73 +15,48 @@ public class PacketListener implements Runnable {
 
 	public static volatile boolean debug = false;
 
-	private final Mailbox<Message>    mailbox;
-	private final BufferedInputStream input;
+	private final Mailbox<Message> mailbox;
+	private final BufferedReader   input;
 
+	/**
+	 * Creates a PacketListener.
+	 *
+	 * A PacketListener reads each line of the InputStream and attempts to parse
+	 * them as messages using Message.parseMessage().
+	 *
+	 * If the parsing was successful, the packet listener will add the new message to the inbox of the
+	 * given mailbox and continue on reading the input stream.
+	 *
+	 * @param m The mailbox to add new messages to.
+	 * @param is The InputStream the packet listener should read.
+	 */
 	public PacketListener(Mailbox<Message> m, InputStream is) {
 		this.mailbox = m;
-		this.input = new BufferedInputStream(is);
+		this.input = new BufferedReader(new InputStreamReader(is));
 	}
 
 	@Override
 	public void run() {
-		int data;
 
-		int m_length = 0;
-		byte[] body = null;
-		short id = 0;
-
-		int index = 0;
+		String data;
 
 		try {
-			while((data = this.input.read()) != -1) {
+			while((data = this.input.readLine()) != null) {
 				if(!debug) {
-
-					// Header - Message Length
-					if(index < Message.HEADER_SIZE - 1) {
-						m_length |= (data << (8 * (3 - index)));
+					try {
+						Message msg = Message.parseMessage(data);
+						mailbox.receive(msg);
 					}
+					catch(MalformedMessageException e) {
 
-					// Header - Message ID
-					else if(index == Message.HEADER_SIZE - 1) {
-						// We are only interested in storing the body of the message.
-						body = new byte[m_length - 1];
-						id = (short) (data & 0xff);
+						logger.log(Level.SEVERE, "PacketListener received malformed message! " +
+							"Message: \"" + e.getMessage() + "\"", e);
+
+						mailbox.send(new ErrorMsg(System.currentTimeMillis(), e.getMessage()));
 					}
-
-					// Message body
-					else if(index < m_length + Message.HEADER_SIZE - 1) {
-						body[index - Message.HEADER_SIZE] = (byte) data;
-
-						// Finished, add message to inbox and reset accumulators!
-						if(index == m_length + Message.HEADER_SIZE - 2) {
-							logger.fine("Added message to inbox! MSG: " + Utils.bytePresentation(body));
-
-							Message msg;
-							try {
-								msg = Message.parseMessage(id, body);
-								mailbox.recieve(msg);
-							}
-							catch(UnsupportedEncodingException e) {
-								logger.log(Level.SEVERE, e.getMessage(), e);
-							}
-							catch(MalformedMessageException e) {
-								logger.log(Level.SEVERE, e.getMessage(), e);
-								mailbox.send(new ErrorMessage("The received message was malformed!"));
-							}
-
-							index = -1;
-							m_length = 0;
-							body = null;
-							id = 0;
-						}
-					}
-
-					// Increment index counter
-					++index;
 				}
 				else {
-					logger.info("Received data: " + Utils.bytePresentation(new int[]{data}));
+					logger.info("Received message: " + data);
 				}
 			}
 

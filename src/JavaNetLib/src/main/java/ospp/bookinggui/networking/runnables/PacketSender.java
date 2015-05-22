@@ -3,10 +3,7 @@ package ospp.bookinggui.networking.runnables;
 import ospp.bookinggui.networking.Mailbox;
 import ospp.bookinggui.networking.Message;
 
-import java.io.BufferedOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -14,14 +11,27 @@ public class PacketSender implements Runnable {
 
 	private static final Logger logger = Logger.getLogger(PacketSender.class.getName());
 
-	private final Mailbox<Message>     mailbox;
-	private final BufferedOutputStream output;
+	private final Mailbox<Message> mailbox;
+	private final PrintWriter      output;
 
 	private volatile boolean keepRunning = true;
 
+	/**
+	 * Creates a new PacketSender.
+	 *
+	 * The packet sender polls the mailbox for new outgoing messages.
+	 * If there are no new messages to send, it will sleep for 10 milliseconds then check again.
+	 * This is repeated until it finds a new outgoing message in the mailbox.
+	 *
+	 * Upon retrieving a message, it calls message.createMessage() to form what should be written
+	 * to the output stream. It then writes the message and flushes the buffer to send it.
+	 *
+	 * @param mailbox The mailbox to poll for outgoing messages.
+	 * @param os Where to write the messages.
+	 */
 	public PacketSender(Mailbox<Message> mailbox, OutputStream os) {
 		this.mailbox = mailbox;
-		this.output = new BufferedOutputStream(os);
+		this.output = new PrintWriter(os);
 	}
 
 	@Override
@@ -41,22 +51,11 @@ public class PacketSender implements Runnable {
 				}
 			}
 
-			// Attempt to create message.
-			byte[] data;
 			try {
-				data = m.createMessage();
+				output.println(m.createMessage());
+				output.flush();
 			}
 			catch(UnsupportedEncodingException e) {
-				logger.log(Level.SEVERE, e.getMessage(), e);
-				continue;
-			}
-
-			// Attempt to send the data.
-			try {
-				this.output.write(data, 0, data.length);
-				this.output.flush();
-			}
-			catch(IOException e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 			}
 		}

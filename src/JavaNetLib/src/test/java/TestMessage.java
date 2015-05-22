@@ -1,9 +1,8 @@
 import org.junit.Test;
 import ospp.bookinggui.exceptions.MalformedMessageException;
 import ospp.bookinggui.networking.Message;
-import ospp.bookinggui.networking.messages.HandshakeMsg;
-import ospp.bookinggui.networking.messages.HandshakeRespMsg;
-import ospp.bookinggui.networking.messages.HeartbeatMsg;
+import ospp.bookinggui.networking.MessageType;
+import ospp.bookinggui.networking.messages.LoginMsg;
 
 import java.io.UnsupportedEncodingException;
 
@@ -12,184 +11,172 @@ import static org.junit.Assert.*;
 public class TestMessage {
 
 	@Test
-	public void setALValue() {
-		int al = 12;
-		byte[] message = new byte[Message.AL_SIZE];
+	public void parseRandomData1() throws UnsupportedEncodingException {
+		byte[] data = new byte[]{
+			0x23, 0x21, 0x65, (byte) 0xf1, (byte) 0x88, 0x76
+		};
 
-		Message.setALValue(message, al, 0);
-
-		byte[] expected = new byte[Message.AL_SIZE];
-		expected[Message.AL_SIZE - 1] = 12;
-
-		assertArrayEquals(expected, message);
+		try {
+			Message.parseMessage(new String(data));
+			fail("Message.parseMessage did not throw the correct exceptions with random data!");
+		}
+		catch(MalformedMessageException ignored) {
+		}
 	}
 
 	@Test
-	public void getALValue() {
-		byte[] m = new byte[]{
-			0x12, 0x12
-		};
+	public void testParseLogin() throws MalformedMessageException, UnsupportedEncodingException {
+		String data = "1&100203002&tjenare&yolo&";
 
-		int value = Message.getALValue(m, 0);
+		Message msg = Message.parseMessage(data);
 
-		assertEquals(0x1212, value);
+		assertEquals(MessageType.LOGIN, msg.getType());
+		assertEquals(100203002L, msg.getTimestamp());
 
-		byte[] m2 = new byte[]{
-			0x01, 0x02, 0x03, 0x04, 0x05
-		};
+		String[] body = msg.getBody();
 
-		int value21 = Message.getALValue(m2, 1);
-
-		assertEquals(0x0203, value21);
-
-		int value22 = Message.getALValue(m2, 3);
-
-		assertEquals(0x0405, value22);
+		assertArrayEquals(new String[]{"tjenare", "yolo"}, body);
 	}
 
 	@Test
-	public void setArgument() {
-		byte[] m = new byte[]{
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-		};
+	public void constructMessage1() throws UnsupportedEncodingException {
 
-		Message.setArgument(m, new byte[]{0x12, 0x13}, 0);
+		long timestamp = 1337L;
 
-		assertArrayEquals(new byte[]{0x12, 0x13, 0, 0, 0, 0, 0, 0, 0, 0}, m);
+		LoginMsg loginMsg = new LoginMsg(timestamp, "göran", "persson");
 
-		byte[] m2 = new byte[]{
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-		};
+		String data = loginMsg.createMessage();
 
-		Message.setArgument(m2, new byte[]{0x12, 0x13}, 3);
-
-		assertArrayEquals(new byte[]{0, 0, 0, 0x12, 0x13, 0, 0, 0, 0, 0}, m2);
+		assertEquals("1&1337&g%C3%B6ran&persson&", data);
 	}
 
 	@Test
-	public void constructHeader() {
+	public void constructMessage2() throws UnsupportedEncodingException {
+		long timestamp = 1338L;
 
-		Message foo = new HeartbeatMsg();
+		Message msg = new Message(MessageType.LOGIN, timestamp, "arg1", "arg2", "arg3");
 
-		// Test with a zero body size
-		byte[] header = foo.constructHeader(0);
+		String data = msg.createMessage();
 
-		byte[] expected = new byte[]{
-			0, 0, 0, 1, Message.Type.HEARTBEAT.ID
-		};
-
-		assertArrayEquals(expected, header);
-
-
-		// Test with a >zero body size
-		byte[] header2 = foo.constructHeader(0x0f1232fa);
-
-		byte[] expected2 = new byte[]{
-			0x0f, 0x12, 0x32, (byte) 0xfa + 1, Message.Type.HEARTBEAT.ID
-		};
-
-		assertArrayEquals(expected2, header2);
+		assertEquals("1&1338&arg1&arg2&arg3&", data);
 	}
 
 	@Test
-	public void deconHandshake1() throws UnsupportedEncodingException, MalformedMessageException {
-		String username = "Tjenare";
-		String password = "foobar";
+	public void parseIncorrectData() throws UnsupportedEncodingException {
+		String data = "asddisfuhs839i2no34";
 
-		byte[] usr = username.getBytes(Message.ENCODING);
-		byte[] pas = password.getBytes(Message.ENCODING);
-
-		byte[] message = new byte[4 + usr.length + pas.length];
-
-		int index = 0;
-
-		message[index++] = (byte) ((usr.length & 0xFF00) >> 8);
-		message[index++] = (byte) (usr.length & 0x00FF);
-		System.arraycopy(usr, 0, message, index, usr.length);
-
-		index += usr.length;
-
-		message[index++] = (byte) ((pas.length & 0xFF00) >> 8);
-		message[index++] = (byte) (pas.length & 0x00FF);
-		System.arraycopy(pas, 0, message, index, pas.length);
-
-		Message msg = Message.parseMessage((short) 1, message);
-
-		assertTrue(msg instanceof HandshakeMsg);
-
-		HandshakeMsg handshake = (HandshakeMsg) msg;
-
-		assertTrue(handshake.getPassword().equals("foobar"));
-		assertTrue(handshake.getUsername().equals("Tjenare"));
+		try {
+			Message.parseMessage(data);
+			fail("Parsing with incorrect data did not throw an exception!");
+		}
+		catch(MalformedMessageException e) {
+			assertEquals("Could not parse message! The message is too small!", e.getMessage());
+		}
 	}
 
 	@Test
-	public void deconHandshake2() throws UnsupportedEncodingException, MalformedMessageException {
-		HandshakeMsg hand_msg = new HandshakeMsg("Peter", "Salming");
+	public void parseIncorrectID() throws UnsupportedEncodingException {
+		String data = "sdflk&lkaksjd&";
 
-		byte[] hand_msg_ar = hand_msg.constructBody();
-
-		Message decon = Message.parseMessage((short) 1, hand_msg_ar);
-
-		assertTrue(decon instanceof HandshakeMsg);
-
-		HandshakeMsg decon_msg = (HandshakeMsg) decon;
-
-		assertTrue(decon_msg.getUsername().equals(hand_msg.getUsername()));
-		assertTrue(decon_msg.getPassword().equals(hand_msg.getPassword()));
+		try {
+			Message.parseMessage(data);
+			fail("Parsing with incorrect id did not throw an exception!");
+		}
+		catch(MalformedMessageException e) {
+			assertEquals("The message ID is not an integer!", e.getMessage());
+		}
 	}
 
 	@Test
-	public void deconHandshakeResp() throws UnsupportedEncodingException, MalformedMessageException {
+	public void parseIncorrectID2() throws UnsupportedEncodingException {
+		String data = "1231241422&1231243245&";
 
-		byte[] hand_resp_success = new byte[]{
-			(byte) 0xFF
-		};
-
-		byte[] hand_resp_failure = new byte[]{
-			0x00
-		};
-
-		Message hand_resp_success_msg = Message.parseMessage((short) 2, hand_resp_success);
-		Message hand_resp_failure_msg = Message.parseMessage((short) 2, hand_resp_failure);
-
-		assertTrue(hand_resp_failure_msg instanceof HandshakeRespMsg);
-		assertTrue(hand_resp_success_msg instanceof HandshakeRespMsg);
-
-		assertTrue(!((HandshakeRespMsg) hand_resp_failure_msg).isSuccessful());
-		assertTrue(((HandshakeRespMsg) hand_resp_success_msg).isSuccessful());
+		try {
+			Message.parseMessage(data);
+			fail("Parsing with unsupported id did not throw an exception!");
+		}
+		catch(MalformedMessageException e) {
+			assertEquals("The supplied message ID is not supported!", e.getMessage());
+		}
 	}
 
 	@Test
-	public void createPaidBlock() {
-		final long paid = 0x1112131415161718L;
+	public void parseIncorrectTimestamp() throws UnsupportedEncodingException {
+		String data = "1&234234jkj24&";
 
-		byte[] block = Message.createPaidBlock(paid);
+		try {
+			Message.parseMessage(data);
+			fail("Parsing with incorrect timestamp did not throw an exception!");
+		}
+		catch(MalformedMessageException e) {
+			assertEquals("The timestamp is not a valid long!", e.getMessage());
+		}
+	}
 
-		byte[] expected = new byte[]{
-			0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18
-		};
+	@Test
+	public void constructSpecialChars() throws UnsupportedEncodingException {
 
-		assertArrayEquals(expected, block);
+		String arg1 = "&&&&";
+		String arg2 = "(/&(¤%$";
 
-		final long paid2 = 0xff00ff00ff00ff00L;
+		Message msg = new Message(MessageType.DISCONNECT, 1337L, arg1, arg2);
 
-		byte[] block2 = Message.createPaidBlock(paid2);
+		String data = msg.createMessage();
 
-		byte[] expected2 = new byte[]{
-			(byte) 0xff, 0x00, (byte) 0xff, 0x00, (byte) 0xff, 0x00, (byte) 0xff, 0x00
-		};
+		assertEquals("3&1337&%26%26%26%26&%28%2F%26%28%C2%A4%25%24&", data);
+	}
 
-		assertArrayEquals(expected2, block2);
+	@Test
+	public void parseSpecialChars() throws UnsupportedEncodingException, MalformedMessageException {
+		String data = "1&1337&%26%26%26%26&%28%2F%26%28%C2%A4%25%24&";
 
-		final long paid3 = 0x00ff00ff00ff00ffL;
+		Message msg = Message.parseMessage(data);
 
-		byte[] block3 = Message.createPaidBlock(paid3);
+		assertTrue(msg instanceof LoginMsg);
+		assertArrayEquals(new String[]{"&&&&", "(/&(¤%$"}, msg.getBody());
+	}
 
-		byte[] expected3 = new byte[]{
-			0x00, (byte) 0xff, 0x00, (byte) 0xff, 0x00, (byte) 0xff, 0x00, (byte) 0xff,
-		};
+	@Test
+	public void constructWithNullVararg() throws UnsupportedEncodingException {
+		Message msg = new Message(MessageType.LOGIN, 1337L, null);
 
-		assertArrayEquals(expected3, block3);
+		String constructed = msg.createMessage();
+
+		String expected = "1&1337&";
+
+		assertEquals(expected, constructed);
+	}
+
+	@Test
+	public void constructWithNullVararg2() throws UnsupportedEncodingException {
+		Message msg = new Message(MessageType.LOGIN, 1337L, null, "tjosan");
+
+		String constructed = msg.createMessage();
+
+		String expected = "1&1337&";
+
+		assertEquals(expected, constructed);
+	}
+
+	@Test
+	public void constructWithNullVararg3() throws UnsupportedEncodingException {
+		Message msg = new Message(MessageType.LOGIN, 1337, "tjosan", null);
+
+		String constructed = msg.createMessage();
+
+		String expected = "1&1337&";
+
+		assertEquals(expected, constructed);
+	}
+
+	@Test
+	public void constructWithEmptyVararg() throws UnsupportedEncodingException {
+		Message msg = new Message(MessageType.LOGIN, 1337);
+
+		String constructed = msg.createMessage();
+
+		String expected = "1&1337&";
+
+		assertEquals(expected, constructed);
 	}
 }

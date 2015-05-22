@@ -1,240 +1,225 @@
 package ospp.bookinggui.networking;
 
-import ospp.bookinggui.Passenger;
-import ospp.bookinggui.Utils;
 import ospp.bookinggui.exceptions.MalformedMessageException;
 import ospp.bookinggui.networking.messages.*;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public abstract class Message {
+public class Message {
 
-	public static final  int    HEADER_SIZE = 5;
-	public static final  String ENCODING    = "UTF8";
-	public static final  int    AL_SIZE     = 2;
-	private static final Logger logger      = Logger.getLogger(Message.class.getName());
-	private final Type type;
+	/**
+	 * This is what separates the different parts of a message.
+	 */
+	public static final String SEPARATOR = "&";
 
-	protected Message(Type t) {
-		this.type = t;
+	/**
+	 * This is the least amount of parts needed for each message.
+	 * Current parts:
+	 * First part:   ID
+	 * Second part:  Timestamp (milliseconds)
+	 * Third and up: The message body
+	 */
+	public static final int HEADER_SIZE = 2;
+
+	private static final Logger logger = Logger.getLogger(Message.class.getName());
+
+	private final MessageType TYPE;
+	private final long        TIMESTAMP;
+	private final String[]    BODY;
+
+	/**
+	 * Creates a message with the given parameters.
+	 *
+	 * WARNING! If this constructor is called manually and not from
+	 * a child message constructor, you need to make absolutely sure that the way you call
+	 * it complies with the defined protocol!
+	 *
+	 * @param type The type of the message.
+	 * @param timestamp The timestamp of the message.
+	 * @param body The body of the message.
+	 */
+	public Message(MessageType type, long timestamp, String... body) {
+		this.TYPE = type;
+		this.TIMESTAMP = timestamp;
+
+		if(isNull(body)) {
+			this.BODY = new String[0];
+		}
+		else {
+			this.BODY = body;
+		}
 	}
 
-	public static Message parseMessage(short id, byte[] body) throws UnsupportedEncodingException, MalformedMessageException {
+	private boolean isNull(String[] a) {
+		if(a == null) {
+			return true;
+		}
+		else if(a.length == 0) {
+			return false;
+		}
+		else {
+			for(String s : a) {
+				if(s == null) {
+					return true;
+				}
+			}
+			return false;
+		}
+	}
 
-		Type type;
-		try {
-			type = Type.getType(id);
+	/**
+	 * Attempts to parse the given string according to the defined protocol.
+	 * Throws MalformedMessageException with a description of the problem if any error occurs during parsing.
+	 *
+	 * @param data The string to parse to a message.
+	 * @return The message if successful.
+	 * @throws MalformedMessageException If any problems occur during parsing.
+	 */
+	public static Message parseMessage(String data) throws MalformedMessageException, UnsupportedEncodingException {
+
+		String[] parts = data.split(Message.SEPARATOR);
+
+		// Remove the URL encoding from the message, we no longer need it.
+		for(int i = 0; i < parts.length; i++) {
+			parts[i] = URLDecoder.decode(parts[i], "UTF8");
 		}
-		catch(IllegalArgumentException e) {
-			throw new MalformedMessageException("The supplied message ID is not supported!");
+
+		if(parts.length < Message.HEADER_SIZE) {
+			throw new MalformedMessageException("Could not parse message! The message is too small!");
 		}
+
+		MessageType type = retrieveType(parts);
+		long timestamp = retrieveTimestamp(parts);
+		String[] body = retrieveBody(parts);
 
 		try {
 			switch(type) {
-				case HANDSHAKE:
-					return HandshakeMsg.parse(body);
+				case LOGIN:
+					return new LoginMsg(timestamp, body[0], body[1]);
 
-				case HANDSHAKE_RESPONSE:
-					return HandshakeRespMsg.parse(body);
-
-				case GET_PASSENGERS:
-					return GetPassengerListMsg.parse(body);
-
-				case GET_PASSENGERS_RESP:
-					return GetPassengerListRespMsg.parse(body);
-
-				case BOOK_SEAT:
-					return BookSeatMsg.parse(body);
-
-				case BOOK_SEAT_RESP:
-					return BookSeatRespMsg.parse(body);
+				case LOGIN_RESP:
+					return new LoginRespMsg(timestamp, body[0]);
 
 				case DISCONNECT:
-					return new DisconnectMsg();
-
-				case HEARTBEAT:
-					return new HeartbeatMsg();
-
-				case GET_PASSENGER_INFO:
-					return GetPassengerInfoMsg.parse(body);
-
-				case GET_PASSENGER_INFO_RESP:
-					return GetPassengerInfoRespMsg.parse(body);
-
-				case GET_FLIGHT_LIST:
-					return GetFlightListMsg.parse(body);
-
-				case GET_FLIGHT_LIST_RESP:
-					return GetFlightListRespMsg.parse(body);
+					return new DisconnectMsg(timestamp);
 
 				case ERROR:
-					return ErrorMessage.parse(body);
+					return new ErrorMsg(timestamp, body[0]);
 
+				case REQ_AIRPORTS:
+					String iata = body == null ? null : body[0];
+					return new RequestAirportsMsg(timestamp, iata);
+
+				case REQ_AIRPORTS_RESP:
+					return new RequestAirportsRespMsg(timestamp, body);
+
+				case SEARCH_ROUTE_RESP:
+					return new SearchAirportRouteRespMsg(timestamp, body);
+
+				case INIT_BOOK:
+				case FIN_BOOK:
+				case FIN_BOOK_RESP:
+				case ABORT_BOOK:
+				case SEARCH_ROUTE:
+				case REQ_FLIGHT_DETAILS:
+				case REQ_FLIGHT_DETAILS_RESP:
+				case REQ_SEAT_SUGGESTION:
+				case REQ_SEAT_SUGGESTION_RESP:
+				case REQ_SEAT_MAP:
+				case REQ_SEAT_MAP_RESP:
+				case REQ_PASSENGER_LIST:
+				case REQ_PASSENGER_LIST_RESP:
+				case REQ_SEAT_MAP_ADMIN:
+				case REQ_SEAT_MAP_ADMIN_RESP:
 				default:
-					logger.severe("Unsupported message id!");
-					logger.severe("ID: " + id);
-					throw new IllegalArgumentException("Unsupported message id!");
+					logger.warning("Message.parseMessage() is missing specific parsing for the type: " + type);
+					return new Message(type, timestamp, body);
 			}
 		}
-		catch(UnsupportedEncodingException e) {
-			throw e;
-		}
-		catch(Exception e) {
+		catch(NullPointerException | IndexOutOfBoundsException e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);
-			throw new MalformedMessageException(
-				"Error while attempting to parse message type=\"" + type + "\"! Error message: \"" + e.getMessage() + "\"");
+			throw new MalformedMessageException("Could not parse message! The body is not correctly formed!");
 		}
 	}
 
-	public static byte[] setALValue(byte[] m, int al, int offset) {
-		if(m.length + offset < Message.AL_SIZE) {
-			throw new IndexOutOfBoundsException("The message-array can not fit an AL-block!");
+	private static String[] retrieveBody(String[] parts) {
+		String[] body = null;
+		if(parts.length > Message.HEADER_SIZE) {
+			body = new String[parts.length - Message.HEADER_SIZE];
+			System.arraycopy(parts, 2, body, 0, parts.length - Message.HEADER_SIZE);
 		}
-
-		for(int i = 0; i < AL_SIZE; i++) {
-			int shift_mult = AL_SIZE - i - 1;
-			int shift_amount = 8 * shift_mult;
-			int shifted = al >> shift_amount;
-			m[offset + i] = (byte) (shifted & 0xff);
-		}
-
-		return m;
+		return body;
 	}
 
-	public static int getALValue(byte[] m, int offset) {
-		if(m.length < offset + Message.AL_SIZE) {
-			throw new IndexOutOfBoundsException("There does not fit an AL-block at the given offset in the byte array!");
+	private static long retrieveTimestamp(String[] parts) throws MalformedMessageException {
+		try {
+			long timestamp = Long.valueOf(parts[1]);
+			return timestamp;
+		}
+		catch(NumberFormatException e) {
+			throw new MalformedMessageException("The timestamp is not a valid long!");
+		}
+	}
+
+	private static MessageType retrieveType(String[] parts) throws MalformedMessageException {
+		try {
+			MessageType type = MessageType.getType(Integer.valueOf(parts[0]));
+			return type;
+		}
+		catch(NumberFormatException e) {
+			throw new MalformedMessageException("The message ID is not an integer!");
+		}
+		catch(IllegalArgumentException | ArrayIndexOutOfBoundsException e) {
+			throw new MalformedMessageException("The supplied message ID is not supported!");
+		}
+	}
+
+	/**
+	 * Creates the message.
+	 *
+	 * @return The created message.
+	 */
+	public String createMessage() throws UnsupportedEncodingException {
+		StringBuilder message = new StringBuilder();
+
+		message.append(this.TYPE.ID).append(Message.SEPARATOR);
+		message.append(this.TIMESTAMP).append(Message.SEPARATOR);
+
+		for(String arg : this.BODY) {
+			message.append(URLEncoder.encode(arg, "UTF8")).append(Message.SEPARATOR);
 		}
 
-		int value = 0;
-
-		for(int i = 0; i < Message.AL_SIZE; i++) {
-			value = ((value << 8) | m[offset + i]);
-		}
-
-		return value;
+		return message.toString();
 	}
 
-	public static byte[] setArgument(byte[] out, byte[] in, int offset) {
-		if(out.length + offset < in.length) {
-			throw new IndexOutOfBoundsException("The in-array is larger than the out-array + offset!");
-		}
-
-		System.arraycopy(in, 0, out, offset, in.length);
-
-		return out;
+	/**
+	 * Retrieves the type of the message.
+	 *
+	 * @return
+	 */
+	public MessageType getType() {
+		return this.TYPE;
 	}
 
-	public static byte[] getArgument(byte[] m, int al, int offset) {
-		byte[] arg = new byte[al];
-		System.arraycopy(m, offset, arg, 0, al);
-		return arg;
+	/**
+	 * Retrieves the timestamp of the message.
+	 *
+	 * @return
+	 */
+	public long getTimestamp() {
+		return this.TIMESTAMP;
 	}
 
-	public static byte[] createPaidBlock(long paid) {
-		byte[] block = new byte[8];
-
-		for(int i = 0; i < 8; i++) {
-			block[i] = (byte) ((paid >> (8 * (8 - i - 1))) & 0xff);
-		}
-
-		return block;
-	}
-
-	public static byte[] createUIBlock(Passenger p) throws UnsupportedEncodingException {
-
-		byte[] id = Message.createPaidBlock(p.getIdentification());
-		byte[] pn = p.getName().getBytes(Message.ENCODING);
-		byte[] adr = p.getAddress().getBytes(Message.ENCODING);
-		byte[] pi = p.getPaymentInfo().getBytes(Message.ENCODING);
-		byte[] email = p.getEmail().getBytes(Message.ENCODING);
-
-		byte[] paid_block = new byte[Message.AL_SIZE * 4 + id.length + pn.length + adr.length + pi.length + email.length];
-
-		int index = 0;
-
-		Message.setArgument(paid_block, id, index);
-		index += 8;
-
-		Message.setALValue(paid_block, pn.length, index);
-		index += Message.AL_SIZE;
-
-		Message.setArgument(paid_block, pn, index);
-		index += pn.length;
-
-		Message.setALValue(paid_block, adr.length, index);
-		index += Message.AL_SIZE;
-
-		Message.setArgument(paid_block, adr, index);
-		index += adr.length;
-
-		Message.setALValue(paid_block, pi.length, index);
-		index += Message.AL_SIZE;
-
-		Message.setArgument(paid_block, pi, index);
-		index += pi.length;
-
-		Message.setALValue(paid_block, email.length, index);
-		index += Message.AL_SIZE;
-
-		Message.setArgument(paid_block, email, index);
-
-		return paid_block;
-	}
-
-	public byte[] constructHeader(int body_size) {
-		byte[] header = new byte[HEADER_SIZE];
-
-		int message_length = 1 + body_size;
-
-		header[0] = (byte) ((message_length & 0xff000000) >> 24);
-		header[1] = (byte) ((message_length & 0x00ff0000) >> 16);
-		header[2] = (byte) ((message_length & 0x0000ff00) >> 8);
-		header[3] = (byte) (message_length & 0x000000ff);
-
-		header[4] = type.ID;
-
-		return header;
-	}
-
-	public abstract byte[] constructBody() throws UnsupportedEncodingException;
-
-	public byte[] createMessage() throws UnsupportedEncodingException {
-		byte[] body = this.constructBody();
-		byte[] header = this.constructHeader(body.length);
-
-		return Utils.concat(header, body);
-	}
-
-	public enum Type {
-
-		HANDSHAKE,
-		HANDSHAKE_RESPONSE,
-		GET_PASSENGERS,
-		GET_PASSENGERS_RESP,
-		BOOK_SEAT,
-		BOOK_SEAT_RESP,
-		DISCONNECT,
-		HEARTBEAT,
-		GET_PASSENGER_INFO,
-		GET_PASSENGER_INFO_RESP,
-		GET_FLIGHT_LIST,
-		GET_FLIGHT_LIST_RESP,
-		ERROR;
-
-		public final byte ID;
-
-		Type() {
-			this.ID = (byte) ((this.ordinal() + 1) & 0xFF);
-		}
-
-		public static Type getType(int id) {
-			if(id > Type.values().length) {
-				throw new IllegalArgumentException("Incorrect ID! ID is too large!");
-			}
-			return Type.values()[id - 1];
-		}
+	/**
+	 * Retrieves the body of the message.
+	 *
+	 * @return
+	 */
+	public String[] getBody() {
+		return this.BODY.clone();
 	}
 }

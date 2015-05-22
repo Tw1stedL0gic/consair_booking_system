@@ -1,17 +1,10 @@
 package ospp.bookinggui.networking.messages;
 
 import ospp.bookinggui.networking.Message;
-
-import java.io.UnsupportedEncodingException;
+import ospp.bookinggui.networking.MessageType;
 
 public class DisconnectMsg extends Message {
-
-	public DisconnectMsg() {
-		super(Type.DISCONNECT);
-	}
-
-	@Override
-	public byte[] constructBody() throws UnsupportedEncodingException {
-		return new byte[0];
+	public DisconnectMsg(long timestamp) {
+		super(MessageType.DISCONNECT, timestamp);
 	}
 }

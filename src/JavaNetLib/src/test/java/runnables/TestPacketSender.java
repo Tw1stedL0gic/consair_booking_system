@@ -1,76 +1,49 @@
 package runnables;
 
-import org.junit.Before;
 import org.junit.Test;
-import ospp.bookinggui.Utils;
 import ospp.bookinggui.networking.Mailbox;
 import ospp.bookinggui.networking.Message;
-import ospp.bookinggui.networking.messages.HandshakeMsg;
+import ospp.bookinggui.networking.MessageType;
 import ospp.bookinggui.networking.runnables.PacketSender;
 
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
 public class TestPacketSender {
-
-	@Before
-	public void setup() {
-		Logger logger = Logger.getLogger(PacketSender.class.getName());
-		logger.setLevel(Level.OFF);
-	}
 
 	@Test(timeout = 500)
 	public void testOne() throws UnsupportedEncodingException {
 		Mailbox<Message> mailbox = new Mailbox<>();
+
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
+
+		long timestamp = System.currentTimeMillis();
+
+		mailbox.send(new Message(MessageType.LOGIN, timestamp, "yo", "lo"));
 
 		PacketSender sender = new PacketSender(mailbox, output);
 		new Thread(sender).start();
 
-		HandshakeMsg m = new HandshakeMsg("tjenare", "greger");
-
-		mailbox.send(m);
-
-		// Ugly! But we need to wait for the sender to complete its work
+		// Wait for the PacketSender to do its job
 		try {
-			Thread.sleep(30);
+			Thread.sleep(100);
 		}
 		catch(InterruptedException e) {
 			e.printStackTrace();
 		}
 
+		// Stop the sender runnable, killing the thread.
 		sender.stop();
 
-		assertArrayEquals(m.createMessage(), output.toByteArray());
-	}
+		String sent = output.toString();
 
-	@Test(timeout = 500)
-	public void testTwo() throws UnsupportedEncodingException {
-		Mailbox<Message> mailbox = new Mailbox<>();
-		ByteArrayOutputStream output = new ByteArrayOutputStream();
+		// WARNING! This doesn't work on windows!
+		// Windows uses the "\r\n" line break char instead of the standard UNIX "\n"
+		// "Fuck you! Thats why!" -- Bill Gates
+		String expected = "1&" + timestamp + "&yo&lo&\n";
 
-		PacketSender sender = new PacketSender(mailbox, output);
-		new Thread(sender).start();
-
-		HandshakeMsg m1 = new HandshakeMsg("tjenare", "greger");
-		HandshakeMsg m2 = new HandshakeMsg("tjosan", "posan");
-
-		mailbox.send(m1);
-		mailbox.send(m2);
-
-		try {
-			Thread.sleep(50);
-		}
-		catch(InterruptedException e) {
-			e.printStackTrace();
-		}
-
-		sender.stop();
-
-		assertArrayEquals(Utils.concat(m1.createMessage(), m2.createMessage()), output.toByteArray());
+		assertEquals(expected, sent);
 	}
 }
