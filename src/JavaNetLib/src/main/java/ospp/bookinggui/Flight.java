@@ -1,22 +1,18 @@
 package ospp.bookinggui;
 
-import ospp.bookinggui.networking.Message;
-
 public class Flight {
 
-	public static final int ARG_AMOUNT = 2 + Airport.ARG_AMOUNT + Date.ARG_AMOUNT + Seat.ARG_AMOUNT;
+	public static final int ARG_AMOUNT = 2 + Airport.ARG_AMOUNT + Date.ARG_AMOUNT;
 
 	private final String  FLIGHT_ID;
 	private final Airport airport;
 	private final Date    date;
-	private final Seat[]  seat_list;
 	private final String  FLIGHT_NR;
 
-	public Flight(String flight_id, Airport airport, Date date, Seat[] seat_list, String flight_nr) {
+	public Flight(String flight_id, Airport airport, Date date, String flight_nr) {
 		this.FLIGHT_ID = flight_id;
 		this.airport = airport;
 		this.date = date;
-		this.seat_list = seat_list;
 		this.FLIGHT_NR = flight_nr;
 	}
 
@@ -40,12 +36,8 @@ public class Flight {
 		return this.airport;
 	}
 
-	public Date getDate(){
+	public Date getDate() {
 		return this.date;
-	}
-
-	public Seat[] getSeatList() {
-		return this.seat_list.clone();
 	}
 
 	public String getFlightNumber() {
