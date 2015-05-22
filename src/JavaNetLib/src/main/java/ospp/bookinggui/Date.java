@@ -23,6 +23,10 @@ public class Date {
 	}
 
 	public static Date parseBody(String[] parts, int offset) {
+		if(parts.length - offset < ARG_AMOUNT) {
+			throw new IllegalArgumentException("Date.parseBody() was given a too small array!");
+		}
+
 		return new Date(
 			parts[offset],
 			parts[offset + 1],

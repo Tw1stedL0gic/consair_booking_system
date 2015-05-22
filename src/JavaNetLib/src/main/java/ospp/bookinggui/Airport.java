@@ -31,8 +31,8 @@ public class Airport {
 
 	public static Airport[] parseBody(String[] body, int offset) {
 
-		if(body.length % 3 != 0) {
-			throw new IllegalArgumentException("The length of the body is not divisible by three!");
+		if((body.length - offset) % 3 != 0) {
+			throw new IllegalArgumentException("Airport.parseBody() was given an array not divisable by three after subtracting the offset!");
 		}
 
 		Airport[] ports = new Airport[body.length / 3];
