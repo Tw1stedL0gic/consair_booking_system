@@ -117,12 +117,14 @@ public class Message {
 				case REQ_AIRPORTS_RESP:
 					return new RequestAirportsRespMsg(timestamp, body);
 
+				case SEARCH_ROUTE_RESP:
+					return new SearchAirportRouteRespMsg(timestamp, body);
+
 				case INIT_BOOK:
 				case FIN_BOOK:
 				case FIN_BOOK_RESP:
 				case ABORT_BOOK:
 				case SEARCH_ROUTE:
-				case SEARCH_ROUTE_RESP:
 				case REQ_FLIGHT_DETAILS:
 				case REQ_FLIGHT_DETAILS_RESP:
 				case REQ_SEAT_SUGGESTION:
