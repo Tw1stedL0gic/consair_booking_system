@@ -105,7 +105,7 @@ public class Message {
 					return new LoginRespMsg(timestamp, body[0]);
 
 				case DISCONNECT:
-					return new DisconnectMsg(timestamp, body[0]);
+					return new DisconnectMsg(timestamp);
 
 				case ERROR:
 					return new ErrorMsg(timestamp, body[0]);

@@ -21,7 +21,6 @@ public class TestDisconnect {
 		assertTrue(msg instanceof DisconnectMsg);
 		assertEquals(MessageType.DISCONNECT, msg.getType());
 		assertEquals(1337247L, msg.getTimestamp());
-		assertArrayEquals(new String[]{"greger"}, msg.getBody());
 	}
 
 	@Test
