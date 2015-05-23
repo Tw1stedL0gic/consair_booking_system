@@ -1,8 +1,15 @@
 package ospp.bookinggui;
 
+import java.lang.reflect.Field;
+
 public class Airport {
 
-	public static final int ARG_AMOUNT = 3;
+	public static final int ARG_AMOUNT;
+
+	static {
+		Field[] fields = Airport.class.getDeclaredFields();
+		ARG_AMOUNT = fields.length;
+	}
 
 	private final String ID;
 	private final String IATA;
