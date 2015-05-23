@@ -8,7 +8,7 @@ public class Airport {
 
 	static {
 		Field[] fields = Airport.class.getDeclaredFields();
-		ARG_AMOUNT = fields.length;
+		ARG_AMOUNT = fields.length - 1;
 	}
 
 	private final String ID;
