@@ -91,7 +91,13 @@ Jobbade med färgscheman i css så att GUIt ser mycket bättre ut, samt skrev ko
 ##### Torsdag
 Började med att skriva på rapporten och gjorde ett skelett för den, samt presentationen. Lade också till i GUIt så att man inte kan söka på flights om man inte har matat in från vart man vill åka, till vart man vill åka, fler än 0 personer och inget valt datum. Tidsåtgång 5h
 ##### Fredag
+Började jobba lite på rapporten och funderade på hur vi ska göra med demonstration. Tidsåtgång 2h
 
+##### Lördag
+Jobbade med rapporten till första draften, skrev klart en några delar och fyllde i så mycket jag kunde. Tidsåtgång 6h
+
+##### Söndag
+Jobbade med rapport, presentation och fixade till så att vi kan göra en demonstration om hur en komplett bokning kan se ut i vårt system. Tidsåtgång 7h
 ## Vecka 22
 
 ##### Måndag
