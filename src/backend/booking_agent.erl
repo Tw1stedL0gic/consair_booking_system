@@ -24,13 +24,25 @@
 %% Input: Username, password
 %% Example: sk8erboi, iluvmileycyrus
 %% Ouput: Failed or user level (error, user, admin)
-
+%% Done need som patternmatching to make it work, 1 for admin 0 not admin,[] - no user. 
 login(Username, Password) ->
-    case Username =:= Password of
+    {_,[{_,_,Name,Pass,Ulvl,_}]} = get_database:get_user_from_db(Username),
+
+    case Username =:= Name of
 	true ->
-	    admin;
-	_ ->
-	    user
+	    case Password =:= Pass of
+		true->
+		    case Ulvl =:= 1 of
+			true ->
+			    admin;
+			false ->
+			    user
+		    end;
+		false->
+		    wrong_password
+	    end;
+	false ->
+	    not_a_user
     end.
 
 %%---------------------------------------------------------------------%%
@@ -40,30 +52,53 @@ login(Username, Password) ->
 %% Input: Username
 %% Output: ok / {error, Error} 
 
-disconnect() ->
     %% check if User is currently locking a seat and unlock it. 
     %% Potential error: Database could not unlock?
-    ok.	    
+    %% {ok,[[{seats,2,2,1,3,0,0,"1","A",1337,0},
+    %%   {user,3,"Kalle","hehe",2,"kalle@derp.se"}]]}
+
+disconnect(Username) ->
+    Data  = get_database:get_user_from_seats(Username),
+    case Data of
+	{_,[[{_,S_id,_,_,_,_,_,_,_,_,Lock_s},{_,_,U_name,_,_,_}]]} ->
+	    case U_name =:= Username of
+		true ->
+		    case Lock_s of
+			1 ->
+			    get_database:update_seat_lock(S_id,0),
+			    ok;
+			_ ->
+			    ok
+		    end;
+		_->    
+		    ok
+	    end;
+	_ ->
+	    ok
+    end.
 
 %%---------------------------------------------------------------------%%
 
+
 %% Returns a list of all airports. 
 %% Output: List of airport tuples or error.
-%% Example: [{100, "ARN", "Arlanda"}, 
-%%           {101, "LAX", "Los Angeles International Airport"}]
+%% Example: {ok,[{100, "ARN", "Arlanda"}, 
+%%           {101, "LAX", "Los Angeles International Airport"}]}
 %% DONE SEE get_database:get_airport_from_db()
 airport_list() ->
-    ok.
+    get_database:get_airport_form_db().
+    
 
 %% In case of departure airport, return all airports which that airport
 %% has a route to. 
 %% Input: Airport ID
 %% Example: 100
-%% Output: List of airport tuples ({id, iata, airporrt_name}).
+%% Output: List of airport tuples ({id, iata, airporrt_name}).you dont see id hidden state
 %% Example: [{101, "LAX", "Los Angeles Internation Airport"}]
 %% DONE SEE get_database:get_airport_from_db_filter(Airport)
 airport_list(Airport) ->
-    ok.
+    get_database:get_airport_from_db_filter(Airport).
+    
 
 %%---------------------------------------------------------------------%%
 
@@ -100,11 +135,11 @@ route_search(airport, arrival_point, {{Year, Month, Day},_}) ->
 %%           {{2015,12,31},{10,32,00}},
 %%           SEAT_TABLE,
 %%           ARNLAX120}
-
+%% 
 flight_details(Flight) ->
     %% return all information about flight 
     %% In this function, booked and locked seats are both represented by 1, and available by 0. 
-    ok.
+    get_database:get_flight_from_db_f(Flight).
 
 %% @doc Returns all information about flight.
 %% Input:  Flight ID
@@ -118,11 +153,12 @@ flight_details(Flight) ->
 %%           {{2015,12,31},{10,32,00}},
 %%           SEAT_TABLE,
 %%           ARNLAX120}
-
+%%TODO!
 flight_details(Flight, admin) ->
     %% returns all information, including admin info, about flight.
     %% In this function, seats are shown as available, locked or booked. 
-    ok. 
+    get_database:get_flight_from_db_f(Flight).
+ 
 
 %%---------------------------------------------------------------------%%
 
@@ -132,9 +168,24 @@ flight_details(Flight, admin) ->
 %% Output: Lock status
 %% Example: 0, 1 or 2.
 
-seat_lock(Seat_ID, Flight_ID) ->
+
+seat_lock(Seat_ID) ->
     %% return availability of Seat_ID in Flight_ID
-    ok.
+    Data = get_database:get_seats_id_from_db(Seat_ID),
+    case Data of
+	{_,[{_,_,_,_,_,_,_,_,_,_,Lock_s}]} ->
+	    case Lock_s of
+		0->
+		    0;
+		1->
+		    1;
+		2 ->
+		    2
+	    end;
+	_->
+	    {error,no_seat}
+    end.
+    
 
 
 %%---------------------------------------------------------------------%%
@@ -165,8 +216,15 @@ seat_lock(Seat_ID, Flight_ID) ->
 %%            23,
 %%            2}, ... ]
 
-seat_details({Flight, Seat}) ->
-    ok.
+seat_details([Last_seat_ID]) ->
+    [get_database:get_seats_id_from_db(Last_seat_ID)];
+seat_details([Head_seat_ID | Tail_seat_ID]) ->
+    lists:append([case get_database:get_seats_id_from_db(Head_seat_ID) of
+		      {ok,[{DB,S_id,Flight,Class,User,Window,Aisle,Row,Col,Price,2}]} ->    
+			  {ok,[{DB,S_id,Flight,Class,User,Window,Aisle,Row,Col,Price,1}]};
+		      Seat -> Seat
+		  end],						    
+		 seat_details(Tail_seat_ID)).
 
 %% @doc Returns information about seat(s), including admin info. 
 %% When inputting a list of seat IDs, the output will be about the included seats. When inputting a row id, all seats in that row will be returned. When inputting a column id, all the seats in that column will be returned. 
@@ -176,8 +234,10 @@ seat_details({Flight, Seat}) ->
 %% Output: Seat tuple list ({id, flights, class, user, window, aisle, row, col, lock_s})
 %% Example: Same as above
 
-seat_details({Flight, Seat}, admin) ->
-    ok. 
+seat_details([Last_seat_ID],admin) ->
+    [get_database:get_seats_id_from_db(Last_seat_ID)];
+seat_details([Head_seat_ID | Tail_seat_ID],admin) ->
+    lists:append([get_database:get_seats_id_from_db(Head_seat_ID)], seat_details(Tail_seat_ID)).
 
 %%---------------------------------------------------------------------%%
 
@@ -187,7 +247,7 @@ seat_details({Flight, Seat}, admin) ->
 %% in plane (front, back, emergency exit)
 
 suggest_seat() ->
-    %% implement preferences
+    %% implement preferences TBI
     ok. 
 
 %%---------------------------------------------------------------------%%
@@ -196,15 +256,21 @@ suggest_seat() ->
 %% booked and wait for payment. Time of seat locking will be recorded
 %% to make sure that a crash does not mean a endlessly locked seat.
 
-start_booking(User, Flight, seat) ->
+start_booking(User, Seat_id) ->
     %% record time of seat locking so that in case of crash, it can be cleared
+    {_,[{_,User_id,_,_,_,_}]} = get_database:get_user_from_db(User),
+    get_database:update_seat_lock(Seat_id,1),
+    get_database:update_seat_user(Seat_id,User_id),
     ok.
+   
 
 %%---------------------------------------------------------------------%%
 
 %% @doc Finalize the booking process. Accept payment and change seat from locked to book. 
-
-finalize_booking(User, Flight, seat) ->
+%%TODO
+finalize_booking(User) ->
+    {_,[{_,User_id,_,_,_,_}]} = get_database:get_user_from_db(User),
+    get_database:update_seat_lock_user(User_id),    
     ok.
 
 %%---------------------------------------------------------------------%%
@@ -214,7 +280,10 @@ receipt(User) ->
 
 %%---------------------------------------------------------------------%%
 
-abort_booking(User, Flight, seat) ->
+abort_booking(User) ->
+%%gets the user_id from the user database    
+    {_,[{_,User_id,_,_,_,_}]} = get_database:get_user_from_db(User),
+    get_database:rollback_booking(User_id),    
     ok. 
 
 %%---------------------------------------------------------------------%%

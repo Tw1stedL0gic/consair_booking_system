@@ -68,7 +68,7 @@ populate_airport() ->
 
 
 
-    {ok, U0} = amnesia:add_new (Pid, #user {user_name="PENDING NEW BOOKING",
+    {ok, U0} = amnesia:add_new (Pid, #user {user_name="NULL",
 					    user_password="n/a",
 					    user_class=1,
 					    user_email="n@a.se"}),

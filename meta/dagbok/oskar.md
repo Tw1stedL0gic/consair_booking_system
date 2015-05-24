@@ -74,21 +74,25 @@ jobbat med databasen
 ##### Fredag
 jobbat med databasen
 ##### Lördag
-Rapport och Presentrtion / database
+Rapport och  / database
 ##### Söndag 
-Rapport och Presentrtion /Laggt till alla frågor och db dunktioner till bookinghandler
+Rapport och  /Laggt till alla frågor och db funktioner till bookinghandler
 ## Vecka 21
 
 ##### Måndag
-
+Refactoring DB pga dåliga desigen val i början, samt att skriver om den Sql frågor som behövs
 ##### Tisdag
-
+Fixar med buggar från refackoring av databasen och håller på att fixa dessa 
 ##### Onsdag
-
+Upptäckte idag att det finns stora brister i hur amnesia hanterar sql det kommer att bli en massor med frågor för att kunna hantera den datan som vi vill ha ut.
 ##### Torsdag
-
+Fixar med de mer komplexa Sql frågorna
 ##### Fredag
-
+Bugg fixar sql kod / det kommer bli mera och mera sql frågor 
+##### Lördag
+Satt med rapport och fixade lite med kod till booking_agent (att sätta ihop filerna som kontrollerar db med den delen av servern som kallar på dem)
+##### Söndag
+Suttit med sammankopplingen mellan booking_agent och med get_database och fortsatt med det som pysslades med igår samt att vi har hållt på med persetationen
 ## Vecka 22
 
 ##### Måndag
