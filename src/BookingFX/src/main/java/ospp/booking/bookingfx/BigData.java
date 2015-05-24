@@ -10,6 +10,10 @@ package ospp.booking.bookingfx;
  * @author Andreas
  */
 public class BigData {
+    public static String flights[][]={{"Arlanda", "ARN", "2015-06-02","13:45","Bahamas airport", "BAH", "2015-06-03","02:45"},
+        {"Arlanda", "ARN", "2015-06-02","17:43","Bahamas airport", "BAH", "2015-06-03","06:43"},
+        {"Arlanda", "ARN", "2015-06-02","19:45","Bahamas airport", "BAH", "2015-06-03","08:45"},
+        {"Arlanda", "ARN", "2015-06-02","01:45","Bahamas airport", "BAH", "2015-06-03","12:45"}};
     public static String airports[][] = {
 {"Total Rf Heliport","US","US-PA","Bensalem","00A"},
 {"Epps Airpark","US","US-AL","Harvest","00AL"},

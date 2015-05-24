@@ -14,7 +14,11 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -41,7 +45,16 @@ public class BookOptionInterfaceController implements Initializable, ControlledS
         timeline   = new Timeline();        
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.setAutoReverse(true);
-        
+        final String[] flyg = new String[BigData.flights.length];
+        for(int i=0; i<BigData.flights.length; i++){
+            flyg[i] = BigData.flights[i][0] + " " + BigData.flights[i][1];
+            Label label = new Label(flyg[i]);
+            Button button = new Button("boka mig");
+            HBox sp = new HBox(label, button);
+            label.setTextFill(Color.WHITE);
+            
+            vbox.getChildren().add(sp);
+        }
         
         
         EventHandler<ActionEvent> onFinished = new EventHandler<ActionEvent>() {
@@ -85,7 +98,7 @@ public class BookOptionInterfaceController implements Initializable, ControlledS
     public void onScreen() {
 
      
-        timeline.play();
+        //timeline.play();
     }
 
     @Override
