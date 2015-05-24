@@ -174,9 +174,21 @@ Jag och Lucas har nu strukturerat hur våra meddelanden ska se ut. Jag har ocks�
 
 ##### Onsdag
 
+10:00 - 17:00
+
+Jobbade mycket med Oskar för att få booking agent att prata med databas. Han har nu tagit över den delen av projektet och det känns väldit skönt. Att tolka meddelanden och formattera dem tar mycket längre tid än jag förväntade mig. 
+
 ##### Torsdag
 
+10:30 - 17:00
+
+Fortsatte med att tolka och formattera paket. När jag har gjort klart detta tänker jag hårdkoda lite svar från booking agent och försöka sätta ihop en server som ger svar. 
+
 ##### Fredag
+
+##### Söndag
+
+Satt och kodade lite och förberedde för presentationen. 
 
 ## Vecka 22
 

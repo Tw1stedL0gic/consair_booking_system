@@ -35,8 +35,8 @@
 %% bitstring to a tuple, calls the appropriate function, and
 %% translates the answer back to bitstring.
 
-handle_package(<<Package>>, User) ->
-    handle_package(translate_package(<<Package>>), User);
+handle_package(Package, User) when is_bitstring(Package) ->
+    handle_package(translate_package(Package), User);
 handle_package({?ClientLogin, [Username, Password]}, User) -> %% ID 1 - Handshake
     %% grants either user or admin privilege alternatively a failure message in case handshake didn't work. 
     %% failed if username or password is incorrect. 
@@ -135,36 +135,34 @@ handle_package({?REQSeatLock, Seat_ID}, User) ->
     end;
 
 handle_package({?REQSeatSuggestion, Message}, User) -> 
-    booking_agent:suggest_seat(),
-    <<?RESPSeatSuggestion>>; 
+    {error, not_yet_implemented};
+   
+handle_package({?REQInitBooking, [_ | Seat_ID_list]}, User) ->
+    case booking_agent:start_booking(User, Seat_ID_list) of
+	{ok, {Success_code, Book_time}} ->
+	    {ok, translate_package({?RESPInitBooking, [Success_code, Book_time]})};
+	{error, Error} ->
+	    {error, Error}
+    end;
 
-handle_package({?REQInitBooking, Message}, User) ->
-    booking_agent:start_booking(),
-    <<?RESPInitBooking>>;
-
-handle_package({?REQFinalizeBooking, Message}, User) -> 
-    booking_agent:finalize_booking(),
-    <<?RESPFinalizeBooking>>;
-
+handle_package({?REQFinalizeBooking}, User) -> 
+    case booking_agent:finalize_booking(User) of
+	{ok, Success_code} ->
+	    {ok, translate_package({?RESPFinalizeBooking, [Success_code]})};
+	{error, Error} ->
+	    {error, Error}
+    end;
+    
 handle_package({?REQReceipt, Message}, User) -> 
-    booking_agent:receipt(),
-    <<?RESPReceipt>>;
+    % booking_agent:receipt(),
+    {error, not_yet_implemented};
 
 handle_package({?AbortBooking, Message}, User) -> 
-    ok;
+    {error, not_yet_implemented};
 
 
 handle_package({ID, Message}, _) ->
-    {error, wrongMessageFormat}.
-
-%% admin_handle_package(<<Package>>) ->
-%%     admin_handle_package(translate_package(<<Package>>));
-%% admin_handle_package({?REQFlightDetails, Message}) ->
-
-%% admin_handle_package({?REQSeatSuggestion, Message}) ->
-%%     booking_agent:seat_availability(Message, admin).
-
-%% Translates from ID and message or only ID to a regexp
+    {error, wrong_message_format}.
 
 translate_package({ID}) ->
     list_to_binary(integer_to_list(ID));
@@ -174,7 +172,8 @@ translate_package({ID, Message}) ->
 %% Translates from a regexp to a tuple with ID and message
 
 translate_package(Message) ->
-    re:split(Message, ?RegExpSeperator).
+    [Message_ID | Message_list] = lists:map(fun binary_to_list/1, lists:droplast(re:split(Message, ?RegExpSeperator))),
+    {list_to_integer(Message_ID), Message_list}.
 
 
 list_to_regexp([Tail | []], _) ->
@@ -227,14 +226,14 @@ seat_tuple_to_list({Seat_ID, Flight_ID, Class, _, Window, Aisle, Row, Col, Price
 	  1 -> 1;
 	  2 -> 1 end)];
 seat_tuple_to_list(_) ->
-    {error, wrongFormat}.
+    {error, wrong_format}.
 
 admin_seat_tuple_to_list({Seat_ID, Flight_ID, Class, User, Window, Aisle, Row, Col, Price, Lock_s}) ->
     [Seat_ID, Flight_ID, 
      Class, User, Window, Aisle, 
      Row, Col, Price, Lock_s];
 admin_seat_tuple_to_list(_) ->
-    {error, wrongFormat}.
+    {error, wrong_format}.
 
 
 
