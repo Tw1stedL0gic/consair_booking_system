@@ -84,11 +84,11 @@ gui 3h
 ##### Måndag
 
 ##### Tisdag
-
+2h gui
 ##### Onsdag
-
+6 gui
 ##### Torsdag
-
+3 gui + rapport
 ##### Fredag
 
 ## Vecka 22
