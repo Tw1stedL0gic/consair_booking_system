@@ -93,6 +93,7 @@ Bugg fixar sql kod / det kommer bli mera och mera sql frågor
 Satt med rapport och fixade lite med kod till booking_agent (att sätta ihop filerna som kontrollerar db med den delen av servern som kallar på dem)
 ##### Söndag
 Suttit med sammankopplingen mellan booking_agent och med get_database och fortsatt med det som pysslades med igår samt att vi har hållt på med persetationen
+laggt till kommentarer till filerna som jag har jobbat med.
 ## Vecka 22
 
 ##### Måndag
