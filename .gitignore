@@ -4,3 +4,5 @@
 *target/
 dependency-reduced-pom.xml
 ebin/
+*.lst
+BookingFX-1.0-SNAPSHOT
