@@ -8,7 +8,7 @@ OBJECTS:=$(SOURCES:src/%.erl=ebin/%.beam)
 
 APPNAME= ConsAir_Bookingsystem
 
-.PHONY: doc doc_url skeleton
+.PHONY: doc doc_url skeleton start_server
 
 all: $(OBJECTS)
 
@@ -28,6 +28,9 @@ doc_url:
 	@echo 
 	@echo "EDoc index page available at file://$(PWD)/doc/index.html"
 	@echo
+
+start_server: all
+	erl -pa ebin/ -s server -s init stop -noshell
 
 ### EUnit ###
 
