@@ -131,7 +131,6 @@ public class SearchInterfaceController implements Initializable, ControlledScree
    
     
     void updateTotalNr(){
-        
         if(adultNr == 1){
             adultLabel.textProperty().set(adultNr + " Adult");
         }
@@ -151,13 +150,14 @@ public class SearchInterfaceController implements Initializable, ControlledScree
         else{
             totalLabel.textProperty().set(totalNr + " Passengers");
         }
+        myScreenMaster.childpass = childNr;
+        myScreenMaster.adultpass = adultNr;
     }
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        updateTotalNr();
         totalLabel.expandedProperty().set(false);
         errorLabel.setVisible(false);
         returnCalendar.disableProperty().bind(turReturBox.selectedProperty().not());

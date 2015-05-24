@@ -10,6 +10,7 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 
 /**
  * FXML Controller class
@@ -25,9 +26,14 @@ public class ConfirmInterfaceController implements Initializable, ControlledScre
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
     }    
-
+    
+    @FXML
+    private Label flightLabel;
     //Lägg till listView'en och lägg all info från föregående sökningar för att
     //bekräfta att allt stämmer så bokningen kan bli bekräftad
+    
+    @FXML
+    private Label totalPass;
     
     
     @FXML
@@ -36,7 +42,7 @@ public class ConfirmInterfaceController implements Initializable, ControlledScre
     }
     @FXML
     void confirmButtonClick(ActionEvent event) {
-        //Bekräfta bokningen med alla val till databasen över nätverket
+        //Skicka bekräftelseförfrågan om bokningen med alla val till databasen över nätverket
         myScreenMaster.setScreen("confirmedinterface");
     }
     
@@ -47,9 +53,13 @@ public class ConfirmInterfaceController implements Initializable, ControlledScre
     }
         @Override
     public void onScreen() {
+        flightLabel.setText(myScreenMaster.chosenFlight);
+        totalPass.setText(Integer.toString(myScreenMaster.adultpass) + " adults and " + Integer.toString(myScreenMaster.childpass) + " children");
     }
 
     @Override
     public void offScreen() {
+        flightLabel.setText("");
+        totalPass.setText("");
     }
 }

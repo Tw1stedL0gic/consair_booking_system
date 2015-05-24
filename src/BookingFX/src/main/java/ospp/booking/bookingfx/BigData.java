@@ -15,6 +15,8 @@ public class BigData {
         {"Arlanda", "ARN", "2015-06-02","19:45","Bahamas airport", "BAH", "2015-06-03","08:45"},
         {"Arlanda", "ARN", "2015-06-02","01:45","Bahamas airport", "BAH", "2015-06-03","12:45"}};
     public static String airports[][] = {
+{"Arlanda", "ARN", "SE", "SE-ST", "001SE"},
+{"Bahamas airport", "BAH", "BH", "BAHAMAS", "0049A"},
 {"Total Rf Heliport","US","US-PA","Bensalem","00A"},
 {"Epps Airpark","US","US-AL","Harvest","00AL"},
 {"Cordes Airport","US","US-AZ","Cordes","00AZ"},

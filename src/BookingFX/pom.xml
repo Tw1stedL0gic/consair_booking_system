@@ -109,6 +109,7 @@
             <groupId>ospp</groupId>
             <artifactId>javanetlib</artifactId>
             <version>0.1-ALPHA</version>
+            <type>jar</type>
         </dependency>
     </dependencies>
 </project>

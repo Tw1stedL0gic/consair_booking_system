@@ -31,7 +31,6 @@ import ospp.bookinggui.networking.Mailbox;
 import ospp.bookinggui.networking.Adapter;
 import ospp.bookinggui.networking.Message;
 import ospp.bookinggui.networking.NetworkAdapter;
-import ospp.bookinggui.networking.messages.HandshakeRespMsg;
 
 /**
  *
@@ -50,6 +49,9 @@ public class ScreenMaster extends StackPane {
     
     public Adapter getAdapter() { return this.networkAdapter; }
     
+    public String chosenFlight = "";
+    public int adultpass = 0;
+    public int childpass = 0;
     public void setAdapter(Adapter a) { 
         this.networkAdapter = a; 
         timeline.play();

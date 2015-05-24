@@ -17,11 +17,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 /**
@@ -37,6 +40,10 @@ public class BookOptionInterfaceController implements Initializable, ControlledS
     private VBox vbox;
     // Visa resultat från sökningen på föregående sida
     
+    
+    
+    @FXML
+    private Label chosenLabel;
     /**
      * Initializes the controller class.
      */
@@ -47,9 +54,21 @@ public class BookOptionInterfaceController implements Initializable, ControlledS
         timeline.setAutoReverse(true);
         final String[] flyg = new String[BigData.flights.length];
         for(int i=0; i<BigData.flights.length; i++){
-            flyg[i] = BigData.flights[i][0] + " " + BigData.flights[i][1];
+            flyg[i] = "From: " + BigData.flights[i][0] + " " + BigData.flights[i][2] + " " + BigData.flights[i][3] + "    To: " 
+            + BigData.flights[i][4] + " " + BigData.flights[i][6] + " " + BigData.flights[i][7] + "   ";
+            final String text = flyg[i];
             Label label = new Label(flyg[i]);
-            Button button = new Button("boka mig");
+            label.setFont(Font.font("Arial", 20));
+            Button button = new Button("Select");
+            button.setOnMouseClicked(new EventHandler<MouseEvent>(){
+
+                @Override
+                public void handle(MouseEvent event) {
+                    chosenLabel.setText(text);
+                    myScreenMaster.chosenFlight = text;
+                }
+                
+            });
             HBox sp = new HBox(label, button);
             label.setTextFill(Color.WHITE);
             
@@ -86,7 +105,8 @@ public class BookOptionInterfaceController implements Initializable, ControlledS
     @FXML
     void nextButtonClick(ActionEvent event) {
         //Valt plan i listan är planet vi vill boka och ska skickas till additionalOptionsInterface
-        myScreenMaster.setScreen("additionaloptionsinterface");
+        //myScreenMaster.setScreen("additionaloptionsinterface");
+        myScreenMaster.setScreen("confirminterface");
     }
     
     private ScreenMaster myScreenMaster;
@@ -103,6 +123,7 @@ public class BookOptionInterfaceController implements Initializable, ControlledS
 
     @Override
     public void offScreen() {
+        chosenLabel.setText("");
         timeline.stop();
     }
 }
