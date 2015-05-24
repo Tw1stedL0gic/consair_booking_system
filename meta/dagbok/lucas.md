@@ -120,7 +120,8 @@ Så jag arbetade på att skriva om 80% av vårt bibliotek.
 Arbetade med avtolkning av de nya meddelanden.
 Samt mer tester. Man kan aldrig få för många tester.
 
-##### Torsdag
+##### Torsdag - Arbetstid: ~4 timmar
+Mer jobb på meddelandena.
 
 ##### Fredag
 

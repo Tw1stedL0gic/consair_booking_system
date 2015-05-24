@@ -34,19 +34,27 @@ table (user) ->
     [ {user_name, varchar, [unique, not_null]},
       {user_password, varchar, not_null},
       {user_class, integer, not_null},
-      {user_email, varchar, [not_null, {default, ""}]}];
+      {user_email, varchar, not_null}];
+
+%% table (airport_from) ->
+%%     [{iata_f, varchar ,[unique, not_null]},
+%%      {airport_name_f, varchar, not_null}];
+
 
 table (airport) ->
     [{iata, varchar ,[unique, not_null]},
      {airport_name, varchar, not_null}];
 
+
 table (flights) -> 
     [ refers_to(airport),
       %%{departuer_point, varchar, not_null}, 
       {arrival_point, varchar, not_null}, 
+      %%refers_to(airport_to),
       {departure_date, datetime, not_null}, 
       {arrival_date, datetime, not_null}, 
-      {flight_nr, varchar, not_null}]; 
+      {flight_nr, varchar, not_null}];
+
 
 
 table(seats) ->
@@ -54,9 +62,9 @@ table(seats) ->
       {class, int, not_null},
       %%{user_name, varchar, not_null}, 
       refers_to(user),
-      {window, bool, not_null},
-      {aisle, bool, not_null}, 
+      {window, integer, not_null},
+      {aisle, integer, not_null}, 
       {row, varchar, not_null},
       {col, varchar, not_null}, 
-      {price, {decimal, 10, 2}, not_null},
+      {price, integer, not_null},
       {lock_s, integer, not_null}].
