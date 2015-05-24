@@ -64,15 +64,19 @@ Suttit och fixat med server pga om desigen av java interface  1,5h
 ## Vecka 20
 
 ##### Måndag
-
+JObbat med databasen ca 5 h
 ##### Tisdag
-
+jobbat med databasen och med rapport och dokumentation ca 3 h
 ##### Onsdag
-
+jobbat med databasen
 ##### Torsdag
-
+jobbat med databasen
 ##### Fredag
-
+jobbat med databasen
+##### Lördag
+Rapport och Presentrtion / database
+##### Söndag 
+Rapport och Presentrtion /Laggt till alla frågor och db dunktioner till bookinghandler
 ## Vecka 21
 
 ##### Måndag
