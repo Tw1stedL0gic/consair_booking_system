@@ -190,7 +190,7 @@ translate_package({ID, Message}) ->
 %% Translates from a regexp to a tuple with ID and message
 
 translate_package(Message) ->
-    [Message_ID | Message_list] = lists:map(fun binary_to_list/1, lists:droplast(re:split(Message, ?RegExpSeperator))),
+    [Message_ID | [Timestamp | Message_list]] = lists:map(fun binary_to_list/1, lists:droplast(re:split(Message, ?RegExpSeperator))),
     case Message_list of
 	[] -> {list_to_integer(Message_ID)};
 	_ -> {list_to_integer(Message_ID), Message_list}
