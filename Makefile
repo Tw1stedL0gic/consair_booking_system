@@ -32,6 +32,9 @@ doc_url:
 start_server: all
 	erl -pa ebin/ -s server -s init stop -noshell
 
+stop_server: all
+	erl -pa ebin/ -s server stop -s init stop -noshell
+
 ### EUnit ###
 
 # Make a comma separated list:
