@@ -4,7 +4,11 @@ import ospp.bookinggui.networking.Message;
 
 public class Date {
 
-	public static final int ARG_AMOUNT = 6;
+	public static final int ARG_AMOUNT;
+
+	static {
+		ARG_AMOUNT = Date.class.getDeclaredFields().length - 1;
+	}
 
 	private final String YEAR;
 	private final String MONTH;

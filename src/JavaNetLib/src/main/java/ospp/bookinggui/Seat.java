@@ -2,7 +2,11 @@ package ospp.bookinggui;
 
 public class Seat {
 
-	public static final int ARG_AMOUNT = 7;
+	public static final int ARG_AMOUNT;
+
+	static {
+		ARG_AMOUNT = Seat.class.getDeclaredFields().length - 1;
+	}
 
 	private final String SEAT_ID;
 	private final String FLIGHT_ID;
