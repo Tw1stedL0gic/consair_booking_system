@@ -7,29 +7,41 @@
 
 %% Package IDs
 %% REQ = Request, RESP = Respond
--define(ClientLogin,            1).
--define(ServerLogin,            2).
--define(Heartbeat,              3).
--define(Disconnect,             4).
--define(REQAirportList,         5).
--define(RESPAirportList,        6).
--define(REQRouteSearch,         7).
--define(RESPRouteSearch,        8).
--define(REQFlightDetails,       9).
--define(RESPFlightDetails,     10).
+-define(LOGIN,                         1).
+-define(LOGIN_RESP,                    2).
+-define(ERROR,                         3).
+-define(DISCONNECT,                    4).
+-define(INIT_BOOK,                     5).
+-define(INIT_BOOK_RESP,                6).
+-define(FIN_BOOK,                      7).
+-define(FIN_BOOK_RESP,                 8).
+-define(ABORT_BOOK,                    9).
+-define(REQ_AIRPORTS,                 10).
+-define(REQ_AIRPORTS_RESP,            11).
+-define(SEARCH_ROUTE,                 12).
+-define(SEARCH_ROUTE_RESP,            13).
+-define(REQ_FLIGHT_DETAILS,           14).
+-define(REQ_FLIGHT_DETAILS_RESP,      15).
+-define(REQ_SEAT_SUGGESTION,          16).
+-define(RESP_SEAT_SUGGESTION_RESP,    17).
+-define(REQ_SEAT_MAP,                 -1).
+-define(REQ_SEAT_MAP_RESP,            -1).
+-define(TERMINATE_SERVER,             24).
+
+-define(Heartbeat,             -1).
 -define(REQSeatLock,          100).
 -define(RESPSeatLock,         101).
--define(REQSeatSuggestion,     11).
--define(RESPSeatSuggestion,    12).
--define(REQInitBooking,        13).
--define(RESPInitBooking,       14).
--define(REQFinalizeBooking,    15).
--define(RESPFinalizeBooking,   16).
+
+
+
+
+
+
 -define(REQReceipt,            17).
 -define(RESPReceipt,           18).
--define(AbortBooking,          19).
--define(Error,                 20).
--define(Terminate_server,      24).
+
+
+
 
 
 %% @doc - A package handler which translates the received package from
@@ -38,75 +50,77 @@
 
 handle_package(Package, User) when is_bitstring(Package) ->
     handle_package(translate_package(Package), User);
-handle_package({?ClientLogin, [Username, Password]}, _) -> %% ID 1 - Handshake
+handle_package({?LOGIN, [Username, Password]}, _) -> %% ID 1 - Handshake
     %% grants either user or admin privilege alternatively a failure message in case handshake didn't work. 
     %% failed if username or password is incorrect. 
     
     %% 0x00 - user
-    %% 0x10 - admin
+   %% 0x10 - admin
     %% 0xff - failed
     
     case booking_agent_fake:login(Username, Password) of
 	user ->
-	    {ok, {user, translate_package({?ServerLogin, ["User"]})}};
+	    {ok, {user, translate_package({?LOGIN_RESP, [1]})}};
 	admin ->
-	    {ok, {admin, translate_package({?ServerLogin, ["Admin"]})}};
-	error ->
-	    {error, loginError}
+	    {ok, {admin, translate_package({?LOGIN_RESP, [2]})}};
+	{error, no_matching_user} ->
+	    {ok, translate_package({?LOGIN_RESP, [3]})};
+	_ ->
+	    {error, login_failed}
     end;
   
 handle_package({?Heartbeat, _}, _) -> 
     translate_package(?Heartbeat); 
 
-handle_package({?Disconnect}, User) -> 
+handle_package({?DISCONNECT}, User) -> 
     case booking_agent_fake:disconnect(User) of
 	ok ->
-	    {ok};
-	{error, Error} ->
-	    {error, Error}
+	    {ok, disconnect};
+	{error, ERROR} ->
+	    {error, ERROR}
     end;
 
-handle_package({?REQAirportList}, _) -> 
+handle_package({?REQ_AIRPORTS}, _) -> 
     case booking_agent_fake:airport_list() of
 	{ok, Airport_list} ->
-	    {ok, translate_package({?RESPAirportList, Airport_list})};
-	{error, Error} ->
-	    {error, Error}
+	    {ok, translate_package({?REQ_AIRPORTS_RESP, Airport_list})};
+	{error, ERROR} ->
+	    {error, ERROR}
     end;
 
-handle_package({?REQAirportList, Airport_ID}, _) -> 
+handle_package({?REQ_AIRPORTS, Airport_ID}, _) -> 
     case booking_agent_fake:airport_list(Airport_ID) of
 	{ok, Airport_list} ->
-	    {ok, translate_package({?RESPAirportList, Airport_list})};
-	{error, Error} ->
-	    {error, Error}
+	    {ok, translate_package({?REQ_AIRPORTS_RESP, Airport_list})};
+	{error, ERROR} ->
+	    {error, ERROR}
     end;
 	
-handle_package({?REQRouteSearch, [Airport_A, Airport_B, Year, Month, Day]}, _) ->
+handle_package({?SEARCH_ROUTE, [Airport_A, Airport_B, Year, Month, Day]}, _) ->
     case booking_agent_fake:flight_details(Airport_A, Airport_B, {Year, Month, Day}) of
 	{ok, Flight_list} ->
-	    {ok, translate_package({?RESPRouteSearch, 
+	    {ok, translate_package({?SEARCH_ROUTE_RESP, 
 				    lists:map(fun basic_flight_tuple_to_list/1, Flight_list)})};
-	{error, Error} ->
-	    {error, Error}
+	{error, ERROR} ->
+	    {error, ERROR}
     end;
 
-handle_package({?REQFlightDetails, Flight_ID}, admin) -> 
+handle_package({?REQ_FLIGHT_DETAILS, Flight_ID}, admin) -> 
     case booking_agent_fake:flight_details(Flight_ID) of
 	{ok, Flight} ->
-	    {ok, translate_package({?RESPFlightDetails,
+	    {ok, translate_package({?REQ_FLIGHT_DETAILS_RESP,
 				    admin_flight_tuple_to_list(Flight)})};
-	{error, Error} ->
-	    {error, Error}
+	{error, ERROR} ->
+	    {error, ERROR}
     end;
 
-handle_package({?REQFlightDetails, Flight_ID}, _) -> 
+handle_package({?REQ_FLIGHT_DETAILS, Flight_ID}, _) -> 
     case booking_agent_fake:flight_details(Flight_ID) of
 	{ok, Flight} ->
-	    {ok, translate_package({?RESPFlightDetails,
+	    {ok, translate_package({?REQ_FLIGHT_DETAILS_RESP,
 				    flight_tuple_to_list(Flight)})};
-	{error, Error} ->
-	    {error, Error}
+	{error, ERROR} ->
+	    {error, ERROR}
     end;
 
 
@@ -120,8 +134,8 @@ handle_package({?REQSeatLock, Seat_ID, Flight_ID}, User) ->
 		_ ->
 		    {ok, translate_package({?RESPSeatLock, (case Lock of 2 -> 1; _ -> Lock end)})}
 	    end;
-	{error, Error} ->
-	    {error, Error}
+	{error, ERROR} ->
+	    {error, ERROR}
     end;
 
 
@@ -129,49 +143,49 @@ handle_package({?REQSeatLock, Seat_ID}, User) ->
     case booking_agent_fake:seat_lock(Seat_ID, User) of
 	{ok, Lock} ->
 	    {ok, translate_package({?RESPSeatLock, Lock})};
-	{error, Error} ->
-	    {error, Error}
+	{error, ERROR} ->
+	    {error, ERROR}
     end;
 
-handle_package({?REQSeatSuggestion, _Message}, _User) -> 
+handle_package({?REQ_SEAT_SUGGESTION, _Message}, _User) -> 
     {error, not_yet_implemented};
    
-handle_package({?REQInitBooking, [_ | Seat_ID_list]}, User) ->
+handle_package({?INIT_BOOK, [_ | Seat_ID_list]}, User) ->
     case booking_agent_fake:start_booking(User, Seat_ID_list) of
 	{ok, {Success_code, Book_time}} ->
-	    {ok, translate_package({?RESPInitBooking, [Success_code, Book_time]})};
-	{error, Error} ->
-	    {error, Error}
+	    {ok, translate_package({?INIT_BOOK_RESP, [Success_code, Book_time]})};
+	{error, ERROR} ->
+	    {error, ERROR}
     end;
 
-handle_package({?REQFinalizeBooking}, User) -> 
+handle_package({?FIN_BOOK}, User) -> 
     case booking_agent_fake:finalize_booking(User) of
 	{ok, Success_code} ->
-	    {ok, translate_package({?RESPFinalizeBooking, [Success_code]})};
-	{error, Error} ->
-	    {error, Error}
+	    {ok, translate_package({?FIN_BOOK_RESP, [Success_code]})};
+	{error, ERROR} ->
+	    {error, ERROR}
     end;
     
 handle_package({?REQReceipt, _Message}, _User) -> 
     % booking_agent_fake:receipt(),
     {error, not_yet_implemented};
 
-handle_package({?AbortBooking, _Message}, _User) -> 
+handle_package({?ABORT_BOOK, _Message}, _User) -> 
     {error, not_yet_implemented};
 
-handle_package({?Terminate_server}, admin) ->
+handle_package({?TERMINATE_SERVER}, admin) ->
     {ok, exit};
 
 handle_package(disconnect, User) ->
-    handle_package({?Disconnect}, User).
+    handle_package({?DISCONNECT}, User).
 
 handle_package(_) ->
     {error, wrong_message_format}.
 
 translate_package({ID}) ->
-    list_to_binary(integer_to_list(ID));
+    translate_package({ID, [now_as_string_millis()]});
 translate_package({ID, Message}) ->
-    list_to_binary(list_to_regexp(lists:append([integer_to_list(ID)], Message), ?RegExpSeperator));
+    list_to_binary(list_to_regexp(lists:append([integer_to_list(ID)], [now_as_string_millis() | Message]), ?RegExpSeperator));
 
 %% Translates from a regexp to a tuple with ID and message
 
@@ -181,6 +195,12 @@ translate_package(Message) ->
 	[] -> {list_to_integer(Message_ID)};
 	_ -> {list_to_integer(Message_ID), Message_list}
     end.
+
+now_as_string_millis() ->
+    {Mega_S, S, Micro_S} = now(),
+    lists:append(lists:append(integer_to_list(Mega_S), integer_to_list(S)), integer_to_list(Micro_S div 1000)).  
+
+    
 
 
 list_to_regexp([Tail | []], _) ->

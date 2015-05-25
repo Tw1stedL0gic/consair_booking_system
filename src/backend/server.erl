@@ -41,7 +41,10 @@ start(Port) ->
     %% Open port
     case gen_tcp:listen(Port, ?CONNECTIONOPTIONS) of 
 	{ok, LSock} ->
-	    spawn(?MODULE, connector_spawner, [LSock, 0]);
+	    %% spawn new process and let this one die 
+	    %% spawn(?MODULE, connector_spawner, [LSock, 0]);
+	    %% continue in same process
+	    connector_spawner(LSock, 0);
 	{error, eaddrinuse} ->
 	    io:fwrite("Port busy~n");
 	_ ->
@@ -145,14 +148,13 @@ connector(Sock, ID, Timeouts, User, ParentPID) ->
 		{ok, {admin, Response}} ->
 		    gen_tcp:send(Sock, Response),
 		    connector(Sock, ID, 0, admin, ParentPID);
-		{ok, {User, Response}} ->
+		{ok, {NewUser, Response}} ->
+		    gen_tcp:send(Sock, Response),
+		    connector(Sock, ID, 0, NewUser, ParentPID);
+		{ok, Response} ->
 		    gen_tcp:send(Sock, Response),
 		    connector(Sock, ID, 0, User, ParentPID);
-		{ok, Response} ->
-		    gen_tcp:send(Sock, Response);
 		{error, Error} ->
 		    ParentPID ! {error, Error}
-	    end,
-	    %% reloop and reset timeouts
-	    connector(Sock, ID, 0, User, ParentPID)
+	    end
     end.	  
