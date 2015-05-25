@@ -15,7 +15,13 @@ import java.util.logging.Logger;
 	TestDisconnect.class,
 	TestRequestAirports.class,
 	TestRequestAirportsResp.class,
-	TestSearchRouteResp.class
+	TestSearchRouteResp.class,
+	TestFinBookResp.class,
+	TestInitBook.class,
+	TestInitBookResp.class,
+	TestLoginResp.class,
+	TestSearchRoute.class,
+	TestError.class
 })
 public class MessageTestSuite extends TestSuite {
 

@@ -4,9 +4,7 @@ import org.junit.Test;
 import ospp.bookinggui.Flight;
 import ospp.bookinggui.networking.messages.SearchAirportRouteRespMsg;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class TestSearchRouteResp {
 
@@ -38,7 +36,7 @@ public class TestSearchRouteResp {
 
 	@Test
 	public void parseIncorrect1() {
-		String[] body = new String[] {
+		String[] body = new String[]{
 			"TJOFRÄS",
 			"12", "ARN", "Arlanda",
 			"1992", "03", "31", "12", "00", "00"
@@ -55,7 +53,7 @@ public class TestSearchRouteResp {
 
 	@Test
 	public void parseIncorrect2() {
-		String[] body = new String[] {
+		String[] body = new String[]{
 			"TJOFRÄS",
 			"1992", "03", "31", "12", "00", "00",
 			"2"
