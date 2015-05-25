@@ -33,14 +33,14 @@ public class Message {
 
 	/**
 	 * Creates a message with the given parameters.
-	 *
+	 * <p/>
 	 * WARNING! If this constructor is called manually and not from
 	 * a child message constructor, you need to make absolutely sure that the way you call
 	 * it complies with the defined protocol!
 	 *
-	 * @param type The type of the message.
+	 * @param type      The type of the message.
 	 * @param timestamp The timestamp of the message.
-	 * @param body The body of the message.
+	 * @param body      The body of the message.
 	 */
 	public Message(MessageType type, long timestamp, String... body) {
 		this.TYPE = type;
@@ -51,23 +51,6 @@ public class Message {
 		}
 		else {
 			this.BODY = body;
-		}
-	}
-
-	private boolean isNull(String[] a) {
-		if(a == null) {
-			return true;
-		}
-		else if(a.length == 0) {
-			return false;
-		}
-		else {
-			for(String s : a) {
-				if(s == null) {
-					return true;
-				}
-			}
-			return false;
 		}
 	}
 
@@ -175,6 +158,23 @@ public class Message {
 		}
 		catch(IllegalArgumentException | ArrayIndexOutOfBoundsException e) {
 			throw new MalformedMessageException("The supplied message ID is not supported!");
+		}
+	}
+
+	private boolean isNull(String[] a) {
+		if(a == null) {
+			return true;
+		}
+		else if(a.length == 0) {
+			return false;
+		}
+		else {
+			for(String s : a) {
+				if(s == null) {
+					return true;
+				}
+			}
+			return false;
 		}
 	}
 

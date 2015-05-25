@@ -9,17 +9,15 @@ import java.util.logging.Logger;
 
 public class NetworkAdapter {
 
-	public static int so_timeout_millis = 30000;
-
 	private static final Logger logger = Logger.getLogger(NetworkAdapter.class.getName());
-
+	public static int so_timeout_millis = 30000;
 	private final Mailbox<Message> mailbox;
 
 	/**
 	 * Initiates the network adapter.
 	 * It will try to connect to the given host address and port on the calling thread!
 	 *
-	 * @param box The mailbox this network adapter should work with.
+	 * @param box  The mailbox this network adapter should work with.
 	 * @param host The address of the host.
 	 * @param port The port on the host machine to target.
 	 * @throws IOException If an IOException occurred when attempting to connect to the host machine.

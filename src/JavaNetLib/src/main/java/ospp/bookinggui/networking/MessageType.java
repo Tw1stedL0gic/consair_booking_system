@@ -42,7 +42,9 @@ public enum MessageType {
 	REQ_PASSENGER_LIST_RESP,
 
 	REQ_SEAT_MAP_ADMIN,
-	REQ_SEAT_MAP_ADMIN_RESP;
+	REQ_SEAT_MAP_ADMIN_RESP,
+
+	TERMINATE_SERVER;
 
 	public final byte ID;
 

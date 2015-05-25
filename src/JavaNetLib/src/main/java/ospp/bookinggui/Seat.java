@@ -8,13 +8,13 @@ public class Seat {
 		ARG_AMOUNT = Seat.class.getDeclaredFields().length - 1;
 	}
 
-	private final String SEAT_ID;
-	private final String FLIGHT_ID;
-	private final String KLASS;
+	private final String  SEAT_ID;
+	private final String  FLIGHT_ID;
+	private final String  KLASS;
 	private final boolean WINDOW;
-	private final int ROW;
-	private final int COL;
-	private boolean locked;
+	private final int     ROW;
+	private final int     COL;
+	private       boolean locked;
 
 	public Seat(String id, String flight_id, String klass, boolean window, int row, int col,
 				boolean locked) {
@@ -52,7 +52,7 @@ public class Seat {
 		return this.FLIGHT_ID;
 	}
 
-	public String getKlass(){
+	public String getKlass() {
 		return this.KLASS;
 	}
 
@@ -74,7 +74,7 @@ public class Seat {
 
 	/**
 	 * Set the locked value to true of this seat.
-	 *
+	 * <p/>
 	 * NOTE! This does not send any data to the server!
 	 * It only alters the boolean value of this object.
 	 */
@@ -84,7 +84,7 @@ public class Seat {
 
 	/**
 	 * Set the locked value to false of this seat.
-	 *
+	 * <p/>
 	 * NOTE! This does not send any data to the server!
 	 * It only alters the boolean value of this object.
 	 */
@@ -93,7 +93,7 @@ public class Seat {
 	}
 
 	public String[] createBody() {
-		return new String[] {
+		return new String[]{
 			SEAT_ID, FLIGHT_ID, KLASS,
 			String.valueOf(WINDOW), String.valueOf(ROW), String.valueOf(COL), String.valueOf(locked)
 		};

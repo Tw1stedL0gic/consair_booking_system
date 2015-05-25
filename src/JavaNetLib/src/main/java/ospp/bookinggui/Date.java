@@ -1,7 +1,5 @@
 package ospp.bookinggui;
 
-import ospp.bookinggui.networking.Message;
-
 public class Date {
 
 	public static final int ARG_AMOUNT;
@@ -66,7 +64,7 @@ public class Date {
 	}
 
 	public String[] createBody() {
-		String[] body = new String[] {
+		String[] body = new String[]{
 			YEAR, MONTH, DAY,
 			HOUR, MINUTE, SECOND
 		};

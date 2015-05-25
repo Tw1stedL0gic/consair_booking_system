@@ -3,7 +3,9 @@ package ospp.bookinggui.networking.runnables;
 import ospp.bookinggui.networking.Mailbox;
 import ospp.bookinggui.networking.Message;
 
-import java.io.*;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,16 +20,16 @@ public class PacketSender implements Runnable {
 
 	/**
 	 * Creates a new PacketSender.
-	 *
+	 * <p/>
 	 * The packet sender polls the mailbox for new outgoing messages.
 	 * If there are no new messages to send, it will sleep for 10 milliseconds then check again.
 	 * This is repeated until it finds a new outgoing message in the mailbox.
-	 *
+	 * <p/>
 	 * Upon retrieving a message, it calls message.createMessage() to form what should be written
 	 * to the output stream. It then writes the message and flushes the buffer to send it.
 	 *
 	 * @param mailbox The mailbox to poll for outgoing messages.
-	 * @param os Where to write the messages.
+	 * @param os      Where to write the messages.
 	 */
 	public PacketSender(Mailbox<Message> mailbox, OutputStream os) {
 		this.mailbox = mailbox;
