@@ -6,6 +6,7 @@ import ospp.bookinggui.networking.messages.SearchAirportRouteRespMsg;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class TestSearchRouteResp {
 
@@ -33,5 +34,39 @@ public class TestSearchRouteResp {
 
 		assertEquals("TJOFRÄS", one.getFlightID());
 		assertEquals("YOLO", two.getFlightID());
+	}
+
+	@Test
+	public void parseIncorrect1() {
+		String[] body = new String[] {
+			"TJOFRÄS",
+			"12", "ARN", "Arlanda",
+			"1992", "03", "31", "12", "00", "00"
+		};
+
+		try {
+			SearchAirportRouteRespMsg resp = new SearchAirportRouteRespMsg(1337L, body);
+			fail("TestSearchRouteResp.parseIncorrect1() did not catch exception!");
+		}
+		catch(Exception e) {
+
+		}
+	}
+
+	@Test
+	public void parseIncorrect2() {
+		String[] body = new String[] {
+			"TJOFRÄS",
+			"1992", "03", "31", "12", "00", "00",
+			"2"
+		};
+
+		try {
+			SearchAirportRouteRespMsg resp = new SearchAirportRouteRespMsg(1337L, body);
+			fail("TestSearchRouteResp.parseIncorrect2() did not catch exception!");
+		}
+		catch(Exception e) {
+
+		}
 	}
 }
