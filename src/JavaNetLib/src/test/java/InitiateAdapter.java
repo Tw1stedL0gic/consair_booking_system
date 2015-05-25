@@ -29,31 +29,11 @@ public class InitiateAdapter {
 
 		PacketListener.debug = true;
 
-
 		final Mailbox<Message> mailbox = new Mailbox<>();
 
-		NetworkAdapter adapter = new NetworkAdapter(mailbox, "212.25.154.51", 53535);
+		NetworkAdapter adapter = new NetworkAdapter(mailbox, "130.243.137.143", 53535);
 
 		Scanner scanner = new Scanner(System.in);
-
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				while(true) {
-					Message msg = mailbox.getOldestIncoming();
-
-					if(msg == null)
-						continue;
-
-					try {
-						System.out.println(msg.createMessage());
-					}
-					catch(UnsupportedEncodingException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		}).start();
 
 		String input;
 		while(true) {

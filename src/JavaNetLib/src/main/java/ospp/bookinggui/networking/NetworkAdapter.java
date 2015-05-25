@@ -30,7 +30,7 @@ public class NetworkAdapter {
 		Socket socket = new Socket(host, port);
 
 		// Set a timeout on read calls.
-		socket.setSoTimeout(NetworkAdapter.so_timeout_millis);
+//		socket.setSoTimeout(NetworkAdapter.so_timeout_millis);
 
 		logger.info("Connection established!");
 
