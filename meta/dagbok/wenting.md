@@ -70,27 +70,37 @@ GUI javafx with Andreas and Erik
 
 ## Vecka 20
 
-##### Måndag
+##### Måndag 13:30-17:00
+GUI javafx with Andreas and Erik
 
-##### Tisdag
+##### Tisdag 13:30-15:00
+GUI readup
 
 ##### Onsdag
 
-##### Torsdag
+##### Torsdag 13:00-20:00
+GUI
 
-##### Fredag
+##### Fredag 13:30-16:30
+GUI
 
 ## Vecka 21
 
-##### Måndag
+##### Måndag 15:00-16:00
+GUI
 
-##### Tisdag
+##### Tisdag 15:00-17:00
+GUI
 
-##### Onsdag
+##### Onsdag 15:00-18:00
+GUI
 
 ##### Torsdag
 
 ##### Fredag
+
+##### Söndag 12:00-17:00
+Presentation slides composition with other 3 group members
 
 ## Vecka 22
 

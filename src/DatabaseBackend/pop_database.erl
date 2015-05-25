@@ -1,4 +1,4 @@
-%%This file is to populate the database
+%%This file is to populate the database for dev and for test of the system
 
 
 -module ('pop_database').

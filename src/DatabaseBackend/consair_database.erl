@@ -29,7 +29,7 @@ driver_info() ->
 tables () ->
     [user, airport, flights, seats].
 
-
+%%Outline for the tabel User
 table (user) ->
     [ {user_name, varchar, [unique, not_null]},
       {user_password, varchar, not_null},
@@ -40,14 +40,14 @@ table (user) ->
 %%     [{iata_f, varchar ,[unique, not_null]},
 %%      {airport_name_f, varchar, not_null}];
 
-
+%%Outline for the tabel Airport
 table (airport) ->
     [{iata, varchar ,[unique, not_null]},
      {airport_name, varchar, not_null}];
 
-
+%%Outline for the table flights
 table (flights) -> 
-    [ refers_to(airport),
+    [ refers_to(airport), %% Links the tabel to Airport
       %%{departuer_point, varchar, not_null}, 
       {arrival_point, varchar, not_null}, 
       %%refers_to(airport_to),
@@ -56,12 +56,12 @@ table (flights) ->
       {flight_nr, varchar, not_null}];
 
 
-
+%%outline for the table seats 
 table(seats) ->
-    [ refers_to(flights),
+    [ refers_to(flights),%% Links the tabel to Flights
       {class, int, not_null},
       %%{user_name, varchar, not_null}, 
-      refers_to(user),
+      refers_to(user),%% Links the tabel to User
       {window, integer, not_null},
       {aisle, integer, not_null}, 
       {row, varchar, not_null},
