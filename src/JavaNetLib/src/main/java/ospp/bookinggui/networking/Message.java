@@ -54,6 +54,23 @@ public class Message {
 		}
 	}
 
+	private static boolean isNull(String[] a) {
+		if(a == null) {
+			return true;
+		}
+		else if(a.length == 0) {
+			return false;
+		}
+		else {
+			for(String s : a) {
+				if(s == null) {
+					return true;
+				}
+			}
+			return false;
+		}
+	}
+
 	/**
 	 * Attempts to parse the given string according to the defined protocol.
 	 * Throws MalformedMessageException with a description of the problem if any error occurs during parsing.
@@ -168,23 +185,6 @@ public class Message {
 		}
 		catch(IllegalArgumentException | ArrayIndexOutOfBoundsException e) {
 			throw new MalformedMessageException("The supplied message ID is not supported!");
-		}
-	}
-
-	private boolean isNull(String[] a) {
-		if(a == null) {
-			return true;
-		}
-		else if(a.length == 0) {
-			return false;
-		}
-		else {
-			for(String s : a) {
-				if(s == null) {
-					return true;
-				}
-			}
-			return false;
 		}
 	}
 
