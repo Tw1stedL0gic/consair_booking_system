@@ -14,7 +14,8 @@ import java.util.logging.Logger;
 	TestLogin.class,
 	TestDisconnect.class,
 	TestRequestAirports.class,
-	TestRequestAirportsResp.class
+	TestRequestAirportsResp.class,
+	TestSearchRouteResp.class
 })
 public class MessageTestSuite extends TestSuite {
 
