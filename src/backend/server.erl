@@ -13,11 +13,13 @@
 %% here is a change
 
 -module(server).
--export([start/0, start/1, connector_spawner/2, connector/5]).
+-export([start/0, start/1, stop/0, stop/1, stop/2, connector_spawner/2, connector/5]).
 -define(PORT, 53535).
 -define(CONNECTIONOPTIONS, [binary, {packet, 0}, {active, false}]).
 -define(ALLOWEDTIMEOUTS, 10). %% Amount of minutes allowed before connection is terminated
 -define(ADMIN_ALLOWEDTIMEOUTS, 20). %% Amount of minutes allowed before admin connection is terminated
+-define(Admin_login, <<"1&carl&asdasd&\n">>).
+-define(Terminate_server, <<"24&\n">>).
 
 %%--------------------------------------------------------------%%
 
@@ -41,12 +43,32 @@ start(Port) ->
 	{ok, LSock} ->
 	    spawn(?MODULE, connector_spawner, [LSock, 0]);
 	{error, eaddrinuse} ->
-	    io:fwrite("Port busy~n")
-%	    gen_tcp:listen(0, ?CONNECTIONOPETIONS),
-%	    io:fwrite("New port assigned: ~p~n", [inet:port()
+	    io:fwrite("Port busy~n");
+	_ ->
+	    {error, could_not_listen}		
     end.
 
 %%--------------------------------------------------------------%%
+
+stop() ->
+    stop("localhost").
+
+stop(IP) ->
+    stop(IP, ?PORT).
+
+stop(IP, Port) ->
+    case gen_tcp:connect(IP, Port, ?CONNECTIONOPTIONS) of
+	{ok, Sock} ->
+	    gen_tcp:send(Sock, ?Admin_login),
+	    timer:sleep(1000),
+	    gen_tcp:send(Sock, ?Terminate_server);
+	{error, Error} ->
+	    {error, Error}
+    end.
+
+%%--------------------------------------------------------------%%
+
+
 
 %% @doc a spawner for listening processes. will switch between
 %% listening for messages from processes and listening to
@@ -56,17 +78,12 @@ start(Port) ->
 
 %% Calling this function with N = 0 will close the server. 
 
-connector_spawner(_, -1) ->
-    io:fwrite("Exit message received, closing~n"),
-    %% call exit function to close port
-    exit(normal);
-
 connector_spawner(LSock, N) ->
     %% receive message from other processes for 100ms
     receive
 	exit ->        %% if received exit -> exit the loop (connection processes are still alive)
 	    io:fwrite("Number of connections: ~p  Exit called~n", [N]),
-	    connector_spawner(LSock, -1);
+	    gen_tcp:close(LSock);
 	disconnect ->  %% if received terminated -> reduce amount of connections
 	    io:fwrite("Number of Connections: ~p  Process terminated~n", [N-1]),
 	    connector_spawner(LSock, N-1)
@@ -94,7 +111,7 @@ connector_spawner(LSock, N) ->
 %% Connection timed out (10 timeouts).
 connector(_, ID, ?ALLOWEDTIMEOUTS, _, ParentPID) ->
     io:fwrite("C~p: ~p timeouts reached, connection terminated~n", [ID, ?ALLOWEDTIMEOUTS]),
-    ParentPID ! terminated;
+    ParentPID ! disconnect;
     %% send message to client that it is timed out
     %% revert all database changes
 
@@ -110,15 +127,16 @@ connector(Sock, ID, Timeouts, User, ParentPID) ->
 	{error, timeout} -> %% in case of timeout, reloop.
 	    %% iterate a counter, which will warn client when timeouting too much
 	    %% after 10 minutes it will break the connection.
-	    io:fwrite("C~p: Timeout ~p, ~p tries remaining~n", [ID, Timeouts, ?ALLOWEDTIMEOUTS-Timeouts]), 
+	    io:fwrite("C~p: Timeout ~p, ~p tries remaining~n", [ID, Timeouts+1, ?ALLOWEDTIMEOUTS-Timeouts]), 
 	    connector(Sock, ID, Timeouts+1, User, ParentPID);
 	{error, closed} -> %% in case of connection closed, tell parent. RECODE THIS TO IMPLEMENT HEARTBEAT
-	    io:fwrite("C~p: Connection closed, terminating.~n", [ID]),
-	    ParentPID ! terminated;
+	    io:fwrite("C~p: Connection closed, disconnecting user.~n", [ID]),
+	    package_handler:handle_package(disconnect, User),
+	    ParentPID ! disconnect;
 	{error, Error} -> %% In case of error, print error and announce termination to parent
 	    io:fwrite("C~p: {error, ~p}~n", [ID, Error]),
-	    ParentPID ! terminated;	
-	{ok, Package} -> %% In case of random package, print and send back "Thanks"
+	    ParentPID ! disconnect;	
+	{ok, Package} -> %% In case of package handle and responde
 	    io:fwrite("C~p: Message received: ~p~n", [ID, Package]),
 	    %% case to handle package
 	    case package_handler:handle_package(Package, User) of

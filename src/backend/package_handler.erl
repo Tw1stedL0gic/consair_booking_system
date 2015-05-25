@@ -29,6 +29,7 @@
 -define(RESPReceipt,           18).
 -define(AbortBooking,          19).
 -define(Error,                 20).
+-define(Terminate_server,      24).
 
 
 %% @doc - A package handler which translates the received package from
@@ -37,7 +38,7 @@
 
 handle_package(Package, User) when is_bitstring(Package) ->
     handle_package(translate_package(Package), User);
-handle_package({?ClientLogin, [Username, Password]}, User) -> %% ID 1 - Handshake
+handle_package({?ClientLogin, [Username, Password]}, _) -> %% ID 1 - Handshake
     %% grants either user or admin privilege alternatively a failure message in case handshake didn't work. 
     %% failed if username or password is incorrect. 
     
@@ -45,7 +46,7 @@ handle_package({?ClientLogin, [Username, Password]}, User) -> %% ID 1 - Handshak
     %% 0x10 - admin
     %% 0xff - failed
     
-    case booking_agent:login(Username, Password) of
+    case booking_agent_fake:login(Username, Password) of
 	user ->
 	    {ok, {user, translate_package({?ServerLogin, ["User"]})}};
 	admin ->
@@ -58,42 +59,40 @@ handle_package({?Heartbeat, _}, _) ->
     translate_package(?Heartbeat); 
 
 handle_package({?Disconnect}, User) -> 
-    case booking_agent:disconnect(User) of
+    case booking_agent_fake:disconnect(User) of
 	ok ->
 	    {ok};
 	{error, Error} ->
 	    {error, Error}
     end;
 
-handle_package({?REQAirportList}, User) ->
-    case booking_agent:airport_list() of
-	{ok, AirportList} ->
-	    {ok, translate_package({?RESPAirportList, 
-				    booking_agent:airport_list()})};
+handle_package({?REQAirportList}, _) -> 
+    case booking_agent_fake:airport_list() of
+	{ok, Airport_list} ->
+	    {ok, translate_package({?RESPAirportList, Airport_list})};
 	{error, Error} ->
 	    {error, Error}
     end;
 
-handle_package({?REQAirportList, Airport_ID}, User) -> 
-    case booking_agent:airport_list() of
-	{ok, AirportList} ->
-	    {ok, translate_package({?RESPAirportList, 
-				    booking_agent:airport_list(Airport_ID)})};
+handle_package({?REQAirportList, Airport_ID}, _) -> 
+    case booking_agent_fake:airport_list(Airport_ID) of
+	{ok, Airport_list} ->
+	    {ok, translate_package({?RESPAirportList, Airport_list})};
 	{error, Error} ->
 	    {error, Error}
     end;
 	
-handle_package({?REQRouteSearch, [Airport_A, Airport_B, Year, Month, Day]}, User) ->
-    case booking_agent:flight_details(Airport_A, Airport_B, {Year, Month, Day}) of
-	{ok, FlightList} ->
+handle_package({?REQRouteSearch, [Airport_A, Airport_B, Year, Month, Day]}, _) ->
+    case booking_agent_fake:flight_details(Airport_A, Airport_B, {Year, Month, Day}) of
+	{ok, Flight_list} ->
 	    {ok, translate_package({?RESPRouteSearch, 
-				    lists:map(fun basic_flight_tuple_to_list/1, FlightList)})};
+				    lists:map(fun basic_flight_tuple_to_list/1, Flight_list)})};
 	{error, Error} ->
 	    {error, Error}
     end;
 
 handle_package({?REQFlightDetails, Flight_ID}, admin) -> 
-    case booking_agent:flight_details(Flight_ID) of
+    case booking_agent_fake:flight_details(Flight_ID) of
 	{ok, Flight} ->
 	    {ok, translate_package({?RESPFlightDetails,
 				    admin_flight_tuple_to_list(Flight)})};
@@ -101,8 +100,8 @@ handle_package({?REQFlightDetails, Flight_ID}, admin) ->
 	    {error, Error}
     end;
 
-handle_package({?REQFlightDetails, Flight_ID}, User) -> 
-    case booking_agent:flight_details(Flight_ID) of
+handle_package({?REQFlightDetails, Flight_ID}, _) -> 
+    case booking_agent_fake:flight_details(Flight_ID) of
 	{ok, Flight} ->
 	    {ok, translate_package({?RESPFlightDetails,
 				    flight_tuple_to_list(Flight)})};
@@ -113,7 +112,7 @@ handle_package({?REQFlightDetails, Flight_ID}, User) ->
 
 
 handle_package({?REQSeatLock, Seat_ID, Flight_ID}, User) ->
-    case booking_agent:seat_lock(Seat_ID, Flight_ID) of
+    case booking_agent_fake:seat_lock(Seat_ID, Flight_ID) of
 	{ok, Lock} ->
 	    case User of
 		admin ->
@@ -127,18 +126,18 @@ handle_package({?REQSeatLock, Seat_ID, Flight_ID}, User) ->
 
 
 handle_package({?REQSeatLock, Seat_ID}, User) ->
-    case booking_agent:seat_lock(Seat_ID, User) of
+    case booking_agent_fake:seat_lock(Seat_ID, User) of
 	{ok, Lock} ->
 	    {ok, translate_package({?RESPSeatLock, Lock})};
 	{error, Error} ->
 	    {error, Error}
     end;
 
-handle_package({?REQSeatSuggestion, Message}, User) -> 
+handle_package({?REQSeatSuggestion, _Message}, _User) -> 
     {error, not_yet_implemented};
    
 handle_package({?REQInitBooking, [_ | Seat_ID_list]}, User) ->
-    case booking_agent:start_booking(User, Seat_ID_list) of
+    case booking_agent_fake:start_booking(User, Seat_ID_list) of
 	{ok, {Success_code, Book_time}} ->
 	    {ok, translate_package({?RESPInitBooking, [Success_code, Book_time]})};
 	{error, Error} ->
@@ -146,22 +145,27 @@ handle_package({?REQInitBooking, [_ | Seat_ID_list]}, User) ->
     end;
 
 handle_package({?REQFinalizeBooking}, User) -> 
-    case booking_agent:finalize_booking(User) of
+    case booking_agent_fake:finalize_booking(User) of
 	{ok, Success_code} ->
 	    {ok, translate_package({?RESPFinalizeBooking, [Success_code]})};
 	{error, Error} ->
 	    {error, Error}
     end;
     
-handle_package({?REQReceipt, Message}, User) -> 
-    % booking_agent:receipt(),
+handle_package({?REQReceipt, _Message}, _User) -> 
+    % booking_agent_fake:receipt(),
     {error, not_yet_implemented};
 
-handle_package({?AbortBooking, Message}, User) -> 
+handle_package({?AbortBooking, _Message}, _User) -> 
     {error, not_yet_implemented};
 
+handle_package({?Terminate_server}, admin) ->
+    {ok, exit};
 
-handle_package({ID, Message}, _) ->
+handle_package(disconnect, User) ->
+    handle_package({?Disconnect}, User).
+
+handle_package(_) ->
     {error, wrong_message_format}.
 
 translate_package({ID}) ->
@@ -173,7 +177,10 @@ translate_package({ID, Message}) ->
 
 translate_package(Message) ->
     [Message_ID | Message_list] = lists:map(fun binary_to_list/1, lists:droplast(re:split(Message, ?RegExpSeperator))),
-    {list_to_integer(Message_ID), Message_list}.
+    case Message_list of
+	[] -> {list_to_integer(Message_ID)};
+	_ -> {list_to_integer(Message_ID), Message_list}
+    end.
 
 
 list_to_regexp([Tail | []], _) ->
