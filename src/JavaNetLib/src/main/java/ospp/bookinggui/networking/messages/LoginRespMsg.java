@@ -5,14 +5,20 @@ import ospp.bookinggui.networking.MessageType;
 
 public class LoginRespMsg extends Message {
 
-	private final String privilege_level;
+	public enum PrivilegeLevel {
+		USER,
+		ADMIN,
+		FAIL
+	}
+
+	private final PrivilegeLevel privilege_level;
 
 	public LoginRespMsg(long timestamp, String privilege_level) {
 		super(MessageType.LOGIN_RESP, timestamp, privilege_level);
-		this.privilege_level = privilege_level;
+		this.privilege_level = PrivilegeLevel.values()[Integer.valueOf(privilege_level) - 1];
 	}
 
-	public String getPrivilegeLeve() {
+	public PrivilegeLevel getPrivilegeLevel() {
 		return this.privilege_level;
 	}
 }

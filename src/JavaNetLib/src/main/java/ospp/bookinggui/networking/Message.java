@@ -111,7 +111,7 @@ public class Message {
 					return new ErrorMsg(timestamp, body[0]);
 
 				case INIT_BOOK:
-					return new InitBookMsg(timestamp, body[0], body[1]);
+					return new InitBookMsg(timestamp, body[0]);
 
 				case INIT_BOOK_RESP:
 					return new InitBookRespMsg(timestamp, body[0], body[1]);
@@ -132,10 +132,14 @@ public class Message {
 				case SEARCH_ROUTE_RESP:
 					return new SearchAirportRouteRespMsg(timestamp, body);
 
+				case REQ_FLIGHT_DETAILS:
+					return new RequestFlightDetailsMsg(timestamp, body[0]);
+
+				case REQ_FLIGHT_DETAILS_RESP:
+					return new RequestFlightDetailsRespMsg(timestamp, body);
+
 				case FIN_BOOK:
 				case ABORT_BOOK:
-				case REQ_FLIGHT_DETAILS:
-				case REQ_FLIGHT_DETAILS_RESP:
 				case REQ_SEAT_SUGGESTION:
 				case REQ_SEAT_SUGGESTION_RESP:
 				case REQ_SEAT_MAP:

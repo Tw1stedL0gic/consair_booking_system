@@ -1,3 +1,4 @@
+import ospp.bookinggui.exceptions.MalformedMessageException;
 import ospp.bookinggui.logging.ConsoleFormatter;
 import ospp.bookinggui.networking.Mailbox;
 import ospp.bookinggui.networking.Message;
@@ -5,6 +6,8 @@ import ospp.bookinggui.networking.NetworkAdapter;
 import ospp.bookinggui.networking.runnables.PacketListener;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.Scanner;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -27,12 +30,42 @@ public class InitiateAdapter {
 		PacketListener.debug = true;
 
 
-		Mailbox<Message> mailbox = new Mailbox<>();
+		final Mailbox<Message> mailbox = new Mailbox<>();
 
-		NetworkAdapter adapter = new NetworkAdapter(mailbox, "localhost", 3333);
+		NetworkAdapter adapter = new NetworkAdapter(mailbox, "212.25.154.51", 53535);
 
+		Scanner scanner = new Scanner(System.in);
+
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while(true) {
+					Message msg = mailbox.getOldestIncoming();
+
+					if(msg == null)
+						continue;
+
+					try {
+						System.out.println(msg.createMessage());
+					}
+					catch(UnsupportedEncodingException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}).start();
+
+		String input;
 		while(true) {
+			input = scanner.next();
 
+			try {
+				Message msg = Message.parseMessage(input);
+				mailbox.send(msg);
+			}
+			catch(MalformedMessageException | UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }

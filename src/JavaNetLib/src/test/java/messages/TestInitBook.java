@@ -14,17 +14,16 @@ public class TestInitBook {
 
 	@Test
 	public void parse1() throws UnsupportedEncodingException, MalformedMessageException {
-		String data = "5&1336&12&127&";
+		String data = "5&1336&127&";
 
 		InitBookMsg msg = (InitBookMsg) Message.parseMessage(data);
 
-		assertEquals("12", msg.getFlightID());
 		assertEquals("127", msg.getSeatID());
 	}
 
 	@Test
 	public void parseIncorrectBody() {
-		String data = "5&1331&12&";
+		String data = "5&1331&";
 
 		try {
 			Message.parseMessage(data);
@@ -36,8 +35,8 @@ public class TestInitBook {
 
 	@Test
 	public void create1() throws UnsupportedEncodingException {
-		InitBookMsg msg = new InitBookMsg(1337L, "12", "127");
+		InitBookMsg msg = new InitBookMsg(1337L, "127");
 
-		assertEquals("5&1337&12&127&", msg.createMessage());
+		assertEquals("5&1337&127&", msg.createMessage());
 	}
 }
