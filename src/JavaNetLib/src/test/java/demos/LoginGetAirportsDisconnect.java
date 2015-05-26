@@ -22,7 +22,7 @@ public class LoginGetAirportsDisconnect {
 		mailbox.send(new LoginMsg(System.currentTimeMillis(), "carl", "asdasd"));
 
 		Message msg;
-		while((msg = mailbox.getOldestIncoming()) == null) ;
+		while((msg = mailbox.getOldestIncoming()) == null);
 
 		LoginRespMsg resp = (LoginRespMsg) msg;
 
@@ -34,7 +34,7 @@ public class LoginGetAirportsDisconnect {
 		// REQUEST A LIST OF ALL AIRPORTS ON SERVER
 		mailbox.send(new RequestAirportsMsg(System.currentTimeMillis(), null));
 
-		while((msg = mailbox.getOldestIncoming()) == null) ;
+		while((msg = mailbox.getOldestIncoming()) == null);
 
 		RequestAirportsRespMsg resp2 = (RequestAirportsRespMsg) msg;
 
