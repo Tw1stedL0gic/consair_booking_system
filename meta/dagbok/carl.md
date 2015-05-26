@@ -196,6 +196,12 @@ Satt och kodade lite och förberedde för presentationen.
 
 ##### Tisdag
 
+10:00 - 20:00
+
+Jobbade på servern.
+
+Den sitter nu ihop med java adaptern. Behöver lite fix med att tolk databas meddelanden.
+
 ##### Onsdag
 
 ##### Torsdag
