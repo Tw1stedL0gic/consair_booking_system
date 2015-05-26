@@ -91,12 +91,15 @@ gui 3h
 3 gui + rapport
 ##### Fredag
 
+##### Söndag
+5h presentation och övrigt
+
 ## Vecka 22
 
 ##### Måndag
 
 ##### Tisdag
-
+2h nätverks interface snack
 ##### Onsdag
 
 ##### Torsdag
