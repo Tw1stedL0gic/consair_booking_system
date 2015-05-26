@@ -89,7 +89,7 @@ public class TestRequestFlightDetailsResp {
 
 	@Test
 	public void testFail1() throws UnsupportedEncodingException, MalformedMessageException {
-			String data = "15&1337&" +
+		String data = "15&1337&" +
 			"1&" +
 			"1&ARN&Arlanda&" +
 			"2&FOO&FooBar&" +

@@ -27,13 +27,52 @@ public class InitiateAdapter {
 
 		root_logger.setLevel(Level.ALL);
 
-		PacketListener.debug = true;
+//		PacketListener.debug = true;
 
 		final Mailbox<Message> mailbox = new Mailbox<>();
 
-		NetworkAdapter adapter = new NetworkAdapter(mailbox, "130.243.137.143", 53535);
-
 		Scanner scanner = new Scanner(System.in);
+
+		while(true) {
+			try {
+				root_logger.info("Please enter address:");
+				new NetworkAdapter(mailbox, scanner.next(), 53535);
+				break;
+			}
+			catch(IOException e) {
+				root_logger.warning("Connection failed! Error message: " + e.getMessage());
+			}
+		}
+
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while(true) {
+					Message msg = mailbox.getOldestIncoming();
+
+					if(msg == null) {
+						try {
+							Thread.sleep(100);
+						}
+						catch(InterruptedException e) {
+						}
+						continue;
+					}
+
+					root_logger.info("Received message:");
+					root_logger.info("\tType: " + msg.getType());
+					root_logger.info("\tTime: " + msg.getTimestamp());
+
+					root_logger.info("\tBody: ");
+
+					StringBuilder sb = new StringBuilder();
+					for(String s : msg.getBody()) {
+						sb.append(s).append(", ");
+					}
+					root_logger.info("\t\t" + sb.toString());
+				}
+			}
+		}).start();
 
 		String input;
 		while(true) {
