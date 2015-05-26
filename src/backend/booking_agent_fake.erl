@@ -27,12 +27,14 @@
 %% Done need som patternmatching to make it work, 1 for admin 0 not admin,[] - no user. 
 login(Username, Password) ->
     case {Username, Password} of
-	{"carl", "asdasd"} ->
-	    admin;
-	{"loser", "notanadmin"} ->
-	    user;
-	_ ->
-	    {error, no_matching_user}
+	{"carl", "asdasd"} ->       admin;
+	{"loser", "notanadmin"} ->  user;
+	{"OlleDerpatron","hej"} ->  user;
+	{"Kalle","hehe"} ->         admin;
+	{"pelle","asd"} ->          user;
+	{"sir herp","asd"} ->       admin;
+	{"meeeh","asd"} ->          user;
+	_ ->                        {error, no_matching_user}
     end.
 
 
@@ -48,7 +50,7 @@ login(Username, Password) ->
     %% {ok,[[{seats,2,2,1,3,0,0,"1","A",1337,0},
     %%   {user,3,"Kalle","hehe",2,"kalle@derp.se"}]]}
 
-disconnect(Username) ->
+disconnect(_User) ->
     ok.
 
 %%---------------------------------------------------------------------%%
@@ -60,8 +62,14 @@ disconnect(Username) ->
 %%           {101, "LAX", "Los Angeles International Airport"}]}
 %% DONE SEE get_database:get_airport_from_db()
 airport_list() ->
-    get_database:get_airport_form_db().
-    
+    {ok,  
+     [{1, "ARN", "ARLANDA"},
+      {2, "ERN", "ARNAAIRPORT UPPSALA"},
+      {3, "LAX", "L.A. International Airport"},
+      {4, "OSE", "Ostersund flygplats"},
+      {5, "DRP", "DerpTown Airport"},
+      {6, "TEX", "Texas internatonal Airport"}]}.
+
 
 %% In case of departure airport, return all airports which that airport
 %% has a route to. 
@@ -70,8 +78,15 @@ airport_list() ->
 %% Output: List of airport tuples ({id, iata, airporrt_name}).you dont see id hidden state
 %% Example: [{101, "LAX", "Los Angeles Internation Airport"}]
 %% DONE SEE get_database:get_airport_from_db_filter(Airport)
-airport_list(Airport) ->
-    get_database:get_airport_from_db_filter(Airport).
+airport_list(Airport_ID) ->
+    {ok, Airport_list} = airport_list(),
+    New_airport_list = lists:keydelete(Airport_ID, 1, Airport_list),
+    case New_airport_list of
+	Airport_list ->
+	    {error, no_such_airport};
+	_ ->
+	    New_airport_list
+    end.
     
 
 %%---------------------------------------------------------------------%%
@@ -90,11 +105,44 @@ airport_list(Airport) ->
 %%            {101, "LAX", "Los Angeles International Airport"},
 %%            {{2015,12,30},{20,10,08}}}]
 
-route_search(airport, arrival_point, {{Year, Month, Day},_}) ->
-    %% search through database for route
-    %% check if route exists
-    %% check if date fits
-    ok.
+route_search(Airport_ID, Arrival_point, {{_Year, _Month, _Day},_}) ->
+    case Airport_ID of
+	Arrival_point ->
+	    {error, identical_airport};
+	_ ->
+	    {ok, search_flight_list(Airport_ID, Arrival_point)}
+    end.
+
+
+search_flight_list(Airport_ID, Arrival_point) ->
+    {ok, Airport_list} = airport_list(),
+    keytake_recursive(lists:keyfind(Arrival_point, 1, Airport_list), 3, keytake_recursive(lists:keyfind(Arrival_point, 1, Airport_ID), 2, flight_list())). 
+
+keytake_recursive(Key, N, List) ->
+    keytake_recursive(Key, N, List, []).
+
+keytake_recursive(Key, N, List, Acc) ->
+    case lists:keytake(Key, N, List) of
+	false ->
+	    case length(Acc) of
+		0 -> false;
+		_ -> Acc
+	    end;
+	Tuple ->
+	    keytake_recursive(Key, N, List, lists:append(Acc, Tuple))
+    end.
+
+
+flight_list() ->
+    {ok, Airport_list} = airport_list(),
+    [{1, lists:keyfind(1, 1, Airport_list), lists:keyfind("TEX", 2, Airport_list), 
+      {{2015, 10, 03}, {13, 37, 00}}, {{2015, 10, 04}, {01, 01, 10}}, "SKS101"},
+     {1, lists:keyfind(1, 1, Airport_list), lists:keyfind("ARN", 2, Airport_list),
+      {{2015, 10, 03}, {13, 37, 00}}, {{2015, 10, 04}, {01, 01, 10}}, "SKS102"},
+     {1, lists:keyfind(1, 1, Airport_list), lists:keyfind("ERN", 2, Airport_list), 
+      {{2015, 10, 03}, {13, 37, 00}}, {{2015, 10, 04}, {01, 01, 10}}, "SKS103"},
+     {1, lists:keyfind(1, 1, Airport_list), lists:keyfind("LAX", 2, Airport_list), 
+      {{2015, 10, 03}, {13, 37, 00}}, {{2015, 10, 04}, {01, 01, 10}}, "SKS106"}].
 
 %%---------------------------------------------------------------------%%
 
@@ -110,10 +158,8 @@ route_search(airport, arrival_point, {{Year, Month, Day},_}) ->
 %%           SEAT_TABLE,
 %%           ARNLAX120}
 %% 
-flight_details(Flight) ->
-    %% return all information about flight 
-    %% In this function, booked and locked seats are both represented by 1, and available by 0. 
-    get_database:get_flight_from_db_f(Flight).
+flight_details(_Flight) ->
+    ok.
 
 %% @doc Returns all information about flight.
 %% Input:  Flight ID
@@ -127,11 +173,11 @@ flight_details(Flight) ->
 %%           {{2015,12,31},{10,32,00}},
 %%           SEAT_TABLE,
 %%           ARNLAX120}
-%%TODO!
-flight_details(Flight, admin) ->
+
+flight_details(_Flight, admin) ->
     %% returns all information, including admin info, about flight.
     %% In this function, seats are shown as available, locked or booked. 
-    get_database:get_flight_from_db_f(Flight).
+    ok.
  
 
 %%---------------------------------------------------------------------%%
@@ -249,7 +295,7 @@ finalize_booking(User) ->
 
 %%---------------------------------------------------------------------%%
 
-receipt(User) ->
+receipt(_User) ->
     ok.
 
 %%---------------------------------------------------------------------%%

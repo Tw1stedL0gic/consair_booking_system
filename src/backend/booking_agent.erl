@@ -116,7 +116,7 @@ airport_list(Airport) ->
 %%            {101, "LAX", "Los Angeles International Airport"},
 %%            {{2015,12,30},{20,10,08}}}]
 
-route_search(airport, arrival_point, {{Year, Month, Day},_}) ->
+route_search(airport, arrival_point, {{year, month, day},_}) ->
     %% search through database for route
     %% check if route exists
     %% check if date fits
@@ -174,15 +174,8 @@ seat_lock(Seat_ID) ->
     Data = get_database:get_seats_id_from_db(Seat_ID),
     case Data of
 	{_,[{_,_,_,_,_,_,_,_,_,_,Lock_s}]} ->
-	    case Lock_s of
-		0->
-		    0;
-		1->
-		    1;
-		2 ->
-		    2
-	    end;
-	_->
+	    Lock_s;    
+	_ ->
 	    {error,no_seat}
     end.
     
@@ -197,24 +190,9 @@ seat_lock(Seat_ID) ->
 %% Input: Flight ID, Seat ID list OR Flight ID, Seat Column OR Flight ID, Seat Row. 
 %% Example: {101, A23}
 %% Output: Seat tuple ({id, flights, class, user, window, aisle, row, col, lock_s})
-%% Example: [{A23,
-%%            101,
-%%            1, 
-%%            carl,
-%%            0,
-%%            1,
-%%            A,
-%%            23,
-%%            2},
-%%           {B23,
-%%            101,
-%%            1, 
-%%            carl,
-%%            0,
-%%            1,
-%%            B,
-%%            23,
-%%            2}, ... ]
+%% Example: [{A23, 101, 1, carl, 0, 1, A, 23, 2},
+%%           {B23, 101, 1, carl, 0, 1, B, 23, 2},
+%%           ... ]
 
 seat_details([Last_seat_ID]) ->
     [get_database:get_seats_id_from_db(Last_seat_ID)];
@@ -246,9 +224,45 @@ seat_details([Head_seat_ID | Tail_seat_ID],admin) ->
 %% economy), seat type (window, middle, aisle), group size, location
 %% in plane (front, back, emergency exit)
 
-suggest_seat() ->
-    %% implement preferences TBI
-    ok. 
+suggest_seat(Flight_ID, Group_size) ->
+    find_chain_of_seats(get_database:get_seats_from_flight(Flight_ID), [], -1, Group_size). 
+
+find_chain_of_seats([Seat | Seat_list], Chain_list, Chain_row, Chain_size) ->
+    %% extract necessary info
+    {_Seat_ID, _Flight_ID, _Class, _User, _Window, _Aisle, Seat_row, _Col, _Price, Lock_s} = Seat, 
+    %% check if right size (or zero)
+    case lists:sizeof(Chain_list) of 
+	Chain_size ->
+	    %% finished, return chain
+	    Chain_list;
+	0 ->
+	    %% check seat lock
+	    case Lock_s of
+		0 ->
+		    %% reset including new seat
+		    find_chain_of_seats(Seat_list, [Seat], Seat_row, Chain_size);
+		_ ->
+		    %% reset
+		    find_chain_of_seats(Seat_list, [], Seat_row, Chain_size)
+	    end;
+	_ ->
+	    %% check seat lock
+	    case Lock_s of
+		0 ->
+		    %% check if row matches. 
+		    case Seat_row of
+			Chain_row ->
+			    %% append and continue
+			    find_chain_of_seats(Seat_list, lists:append(Chain_list, Seat), Chain_row, Chain_size);
+			_ -> 
+			    %% reset including new seat
+			    find_chain_of_seats(Seat_list, [Seat], Seat_row, Chain_size)
+		    end;
+		_ ->
+		    %% reset
+		    find_chain_of_seats(Seat_list, [], Seat_row, Chain_size)
+	    end
+    end.
 
 %%---------------------------------------------------------------------%%
 
@@ -287,7 +301,7 @@ finalize_booking(User) ->
 
 %%---------------------------------------------------------------------%%
 
-receipt(User) ->
+receipt(user) ->
     ok.
 
 %%---------------------------------------------------------------------%%
