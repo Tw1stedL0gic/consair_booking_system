@@ -35,6 +35,9 @@ start_server: all
 stop_server: all
 	erl -pa ebin/ -s server stop -s init stop -noshell
 
+client_terminal:
+	java -jar src/JavaNetLib/target/JavaNetLib.jar
+
 ### EUnit ###
 
 # Make a comma separated list:

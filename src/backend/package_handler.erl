@@ -1,6 +1,7 @@
 -module(package_handler).			
 %-export([handle_package/2]).
 -compile(export_all).
+-import(server_utils, [translate_package/1, now_as_string_millis/0, list_to_regexp/2, flatten_tuples_to_list/1]).
 -include_lib("eunit/include/eunit.hrl").
 
 -define(RegExpSeperator, "&"). %% Needs to be enclosed in quotes.
@@ -85,6 +86,8 @@ handle_package({?DISCONNECT}, User) ->
 	    {error, Error}
     end;
 
+%%--------------------------------------------------------------%%
+
 handle_package({?REQ_AIRPORTS}, _) -> 
     case booking_agent:airport_list() of
 	{ok, Airport_list} ->
@@ -105,7 +108,7 @@ handle_package({?SEARCH_ROUTE, [Airport_A, Airport_B, Year, Month, Day]}, _) ->
     case booking_agent:flight_details(Airport_A, Airport_B, {Year, Month, Day}) of
 	{ok, Flight_list} ->
 	    {ok, translate_package({?SEARCH_ROUTE_RESP, 
-				    lists:map(fun flatten_tuples_to_list/1, Flight_list)})};
+				    lists:map(flatten_tuples_to_list}, Flight_list)})};
 	{error, ERROR} ->
 	    {error, ERROR}
     end;
@@ -175,11 +178,15 @@ handle_package({?REQReceipt, _Message}, _User) ->
     % booking_agent:receipt(),
     {error, not_yet_implemented};
 
+%%--------------------------------------------------------------%%
+
 handle_package({?ABORT_BOOK, _Message}, _User) -> 
     {error, not_yet_implemented};
 
 handle_package({?TERMINATE_SERVER}, admin) ->
     {ok, exit};
+
+%%--------------------------------------------------------------%%
 
 handle_package(_, _) ->
     {error, wrong_message_format}.
@@ -187,6 +194,7 @@ handle_package(_, _) ->
 handle_package(_) ->
     {error, wrong_message_format}.
 
+%%--------------------------------------------------------------%%
 
 logout(User) ->
     case User of
@@ -201,54 +209,6 @@ logout(User) ->
 	    end
     end.
 
-
-translate_package({ID}) ->
-    translate_package({ID, [now_as_string_millis()]});
-translate_package({ID, Message}) ->
-    list_to_binary(list_to_regexp(lists:append([integer_to_list(ID)], [now_as_string_millis() | Message]), ?RegExpSeperator));
-
-%% Translates from a regexp to a tuple with ID and message
-
-translate_package(Message) ->
-    [Message_ID | [Timestamp | Message_list]] = lists:map(fun binary_to_list/1, lists:droplast(re:split(Message, ?RegExpSeperator))),
-    case Message_list of
-	[] -> {list_to_integer(Timestamp), {list_to_integer(Message_ID)}};
-	_  -> {list_to_integer(Timestamp), {list_to_integer(Message_ID), Message_list}}
-    end.
-
-now_as_string_millis() ->
-    {Mega_S, S, Micro_S} = now(),
-    lists:append(lists:append(integer_to_list(Mega_S), integer_to_list(S)), integer_to_list(Micro_S div 1000)).  
-
-    
-
-
-list_to_regexp([Tail | []], _) ->
-    string:concat(
-      case is_integer(Tail) of
-	  true -> integer_to_list(Tail);
-	  _ -> Tail
-      end,
-      "&\n");
-list_to_regexp([Head | Tail], Seperator) ->
-    string:concat(string:concat(
-		    case is_integer(Head) of 
-			true -> integer_to_list(Head); 
-			_ -> Head 
-		    end,
-		    Seperator), list_to_regexp(Tail, Seperator)).
-
-flatten_tuples_to_list(Tuple) ->
-    flatten_tuples_to_list([Tuple], []).
-
-flatten_tuples_to_list([], Acc) ->
-    Acc;
-
-flatten_tuples_to_list([Head | Tuple_list], Acc) when is_tuple(Head)->
-    flatten_tuples_to_list(lists:append(tuple_to_list(Head), Tuple_list), Acc);
-
-flatten_tuples_to_list([Head | Tuples_list], Acc) ->
-    flatten_tuples_to_list(Tuples_list, lists:append(Acc, [Head])).
 
 %% airport_tuple_to_list({Airport_ID, IATA, Name}) ->
 %%     [Airport_ID, IATA, Name].
