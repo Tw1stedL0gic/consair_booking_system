@@ -33,6 +33,6 @@ public class RequestFlightDetailsRespMsg extends Message {
 	}
 
 	public Seat[] getSeatList() {
-		return this.seat_list;
+		return this.seat_list.clone();
 	}
 }

@@ -1,6 +1,8 @@
 package messages;
 
 import org.junit.Test;
+import ospp.bookinggui.Airport;
+import ospp.bookinggui.Date;
 import ospp.bookinggui.Flight;
 import ospp.bookinggui.Seat;
 import ospp.bookinggui.exceptions.MalformedMessageException;
@@ -10,6 +12,7 @@ import ospp.bookinggui.networking.messages.RequestFlightDetailsRespMsg;
 import java.io.UnsupportedEncodingException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class TestRequestFlightDetailsResp {
 
@@ -29,7 +32,36 @@ public class TestRequestFlightDetailsResp {
 
 		Flight flight = msg.getFlight();
 
-		//TODO test flight as well!
+		assertEquals("1", flight.getFlightID());
+		assertEquals("3", flight.getFlightNumber());
+
+		Airport from = flight.getFrom();
+		Airport to = flight.getTo();
+
+		assertEquals("1", from.getAirportID());
+		assertEquals("ARN", from.getIATA());
+		assertEquals("Arlanda", from.getName());
+
+		assertEquals("2", to.getAirportID());
+		assertEquals("FOO", to.getIATA());
+		assertEquals("FooBar", to.getName());
+
+		Date departure = flight.getDeparture();
+		Date arrival = flight.getArrival();
+
+		assertEquals("1992", departure.getYear());
+		assertEquals("03", departure.getMonth());
+		assertEquals("31", departure.getDay());
+		assertEquals("12", departure.getHour());
+		assertEquals("00", departure.getMinute());
+		assertEquals("00", departure.getSecond());
+
+		assertEquals("2015", arrival.getYear());
+		assertEquals("05", arrival.getMonth());
+		assertEquals("25", arrival.getDay());
+		assertEquals("12", arrival.getHour());
+		assertEquals("00", arrival.getMinute());
+		assertEquals("00", arrival.getSecond());
 
 		Seat[] seats = msg.getSeatList();
 
@@ -55,5 +87,23 @@ public class TestRequestFlightDetailsResp {
 		assertEquals(false, s2.isLocked());
 	}
 
-	//TODO ADD CRASH TESTS!
+	@Test
+	public void testFail1() throws UnsupportedEncodingException, MalformedMessageException {
+			String data = "15&1337&" +
+			"1&" +
+			"1&ARN&Arlanda&" +
+			"2&FOO&FooBar&" +
+			"2015&05&25&12&00&00&" +
+			"3&" +
+			"1&3&FIRST&true&12&12&false&" +
+			"2&3&ECO&true&12&13&false&";
+
+		try {
+			Message.parseMessage(data);
+			fail("TestRequestFlightDetailsResp.testFail1() did not throw an exception!");
+		}
+		catch(IllegalArgumentException e) {
+			assertEquals("The body was not properly formed to be read in ReqFlightDetResp!", e.getMessage());
+		}
+	}
 }
