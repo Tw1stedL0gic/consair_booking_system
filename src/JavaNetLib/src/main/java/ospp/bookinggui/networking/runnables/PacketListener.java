@@ -5,10 +5,7 @@ import ospp.bookinggui.networking.Mailbox;
 import ospp.bookinggui.networking.Message;
 import ospp.bookinggui.networking.messages.ErrorMsg;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,9 +30,9 @@ public class PacketListener implements Runnable {
 	 * @param m  The mailbox to add new messages to.
 	 * @param is The InputStream the packet listener should read.
 	 */
-	public PacketListener(Mailbox<Message> m, InputStream is) {
+	public PacketListener(Mailbox<Message> m, InputStream is) throws UnsupportedEncodingException {
 		this.mailbox = m;
-		this.input = new BufferedReader(new InputStreamReader(is));
+		this.input = new BufferedReader(new InputStreamReader(is, "UTF8"));
 	}
 
 	@Override
