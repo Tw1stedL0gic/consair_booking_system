@@ -49,8 +49,9 @@
 %% translates the answer back to bitstring.
 
 handle_package(Package, User) when is_bitstring(Package) ->
-    handle_package(translate_package(Package), User);
-handle_package({?LOGIN, [Username, Password]}, _) -> %% ID 1 - Handshake
+    {Timestamp, Translated_package} = translate_package(Package),
+    {Timestamp, handle_package(Translated_package, User)};
+handle_package({?LOGIN, [Username, Password]}, User) -> %% ID 1 - Handshake
     %% grants either user or admin privilege alternatively a failure message in case handshake didn't work. 
     %% failed if username or password is incorrect. 
     
@@ -59,9 +60,15 @@ handle_package({?LOGIN, [Username, Password]}, _) -> %% ID 1 - Handshake
     %% 0xff - failed
     
     case booking_agent_fake:login(Username, Password) of
+	user when User =:= null ->
+	    {ok, {user, translate_package({?LOGIN_RESP, [1]})}};
+	admin when User =:= null ->
+	    {ok, {admin, translate_package({?LOGIN_RESP, [2]})}};
 	user ->
+	    logout(User),
 	    {ok, {user, translate_package({?LOGIN_RESP, [1]})}};
 	admin ->
+	    logout(User),
 	    {ok, {admin, translate_package({?LOGIN_RESP, [2]})}};
 	{error, no_matching_user} ->
 	    {ok, translate_package({?LOGIN_RESP, [3]})};
@@ -73,11 +80,11 @@ handle_package({?Heartbeat, _}, _) ->
     translate_package(?Heartbeat); 
 
 handle_package({?DISCONNECT}, User) -> 
-    case booking_agent_fake:disconnect(User) of
+    case logout(User) of
 	ok ->
 	    {ok, disconnect};
-	{error, ERROR} ->
-	    {error, ERROR}
+	{error, Error} ->
+	    {error, Error}
     end;
 
 handle_package({?REQ_AIRPORTS}, _) -> 
@@ -174,13 +181,25 @@ handle_package({?ABORT_BOOK, _Message}, _User) ->
     {error, not_yet_implemented};
 
 handle_package({?TERMINATE_SERVER}, admin) ->
-    {ok, exit};
-
-handle_package(disconnect, User) ->
-    handle_package({?DISCONNECT}, User).
+    {ok, exit}.
 
 handle_package(_) ->
     {error, wrong_message_format}.
+
+
+logout(User) ->
+    case User of
+	null ->
+	    {error, no_user};
+	_ ->
+	    case booking_agent_fake:disconnect(User) of
+		ok ->
+		    {ok};
+		{error, Error} ->
+		    {error, Error}
+	    end
+    end.
+
 
 translate_package({ID}) ->
     translate_package({ID, [now_as_string_millis()]});
@@ -192,8 +211,8 @@ translate_package({ID, Message}) ->
 translate_package(Message) ->
     [Message_ID | [Timestamp | Message_list]] = lists:map(fun binary_to_list/1, lists:droplast(re:split(Message, ?RegExpSeperator))),
     case Message_list of
-	[] -> {list_to_integer(Message_ID)};
-	_ -> {list_to_integer(Message_ID), Message_list}
+	[] -> {list_to_integer(Timestamp), {list_to_integer(Message_ID)}};
+	_  -> {list_to_integer(Timestamp), {list_to_integer(Message_ID), Message_list}}
     end.
 
 now_as_string_millis() ->
