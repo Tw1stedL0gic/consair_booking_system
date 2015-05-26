@@ -116,8 +116,14 @@ public class Message {
 				case INIT_BOOK_RESP:
 					return new InitBookRespMsg(timestamp, body[0], body[1]);
 
+				case FIN_BOOK:
+					return new FinBookMsg(timestamp);
+
 				case FIN_BOOK_RESP:
 					return new FinBookRespMsg(timestamp, body[0]);
+
+				case ABORT_BOOK:
+					return new AbortBookMsg(timestamp);
 
 				case REQ_AIRPORTS:
 					String iata = body == null ? null : body[0];
@@ -138,17 +144,21 @@ public class Message {
 				case REQ_FLIGHT_DETAILS_RESP:
 					return new RequestFlightDetailsRespMsg(timestamp, body);
 
-				case FIN_BOOK:
-				case ABORT_BOOK:
+				case TERMINATE_SERVER:
+					return new TerminateServerMsg(timestamp);
+
 				case REQ_SEAT_SUGGESTION:
+					return new RequestSeatSuggestionMsg(timestamp, body[0]);
+
 				case REQ_SEAT_SUGGESTION_RESP:
+					return new RequestSeatSuggestionRespMsg(timestamp, body);
+
 				case REQ_SEAT_MAP:
 				case REQ_SEAT_MAP_RESP:
 				case REQ_PASSENGER_LIST:
 				case REQ_PASSENGER_LIST_RESP:
 				case REQ_SEAT_MAP_ADMIN:
 				case REQ_SEAT_MAP_ADMIN_RESP:
-				case TERMINATE_SERVER:
 				default:
 					logger.warning("Message.parseMessage() is missing specific parsing for the type: " + type);
 					return new Message(type, timestamp, body);
