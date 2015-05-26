@@ -34,15 +34,15 @@ login(Username, Password) ->
 		true->
 		    case Ulvl =:= 2 of
 			true ->
-			    admin;
+			    {ok, admin};
 			false ->
-			    user
+			    {ok, user}
 		    end;
 		false->
-		    wrong_password
+		    {error, login_failed} %% Wrong pass
 	    end;
 	false ->
-	    not_a_user
+	    {error, login_failed} %% No such user
     end.
 
 %%---------------------------------------------------------------------%%

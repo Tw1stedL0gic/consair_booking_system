@@ -60,20 +60,18 @@ handle_package({?LOGIN, [Username, Password]}, User) -> %% ID 1 - Handshake
     %% 0xff - failed
     
     case booking_agent:login(Username, Password) of
-	user when User =:= null ->
+	{ok, user} when User =:= null ->
 	    {ok, {user, translate_package({?LOGIN_RESP, [1]})}};
-	admin when User =:= null ->
+	{ok, admin} when User =:= null ->
 	    {ok, {admin, translate_package({?LOGIN_RESP, [2]})}};
-	user ->
+	{ok, user} ->
 	    logout(User),
 	    {ok, {user, translate_package({?LOGIN_RESP, [1]})}};
-	admin ->
+	{ok, admin} ->
 	    logout(User),
 	    {ok, {admin, translate_package({?LOGIN_RESP, [2]})}};
-	{error, no_matching_user} ->
-	    {ok, translate_package({?LOGIN_RESP, [3]})};
-	_ ->
-	    {error, login_failed}
+	{error, login_failed} ->
+	    {ok, translate_package({?LOGIN_RESP, [3]})}
     end;
   
 handle_package({?Heartbeat, _}, _) -> 
