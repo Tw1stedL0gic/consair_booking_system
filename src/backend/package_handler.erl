@@ -59,7 +59,7 @@ handle_package({?LOGIN, [Username, Password]}, User) -> %% ID 1 - Handshake
    %% 0x10 - admin
     %% 0xff - failed
     
-    case booking_agent_fake:login(Username, Password) of
+    case booking_agent:login(Username, Password) of
 	user when User =:= null ->
 	    {ok, {user, translate_package({?LOGIN_RESP, [1]})}};
 	admin when User =:= null ->
@@ -88,7 +88,7 @@ handle_package({?DISCONNECT}, User) ->
     end;
 
 handle_package({?REQ_AIRPORTS}, _) -> 
-    case booking_agent_fake:airport_list() of
+    case booking_agent:airport_list() of
 	{ok, Airport_list} ->
 	    {ok, translate_package({?REQ_AIRPORTS_RESP, Airport_list})};
 	{error, ERROR} ->
@@ -96,7 +96,7 @@ handle_package({?REQ_AIRPORTS}, _) ->
     end;
 
 handle_package({?REQ_AIRPORTS, Airport_ID}, _) -> 
-    case booking_agent_fake:airport_list(Airport_ID) of
+    case booking_agent:airport_list(Airport_ID) of
 	{ok, Airport_list} ->
 	    {ok, translate_package({?REQ_AIRPORTS_RESP, Airport_list})};
 	{error, ERROR} ->
@@ -104,7 +104,7 @@ handle_package({?REQ_AIRPORTS, Airport_ID}, _) ->
     end;
 	
 handle_package({?SEARCH_ROUTE, [Airport_A, Airport_B, Year, Month, Day]}, _) ->
-    case booking_agent_fake:flight_details(Airport_A, Airport_B, {Year, Month, Day}) of
+    case booking_agent:flight_details(Airport_A, Airport_B, {Year, Month, Day}) of
 	{ok, Flight_list} ->
 	    {ok, translate_package({?SEARCH_ROUTE_RESP, 
 				    lists:map(fun basic_flight_tuple_to_list/1, Flight_list)})};
@@ -113,7 +113,7 @@ handle_package({?SEARCH_ROUTE, [Airport_A, Airport_B, Year, Month, Day]}, _) ->
     end;
 
 handle_package({?REQ_FLIGHT_DETAILS, Flight_ID}, admin) -> 
-    case booking_agent_fake:flight_details(Flight_ID) of
+    case booking_agent:flight_details(Flight_ID) of
 	{ok, Flight} ->
 	    {ok, translate_package({?REQ_FLIGHT_DETAILS_RESP,
 				    admin_flight_tuple_to_list(Flight)})};
@@ -122,7 +122,7 @@ handle_package({?REQ_FLIGHT_DETAILS, Flight_ID}, admin) ->
     end;
 
 handle_package({?REQ_FLIGHT_DETAILS, Flight_ID}, _) -> 
-    case booking_agent_fake:flight_details(Flight_ID) of
+    case booking_agent:flight_details(Flight_ID) of
 	{ok, Flight} ->
 	    {ok, translate_package({?REQ_FLIGHT_DETAILS_RESP,
 				    flight_tuple_to_list(Flight)})};
@@ -133,7 +133,7 @@ handle_package({?REQ_FLIGHT_DETAILS, Flight_ID}, _) ->
 
 
 handle_package({?REQSeatLock, Seat_ID, Flight_ID}, User) ->
-    case booking_agent_fake:seat_lock(Seat_ID, Flight_ID) of
+    case booking_agent:seat_lock(Seat_ID, Flight_ID) of
 	{ok, Lock} ->
 	    case User of
 		admin ->
@@ -147,7 +147,7 @@ handle_package({?REQSeatLock, Seat_ID, Flight_ID}, User) ->
 
 
 handle_package({?REQSeatLock, Seat_ID}, User) ->
-    case booking_agent_fake:seat_lock(Seat_ID, User) of
+    case booking_agent:seat_lock(Seat_ID, User) of
 	{ok, Lock} ->
 	    {ok, translate_package({?RESPSeatLock, Lock})};
 	{error, ERROR} ->
@@ -158,7 +158,7 @@ handle_package({?REQ_SEAT_SUGGESTION, _Message}, _User) ->
     {error, not_yet_implemented};
    
 handle_package({?INIT_BOOK, [_ | Seat_ID_list]}, User) ->
-    case booking_agent_fake:start_booking(User, Seat_ID_list) of
+    case booking_agent:start_booking(User, Seat_ID_list) of
 	{ok, {Success_code, Book_time}} ->
 	    {ok, translate_package({?INIT_BOOK_RESP, [Success_code, Book_time]})};
 	{error, ERROR} ->
@@ -166,7 +166,7 @@ handle_package({?INIT_BOOK, [_ | Seat_ID_list]}, User) ->
     end;
 
 handle_package({?FIN_BOOK}, User) -> 
-    case booking_agent_fake:finalize_booking(User) of
+    case booking_agent:finalize_booking(User) of
 	{ok, Success_code} ->
 	    {ok, translate_package({?FIN_BOOK_RESP, [Success_code]})};
 	{error, ERROR} ->
@@ -174,14 +174,17 @@ handle_package({?FIN_BOOK}, User) ->
     end;
     
 handle_package({?REQReceipt, _Message}, _User) -> 
-    % booking_agent_fake:receipt(),
+    % booking_agent:receipt(),
     {error, not_yet_implemented};
 
 handle_package({?ABORT_BOOK, _Message}, _User) -> 
     {error, not_yet_implemented};
 
 handle_package({?TERMINATE_SERVER}, admin) ->
-    {ok, exit}.
+    {ok, exit};
+
+handle_package(_, _) ->
+    {error, wrong_message_format}.
 
 handle_package(_) ->
     {error, wrong_message_format}.
@@ -192,7 +195,7 @@ logout(User) ->
 	null ->
 	    {error, no_user};
 	_ ->
-	    case booking_agent_fake:disconnect(User) of
+	    case booking_agent:disconnect(User) of
 		ok ->
 		    {ok};
 		{error, Error} ->

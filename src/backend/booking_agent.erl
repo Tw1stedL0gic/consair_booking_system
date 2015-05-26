@@ -32,7 +32,7 @@ login(Username, Password) ->
 	true ->
 	    case Password =:= Pass of
 		true->
-		    case Ulvl =:= 1 of
+		    case Ulvl =:= 2 of
 			true ->
 			    admin;
 			false ->
