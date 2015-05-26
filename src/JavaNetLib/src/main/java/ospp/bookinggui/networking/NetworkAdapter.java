@@ -9,6 +9,8 @@ import java.util.logging.Logger;
 
 public class NetworkAdapter {
 
+	public static volatile boolean isConnected = false;
+
 	private static final Logger logger = Logger.getLogger(NetworkAdapter.class.getName());
 	public static int so_timeout_millis = 30000;
 	private final Mailbox<Message> mailbox;
@@ -32,6 +34,7 @@ public class NetworkAdapter {
 		// Set a timeout on read calls.
 //		socket.setSoTimeout(NetworkAdapter.so_timeout_millis);
 
+		isConnected = true;
 		logger.info("Connection established!");
 
 		new Thread(new PacketListener(box, socket.getInputStream()), "PacketListener").start();

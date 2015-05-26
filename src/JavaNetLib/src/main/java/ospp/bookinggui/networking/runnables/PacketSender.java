@@ -2,6 +2,7 @@ package ospp.bookinggui.networking.runnables;
 
 import ospp.bookinggui.networking.Mailbox;
 import ospp.bookinggui.networking.Message;
+import ospp.bookinggui.networking.NetworkAdapter;
 
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -39,7 +40,7 @@ public class PacketSender implements Runnable {
 	@Override
 	public void run() {
 
-		while(keepRunning) {
+		while(keepRunning && NetworkAdapter.isConnected) {
 			Message m = mailbox.getOldestOutgoing();
 
 			// If mailbox is empty, sleep for a while then check again.
@@ -61,6 +62,8 @@ public class PacketSender implements Runnable {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 			}
 		}
+
+		logger.severe("PacketSender was terminated!");
 	}
 
 	public void stop() {
