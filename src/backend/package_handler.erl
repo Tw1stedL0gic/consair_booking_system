@@ -49,8 +49,9 @@
 %% translates the answer back to bitstring.
 
 handle_package(Package, User) when is_bitstring(Package) ->
-    handle_package(translate_package(Package), User);
-handle_package({?LOGIN, [Username, Password]}, _) -> %% ID 1 - Handshake
+    {Timestamp, Translated_package} = translate_package(Package),
+    {Timestamp, handle_package(Translated_package, User)};
+handle_package({?LOGIN, [Username, Password]}, User) -> %% ID 1 - Handshake
     %% grants either user or admin privilege alternatively a failure message in case handshake didn't work. 
     %% failed if username or password is incorrect. 
     
@@ -58,67 +59,71 @@ handle_package({?LOGIN, [Username, Password]}, _) -> %% ID 1 - Handshake
    %% 0x10 - admin
     %% 0xff - failed
     
-    case booking_agent_fake:login(Username, Password) of
-	user ->
+    case booking_agent:login(Username, Password) of
+	{ok, user} when User =:= null ->
 	    {ok, {user, translate_package({?LOGIN_RESP, [1]})}};
-	admin ->
+	{ok, admin} when User =:= null ->
 	    {ok, {admin, translate_package({?LOGIN_RESP, [2]})}};
-	{error, no_matching_user} ->
-	    {ok, translate_package({?LOGIN_RESP, [3]})};
-	_ ->
-	    {error, login_failed}
+	{ok, user} ->
+	    logout(User),
+	    {ok, {user, translate_package({?LOGIN_RESP, [1]})}};
+	{ok, admin} ->
+	    logout(User),
+	    {ok, {admin, translate_package({?LOGIN_RESP, [2]})}};
+	{error, login_failed} ->
+	    {ok, translate_package({?LOGIN_RESP, [3]})}
     end;
   
 handle_package({?Heartbeat, _}, _) -> 
     translate_package(?Heartbeat); 
 
 handle_package({?DISCONNECT}, User) -> 
-    case booking_agent_fake:disconnect(User) of
+    case logout(User) of
 	ok ->
 	    {ok, disconnect};
-	{error, ERROR} ->
-	    {error, ERROR}
+	{error, Error} ->
+	    {error, Error}
     end;
 
 handle_package({?REQ_AIRPORTS}, _) -> 
-    case booking_agent_fake:airport_list() of
+    case booking_agent:airport_list() of
 	{ok, Airport_list} ->
-	    {ok, translate_package({?REQ_AIRPORTS_RESP, Airport_list})};
+	    {ok, translate_package({?REQ_AIRPORTS_RESP, flatten_tuples_to_list(Airport_list)})};
 	{error, ERROR} ->
 	    {error, ERROR}
     end;
 
 handle_package({?REQ_AIRPORTS, Airport_ID}, _) -> 
-    case booking_agent_fake:airport_list(Airport_ID) of
+    case booking_agent:airport_list(Airport_ID) of
 	{ok, Airport_list} ->
-	    {ok, translate_package({?REQ_AIRPORTS_RESP, Airport_list})};
+	    {ok, translate_package({?REQ_AIRPORTS_RESP, flatten_tuples_to_list(Airport_list)})};
 	{error, ERROR} ->
 	    {error, ERROR}
     end;
 	
 handle_package({?SEARCH_ROUTE, [Airport_A, Airport_B, Year, Month, Day]}, _) ->
-    case booking_agent_fake:flight_details(Airport_A, Airport_B, {Year, Month, Day}) of
+    case booking_agent:flight_details(Airport_A, Airport_B, {Year, Month, Day}) of
 	{ok, Flight_list} ->
 	    {ok, translate_package({?SEARCH_ROUTE_RESP, 
-				    lists:map(fun basic_flight_tuple_to_list/1, Flight_list)})};
+				    lists:map(fun flatten_tuples_to_list/1, Flight_list)})};
 	{error, ERROR} ->
 	    {error, ERROR}
     end;
 
 handle_package({?REQ_FLIGHT_DETAILS, Flight_ID}, admin) -> 
-    case booking_agent_fake:flight_details(Flight_ID) of
+    case booking_agent:flight_details(Flight_ID) of
 	{ok, Flight} ->
 	    {ok, translate_package({?REQ_FLIGHT_DETAILS_RESP,
-				    admin_flight_tuple_to_list(Flight)})};
+				    flatten_tuples_to_list(Flight)})};
 	{error, ERROR} ->
 	    {error, ERROR}
     end;
 
 handle_package({?REQ_FLIGHT_DETAILS, Flight_ID}, _) -> 
-    case booking_agent_fake:flight_details(Flight_ID) of
+    case booking_agent:flight_details(Flight_ID) of
 	{ok, Flight} ->
 	    {ok, translate_package({?REQ_FLIGHT_DETAILS_RESP,
-				    flight_tuple_to_list(Flight)})};
+				    flatten_tuples_to_list(Flight)})};
 	{error, ERROR} ->
 	    {error, ERROR}
     end;
@@ -126,7 +131,7 @@ handle_package({?REQ_FLIGHT_DETAILS, Flight_ID}, _) ->
 
 
 handle_package({?REQSeatLock, Seat_ID, Flight_ID}, User) ->
-    case booking_agent_fake:seat_lock(Seat_ID, Flight_ID) of
+    case booking_agent:seat_lock(Seat_ID, Flight_ID) of
 	{ok, Lock} ->
 	    case User of
 		admin ->
@@ -140,7 +145,7 @@ handle_package({?REQSeatLock, Seat_ID, Flight_ID}, User) ->
 
 
 handle_package({?REQSeatLock, Seat_ID}, User) ->
-    case booking_agent_fake:seat_lock(Seat_ID, User) of
+    case booking_agent:seat_lock(Seat_ID, User) of
 	{ok, Lock} ->
 	    {ok, translate_package({?RESPSeatLock, Lock})};
 	{error, ERROR} ->
@@ -151,7 +156,7 @@ handle_package({?REQ_SEAT_SUGGESTION, _Message}, _User) ->
     {error, not_yet_implemented};
    
 handle_package({?INIT_BOOK, [_ | Seat_ID_list]}, User) ->
-    case booking_agent_fake:start_booking(User, Seat_ID_list) of
+    case booking_agent:start_booking(User, Seat_ID_list) of
 	{ok, {Success_code, Book_time}} ->
 	    {ok, translate_package({?INIT_BOOK_RESP, [Success_code, Book_time]})};
 	{error, ERROR} ->
@@ -159,7 +164,7 @@ handle_package({?INIT_BOOK, [_ | Seat_ID_list]}, User) ->
     end;
 
 handle_package({?FIN_BOOK}, User) -> 
-    case booking_agent_fake:finalize_booking(User) of
+    case booking_agent:finalize_booking(User) of
 	{ok, Success_code} ->
 	    {ok, translate_package({?FIN_BOOK_RESP, [Success_code]})};
 	{error, ERROR} ->
@@ -167,7 +172,7 @@ handle_package({?FIN_BOOK}, User) ->
     end;
     
 handle_package({?REQReceipt, _Message}, _User) -> 
-    % booking_agent_fake:receipt(),
+    % booking_agent:receipt(),
     {error, not_yet_implemented};
 
 handle_package({?ABORT_BOOK, _Message}, _User) -> 
@@ -176,11 +181,26 @@ handle_package({?ABORT_BOOK, _Message}, _User) ->
 handle_package({?TERMINATE_SERVER}, admin) ->
     {ok, exit};
 
-handle_package(disconnect, User) ->
-    handle_package({?DISCONNECT}, User).
+handle_package(_, _) ->
+    {error, wrong_message_format}.
 
 handle_package(_) ->
     {error, wrong_message_format}.
+
+
+logout(User) ->
+    case User of
+	null ->
+	    {error, no_user};
+	_ ->
+	    case booking_agent:disconnect(User) of
+		ok ->
+		    {ok};
+		{error, Error} ->
+		    {error, Error}
+	    end
+    end.
+
 
 translate_package({ID}) ->
     translate_package({ID, [now_as_string_millis()]});
@@ -192,8 +212,8 @@ translate_package({ID, Message}) ->
 translate_package(Message) ->
     [Message_ID | [Timestamp | Message_list]] = lists:map(fun binary_to_list/1, lists:droplast(re:split(Message, ?RegExpSeperator))),
     case Message_list of
-	[] -> {list_to_integer(Message_ID)};
-	_ -> {list_to_integer(Message_ID), Message_list}
+	[] -> {list_to_integer(Timestamp), {list_to_integer(Message_ID)}};
+	_  -> {list_to_integer(Timestamp), {list_to_integer(Message_ID), Message_list}}
     end.
 
 now_as_string_millis() ->
@@ -218,49 +238,60 @@ list_to_regexp([Head | Tail], Seperator) ->
 		    end,
 		    Seperator), list_to_regexp(Tail, Seperator)).
 
+flatten_tuples_to_list(Tuple) ->
+    flatten_tuples_to_list([Tuple], []).
 
-airport_tuple_to_list({Airport_ID, IATA, Name}) ->
-    [Airport_ID, IATA, Name].
+flatten_tuples_to_list([], Acc) ->
+    Acc;
 
-basic_flight_tuple_to_list({Flight_ID, Airport_A, Airport_B, {{Year, Month, Day},{Hour, Minute, Second}}}) ->
-    lists:append(lists:append(lists:append([Flight_ID], 
-					   airport_tuple_to_list(Airport_A)), 
-			      airport_tuple_to_list(Airport_B)), 
-		 [Year, Month, Day, Hour, Minute, Second]).
+flatten_tuples_to_list([Head | Tuple_list], Acc) when is_tuple(Head)->
+    flatten_tuples_to_list(lists:append(tuple_to_list(Head), Tuple_list), Acc);
 
-flight_tuple_to_list({Flight_ID, Airport_A, Airport_B, Seat_list, {{Year_D, Month_D, Day_D},{Hour_D, Minute_D, Second_D}}, {{Year_A, Month_A, Day_A},{Hour_A, Minute_A, Second_A}}}) ->
-    lists:append(lists:append(lists:append(lists:append([Flight_ID],
-							airport_tuple_to_list(Airport_A)), 
-					   airport_tuple_to_list(Airport_B)),
-			      lists:foldr(fun lists:append/2, [],
-					  lists:map(fun seat_tuple_to_list/1, Seat_list))),
-		 [Year_D, Month_D, Day_D, Hour_D, Minute_D, Second_D, Year_A, Month_A, Day_A, Hour_A, Minute_A, Second_A]).
+flatten_tuples_to_list([Head | Tuples_list], Acc) ->
+    flatten_tuples_to_list(Tuples_list, lists:append(Acc, [Head])).
 
-admin_flight_tuple_to_list({Flight_ID, Airport_A, Airport_B, Seat_list, {{Year_D, Month_D, Day_D},{Hour_D, Minute_D, Second_D}}, {{Year_A, Month_A, Day_A},{Hour_A, Minute_A, Second_A}}}) ->
-    lists:append(lists:append(lists:append(lists:append([Flight_ID],
-							airport_tuple_to_list(Airport_A)), 
-					   airport_tuple_to_list(Airport_B)),
-			      lists:foldr(fun lists:append/2, [], 
-					  lists:map(fun admin_seat_tuple_to_list/1, Seat_list))),
-		 [Year_D, Month_D, Day_D, Hour_D, Minute_D, Second_D, Year_A, Month_A, Day_A, Hour_A, Minute_A, Second_A]).
+%% airport_tuple_to_list({Airport_ID, IATA, Name}) ->
+%%     [Airport_ID, IATA, Name].
 
-seat_tuple_to_list({Seat_ID, Flight_ID, Class, _, Window, Aisle, Row, Col, Price, Lock_s}) ->
-    [Seat_ID, Flight_ID, 
-     Class, Window, Aisle, 
-     Row, Col, Price, 
-     (case Lock_s of 
-	  0 -> 0;
-	  1 -> 1;
-	  2 -> 1 end)];
-seat_tuple_to_list(_) ->
-    {error, wrong_format}.
+%% basic_flight_tuple_to_list({Flight_ID, Airport_A, Airport_B, {{Year, Month, Day},{Hour, Minute, Second}}}) ->
+%%     lists:append(lists:append(lists:append([Flight_ID], 
+%% 					   airport_tuple_to_list(Airport_A)), 
+%% 			      airport_tuple_to_list(Airport_B)), 
+%% 		 [Year, Month, Day, Hour, Minute, Second]).
 
-admin_seat_tuple_to_list({Seat_ID, Flight_ID, Class, User, Window, Aisle, Row, Col, Price, Lock_s}) ->
-    [Seat_ID, Flight_ID, 
-     Class, User, Window, Aisle, 
-     Row, Col, Price, Lock_s];
-admin_seat_tuple_to_list(_) ->
-    {error, wrong_format}.
+%% flight_tuple_to_list({Flight_ID, Airport_A, Airport_B, Seat_list, {{Year_D, Month_D, Day_D},{Hour_D, Minute_D, Second_D}}, {{Year_A, Month_A, Day_A},{Hour_A, Minute_A, Second_A}}}) ->
+%%     lists:append(lists:append(lists:append(lists:append([Flight_ID],
+%% 							airport_tuple_to_list(Airport_A)), 
+%% 					   airport_tuple_to_list(Airport_B)),
+%% 			      lists:foldr(fun lists:append/2, [],
+%% 					  lists:map(fun seat_tuple_to_list/1, Seat_list))),
+%% 		 [Year_D, Month_D, Day_D, Hour_D, Minute_D, Second_D, Year_A, Month_A, Day_A, Hour_A, Minute_A, Second_A]).
+
+%% admin_flight_tuple_to_list({Flight_ID, Airport_A, Airport_B, Seat_list, {{Year_D, Month_D, Day_D},{Hour_D, Minute_D, Second_D}}, {{Year_A, Month_A, Day_A},{Hour_A, Minute_A, Second_A}}}) ->
+%%     lists:append(lists:append(lists:append(lists:append([Flight_ID],
+%% 							airport_tuple_to_list(Airport_A)), 
+%% 					   airport_tuple_to_list(Airport_B)),
+%% 			      lists:foldr(fun lists:append/2, [], 
+%% 					  lists:map(fun admin_seat_tuple_to_list/1, Seat_list))),
+%% 		 [Year_D, Month_D, Day_D, Hour_D, Minute_D, Second_D, Year_A, Month_A, Day_A, Hour_A, Minute_A, Second_A]).
+
+%% seat_tuple_to_list({Seat_ID, Flight_ID, Class, _, Window, Aisle, Row, Col, Price, Lock_s}) ->
+%%     [Seat_ID, Flight_ID, 
+%%      Class, Window, Aisle, 
+%%      Row, Col, Price, 
+%%      (case Lock_s of 
+%% 	  0 -> 0;
+%% 	  1 -> 1;
+%% 	  2 -> 1 end)];
+%% seat_tuple_to_list(_) ->
+%%     {error, wrong_format}.
+
+%% admin_seat_tuple_to_list({Seat_ID, Flight_ID, Class, User, Window, Aisle, Row, Col, Price, Lock_s}) ->
+%%     [Seat_ID, Flight_ID, 
+%%      Class, User, Window, Aisle, 
+%%      Row, Col, Price, Lock_s];
+%% admin_seat_tuple_to_list(_) ->
+%%     {error, wrong_format}.
 
 
 
@@ -289,21 +320,21 @@ tuple_to_list_test() ->
 		 {"C2",  2, 2, "Andreas", 0, 0, 2,  "C", 1200, 1}],
 
     ?assertMatch([2, "ARN", "Arlanda Airport"], 
-		 airport_tuple_to_list(Airport_A)),
+		 flatten_tuples_to_list(Airport_A)),
 
     ?assertMatch([3, 2, "ARN", "Arlanda Airport", 3, "LAX", "Los Angeles International Airport", 2015, 05, 21, 13, 25, 00],
-		 basic_flight_tuple_to_list({3, Airport_A, Airport_B, {{2015, 05, 21},{13, 25, 00}}})),
+		 flatten_tuples_to_list({3, Airport_A, Airport_B, {{2015, 05, 21},{13, 25, 00}}})),
 
 
     ?assertMatch(["A32", 2, 1, 1, 0, 32, "A", 500, 1],
-		 seat_tuple_to_list(hd(Seat_list))),
+		 flatten_tuples_to_list(hd(Seat_list))),
 
     ?assertMatch(["A32", 2, 1, "Carl", 1, 0, 32, "A", 500, 2],
-		 admin_seat_tuple_to_list(hd(Seat_list))),
+		 flatten_tuples_to_list(hd(Seat_list))),
 
     ?assertMatch([3, 2, "ARN", "Arlanda Airport", 3, "LAX", "Los Angeles International Airport", "A32", 2, 1, 1, 0, 32, "A", 500, 1, "B32", 2, 1, 0, 1, 32, "B", 500, 0, "C2", 2, 2, 0, 0, 2, "C", 1200, 1, 2015, 5, 21, 13, 25, 0, 2015, 5, 22, 1, 21, 12],
-       flight_tuple_to_list({3, Airport_A, Airport_B, Seat_list, {{2015, 05, 21},{13, 25, 00}}, {{2015, 05, 22},{01, 21, 12}}})),
+       flatten_tuples_to_list({3, Airport_A, Airport_B, Seat_list, {{2015, 05, 21},{13, 25, 00}}, {{2015, 05, 22},{01, 21, 12}}})),
 
     ?assertMatch([3, 2, "ARN", "Arlanda Airport", 3, "LAX", "Los Angeles International Airport", "A32", 2, 1, "Carl", 1, 0, 32, "A", 500, 2, "B32", 2, 1, "Carl", 0, 1, 32, "B", 500, 0, "C2", 2, 2, "Andreas", 0, 0, 2, "C", 1200, 1, 2015, 5, 21, 13, 25, 0, 2015, 5, 22, 1, 21, 12],
-       admin_flight_tuple_to_list({3, Airport_A, Airport_B, Seat_list, {{2015, 05, 21},{13, 25, 00}}, {{2015, 05, 22},{01, 21, 12}}})).
+       flatten_tuples_to_list({3, Airport_A, Airport_B, Seat_list, {{2015, 05, 21},{13, 25, 00}}, {{2015, 05, 22},{01, 21, 12}}})).
 

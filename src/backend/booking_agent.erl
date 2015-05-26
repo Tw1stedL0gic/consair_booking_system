@@ -32,17 +32,17 @@ login(Username, Password) ->
 	true ->
 	    case Password =:= Pass of
 		true->
-		    case Ulvl =:= 1 of
+		    case Ulvl =:= 2 of
 			true ->
-			    admin;
+			    {ok, admin};
 			false ->
-			    user
+			    {ok, user}
 		    end;
 		false->
-		    wrong_password
+		    {error, login_failed} %% Wrong pass
 	    end;
 	false ->
-	    not_a_user
+	    {error, login_failed} %% No such user
     end.
 
 %%---------------------------------------------------------------------%%
@@ -86,7 +86,7 @@ disconnect(Username) ->
 %%           {101, "LAX", "Los Angeles International Airport"}]}
 %% DONE SEE get_database:get_airport_from_db()
 airport_list() ->
-    get_database:get_airport_form_db().
+    get_database:get_airport_from_db().
     
 
 %% In case of departure airport, return all airports which that airport
@@ -275,8 +275,20 @@ start_booking(User, Seat_id) ->
     {_,[{_,User_id,_,_,_,_}]} = get_database:get_user_from_db(User),
     get_database:update_seat_lock(Seat_id,1),
     get_database:update_seat_user(Seat_id,User_id),
+    %% timer:sleep(000)
+    %% case get seat user_id
+    %%    User -> ok
+    %%    - -> Åerror
+    timer:sleep(1000),
+    Check = get_dabase:get_filter_seats_from_user_id(User_id),
+    case Check of
+	{ok,[]} ->
+	    {error,seat_booked};
+	{_,[{_,_,_,_,_,_,_,_,_,_,_}]}->
+	    ok
+    end,
     ok.
-   
+
 
 %%---------------------------------------------------------------------%%
 
@@ -295,7 +307,7 @@ receipt(user) ->
 %%---------------------------------------------------------------------%%
 
 abort_booking(User) ->
-%%gets the user_id from the user database    
+    %%gets the user_id from the user database    
     {_,[{_,User_id,_,_,_,_}]} = get_database:get_user_from_db(User),
     get_database:rollback_booking(User_id),    
     ok. 

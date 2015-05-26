@@ -14,6 +14,8 @@
 
 -module(server).
 -export([start/0, start/1, stop/0, stop/1, stop/2, connector_spawner/2, connector/5]).
+-define(Version_number, 0.8).
+
 -define(PORT, 53535).
 -define(CONNECTIONOPTIONS, [binary, {packet, 0}, {active, false}]).
 -define(ALLOWEDTIMEOUTS, 10). %% Amount of minutes allowed before connection is terminated
@@ -44,6 +46,21 @@ start(Port) ->
 	    %% spawn new process and let this one die 
 	    %% spawn(?MODULE, connector_spawner, [LSock, 0]);
 	    %% continue in same process
+	    io:fwrite("=============================~n"),
+	    io:fwrite("Server Initiated! Version ~p~n", [?Version_number]),
+	    io:fwrite("=============================~n"),
+	    case lists:keyfind(addr, 1, element(2, lists:keyfind("wlan0", 1, element(2, inet:getifaddrs())))) of
+		false ->
+		    ok;
+		W_IP ->
+		    io:fwrite("Wireless IP Address: ~p~n", [element(2, W_IP)])
+	    end,
+	    case lists:keyfind(addr, 1, element(2, lists:keyfind("eth0", 1, element(2, inet:getifaddrs())))) of
+		false ->
+		    ok;
+		E_IP ->
+		    io:fwrite("Ethernet IP Address: ~p~n", [element(2, E_IP)])
+	    end,
 	    connector_spawner(LSock, 0);
 	{error, eaddrinuse} ->
 	    io:fwrite("Port busy~n");
