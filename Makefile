@@ -1,8 +1,8 @@
 ERLC_FLAGS=-Wall
 
-SOURCES=$(wildcard src/*.erl src/backend/*.erl)
+SOURCES=$(wildcard src/*.erl src/backend/*.erl src/DatabaseBackend/*.erl)
 
-HEADERS=$(wildcard src/*.hrl src/backend/*.hrl)
+HEADERS=$(wildcard src/*.hrl src/backend/*.hrl src/DatabaseBackend/*.hrl)
 
 OBJECTS:=$(SOURCES:src/%.erl=ebin/%.beam)
 
