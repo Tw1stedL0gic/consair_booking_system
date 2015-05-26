@@ -49,7 +49,18 @@ start(Port) ->
 	    io:fwrite("=============================~n"),
 	    io:fwrite("Server Initiated! Version ~p~n", [?Version_number]),
 	    io:fwrite("=============================~n"),
-	    io:fwrite("IP Address: ~p~n", [element(2, lists:keyfind(addr, 1, element(2, lists:keyfind("wlan0", 1, element(2, inet:getifaddrs())))))]),
+	    case lists:keyfind(addr, 1, element(2, lists:keyfind("wlan0", 1, element(2, inet:getifaddrs())))) of
+		false ->
+		    ok;
+		W_IP ->
+		    io:fwrite("Wireless IP Address: ~p~n", [element(2, W_IP)])
+	    end,
+	    case lists:keyfind(addr, 1, element(2, lists:keyfind("eth0", 1, element(2, inet:getifaddrs())))) of
+		false ->
+		    ok;
+		E_IP ->
+		    io:fwrite("Wireless IP Address: ~p~n", [element(2, E_IP)])
+	    end,
 	    connector_spawner(LSock, 0);
 	{error, eaddrinuse} ->
 	    io:fwrite("Port busy~n");
