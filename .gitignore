@@ -3,4 +3,5 @@
 *.idea/
 *.iml
 *target/
-src/BookingGUI/dependency-reduced-pom.xml
+dependency-reduced-pom.xml
+ebin/
