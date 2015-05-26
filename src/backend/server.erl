@@ -59,7 +59,7 @@ start(Port) ->
 		false ->
 		    ok;
 		E_IP ->
-		    io:fwrite("Wireless IP Address: ~p~n", [element(2, E_IP)])
+		    io:fwrite("Ethernet IP Address: ~p~n", [element(2, E_IP)])
 	    end,
 	    connector_spawner(LSock, 0);
 	{error, eaddrinuse} ->
