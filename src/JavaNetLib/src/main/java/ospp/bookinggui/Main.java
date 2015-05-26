@@ -1,3 +1,5 @@
+package ospp.bookinggui;
+
 import ospp.bookinggui.exceptions.MalformedMessageException;
 import ospp.bookinggui.logging.ConsoleFormatter;
 import ospp.bookinggui.networking.Mailbox;
@@ -13,7 +15,7 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class InitiateAdapter {
+public class Main {
 
 	private static final Logger root_logger = Logger.getLogger("");
 
