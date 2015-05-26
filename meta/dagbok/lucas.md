@@ -127,7 +127,9 @@ Mer jobb på meddelandena.
 
 ## Vecka 22
 
-##### Måndag
+##### Måndag - Arbetstid: ~6-7 timmar
+Arbetade mer på testning och meddelandetolkning.
+Vi började även testa anslutning mellan biblioteket och servern med bra resultat.
 
 ##### Tisdag
 
