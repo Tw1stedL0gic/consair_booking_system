@@ -8,13 +8,14 @@ import ospp.bookinggui.networking.messages.ErrorMsg;
 import ospp.bookinggui.networking.runnables.PacketListener;
 
 import java.io.ByteArrayInputStream;
+import java.io.UnsupportedEncodingException;
 
 import static org.junit.Assert.*;
 
 public class TestPacketListener {
 
 	@Test(timeout = 500)
-	public void testOne() {
+	public void testOne() throws UnsupportedEncodingException {
 		ByteArrayInputStream input = new ByteArrayInputStream("1&1337&yo&lo&".getBytes());
 
 		Mailbox<Message> mailbox = new Mailbox<>();
@@ -35,7 +36,7 @@ public class TestPacketListener {
 	}
 
 	@Test(timeout = 500)
-	public void testFail1() {
+	public void testFail1() throws UnsupportedEncodingException {
 		ByteArrayInputStream input = new ByteArrayInputStream("1&1337&".getBytes());
 
 		Mailbox<Message> mailbox = new Mailbox<>();
