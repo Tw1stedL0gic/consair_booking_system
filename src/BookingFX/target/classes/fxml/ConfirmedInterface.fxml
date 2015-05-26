@@ -16,7 +16,7 @@
     </stylesheets> 
 
     <children>
-      <Text fill="WHITE" layoutY="191.0" rotate="-9.5" strokeType="OUTSIDE" strokeWidth="0.0" text="Thanks for using Cons Air" textAlignment="CENTER" AnchorPane.bottomAnchor="200.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="53.1884765625" AnchorPane.topAnchor="100.0">
+      <Text fill="WHITE" layoutY="191.0" rotate="-9.5" strokeType="OUTSIDE" strokeWidth="0.0" text="Thank you for using Cons Air" textAlignment="CENTER" AnchorPane.bottomAnchor="200.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="53.1884765625" AnchorPane.topAnchor="100.0">
          <font>
             <Font size="29.0" />
          </font></Text>
