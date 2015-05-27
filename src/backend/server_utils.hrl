@@ -1,7 +1,14 @@
--import(server_utils, [translate_package/1, now_as_string_millis/0, list_to_regexp/2, flatten_tuples_to_list/1, connect_send_and_receive_manual/2, connect_send_and_receive/2, connect_send_and_receive_list/2]).
+-import(server_utils, [translate_package/1, now_as_string_millis/0, list_to_regexp/2, flatten_tuples_to_list/1, connect_send_and_receive_manual/2, connect_send_and_receive/2, connect_send_and_receive_list/2, reload_code/0,reload_code/1, stop_server/0, stop_server/1]).
 
 -define(REG_EXP_SEPERATOR, "&"). %% must be enclosed in quotes
+
+
+
+
+-define(PORT, 53535).
 -define(CONNECTIONOPTIONS, [binary, {packet, 0}, {active, false}]).
+-define(ALLOWEDTIMEOUTS, 10). %% Amount of minutes allowed before connection is terminated
+-define(ADMIN_ALLOWEDTIMEOUTS, 20). %% Amount of minutes allowed before admin connection is terminated
 
 
 
@@ -28,6 +35,7 @@
 -define(TERMINATE_SERVER,             24).
  
 -define(HEARTBEAT,                    25).
+-define(RELOAD_CODE,                  26).
 -define(REQSeatLock,                 100).
 -define(RESPSeatLock,                101).
 

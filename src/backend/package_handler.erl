@@ -147,6 +147,9 @@ handle_package({?ABORT_BOOK, _Message}, _User) ->
 handle_package({?TERMINATE_SERVER}, admin) ->
     {ok, exit};
 
+handle_package({?RELOAD_CODE}, admin) ->
+    {ok, reload_code};
+
 %%--------------------------------------------------------------%%
 
 handle_package(_, _) ->

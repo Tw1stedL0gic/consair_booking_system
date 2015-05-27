@@ -13,15 +13,9 @@
 %% here is a change
 
 -module(server).
--export([start/0, start/1, stop/0, stop/1, stop/2, connector_spawner/2, connector/5]).
+-export([start/0, start/1, connector_spawner/2, connector/5]).
+-include("server_utils.hrl").
 -define(Version_number, 0.8).
-
--define(PORT, 53535).
--define(CONNECTIONOPTIONS, [binary, {packet, 0}, {active, false}]).
--define(ALLOWEDTIMEOUTS, 10). %% Amount of minutes allowed before connection is terminated
--define(ADMIN_ALLOWEDTIMEOUTS, 20). %% Amount of minutes allowed before admin connection is terminated
--define(Admin_login, <<"1&1&carl&asdasd&\n">>).
--define(Terminate_server, <<"24&1&\n">>).
 
 %%--------------------------------------------------------------%%
 
@@ -71,26 +65,6 @@ start(Port) ->
 
 %%--------------------------------------------------------------%%
 
-stop() ->
-    stop("localhost").
-
-stop(IP) ->
-    stop(IP, ?PORT).
-
-stop(IP, Port) ->
-    case gen_tcp:connect(IP, Port, ?CONNECTIONOPTIONS) of
-	{ok, Sock} ->
-	    gen_tcp:send(Sock, ?Admin_login),
-	    timer:sleep(1000),
-	    gen_tcp:send(Sock, ?Terminate_server);
-	{error, Error} ->
-	    {error, Error}
-    end.
-
-%%--------------------------------------------------------------%%
-
-
-
 %% @doc a spawner for listening processes. will switch between
 %% listening for messages from processes and listening to
 %% attempts to create connections. 
@@ -107,7 +81,12 @@ connector_spawner(LSock, N) ->
 	    gen_tcp:close(LSock);
 	disconnect ->  %% if received terminated -> reduce amount of connections
 	    io:fwrite("*CS* ~p: Connections: ~p | Process terminated~n", [self(), N-1]),
-	    connector_spawner(LSock, N-1)
+	    connector_spawner(LSock, N-1);
+	reload_code ->
+	    code:load_file(server),
+	    code:load_file(server_utils),
+	    code:load_file(package_handler),
+	    code:load_file(booking_agent)
     after 100 ->
 	    %% try connecting to other device for 100ms
 	    case gen_tcp:accept(LSock, 100) of
@@ -164,7 +143,11 @@ connector(Sock, ID, Timeouts, User, Parent_PID) ->
 	    %% case to handle package
 	    case Handled_package of
 		{ok, exit} ->
+       		    io:fwrite("C~p ~p (~p): Exit request~n", [ID, self(), User]),    
 		    Parent_PID ! exit;
+		{ok, reload_code} ->
+       		    io:fwrite("C~p ~p (~p): Code reload request~n", [ID, self(), User]),    
+		    Parent_PID ! reload_code;
 		{ok, {admin, Response}} ->
 		    io:fwrite("C~p ~p (~p): Message send: ~p~n", [ID, self(), User, Response]),    
 		    gen_tcp:send(Sock, Response),
