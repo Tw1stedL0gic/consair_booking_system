@@ -13,7 +13,7 @@ public class Main implements Application {
 
 	public void startup(Display display, Map<String, String> map) throws Exception {
 		BXMLSerializer bxmlSerializer = new BXMLSerializer();
-		window = (Window) bxmlSerializer.readObject(Main.class, "hello.bxml");
+		window = (Window) bxmlSerializer.readObject(Main.class, "/bxml/hello.bxml");
 		window.open(display);
 	}
 
