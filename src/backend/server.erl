@@ -86,7 +86,8 @@ connector_spawner(LSock, N) ->
 	    code:load_file(server),
 	    code:load_file(server_utils),
 	    code:load_file(package_handler),
-	    code:load_file(booking_agent)
+	    code:load_file(booking_agent),
+	    connector_spawner(LSock, N)
     after 100 ->
 	    %% try connecting to other device for 100ms
 	    case gen_tcp:accept(LSock, 100) of
