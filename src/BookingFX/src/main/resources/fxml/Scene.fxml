@@ -1,61 +1,77 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.image.*?>
-<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-<?import java.net.*?>
+<?import javafx.scene.text.Text?>
+<?import java.net.URL?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" id="AnchorPane" fx:id="rootPane" prefHeight="554.0" prefWidth="800.0"
+            xmlns="http://javafx.com/javafx/8" fx:controller="ospp.booking.bookingfx.FXMLController">
+    <stylesheets>
+        <URL value="@styles/Styles.css"/>
+    </stylesheets>
 
-<AnchorPane id="AnchorPane" fx:id="rootPane" prefHeight="554.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ospp.booking.bookingfx.FXMLController">
-<stylesheets>
-    <URL value="@styles/Styles.css" />
-</stylesheets>
-    
     <children>
-        <Label fx:id="label" layoutX="237.0" layoutY="73.0" minHeight="16" minWidth="69" /><VBox layoutX="14.0" layoutY="14.0" prefHeight="138.0" prefWidth="388.0" styleClass="rootPane" stylesheets="@../styles/Styles.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-<children><Text id="head" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 28;" text="Connect to server" wrappingWidth="244.7109375" /><HBox prefHeight="100.0" prefWidth="457.0">
-<children><TextField fx:id="ipField" prefHeight="25.0" prefWidth="178.0" promptText="IP of Erlang server" text="127.0.0.1" HBox.hgrow="ALWAYS" />
-                  <Label alignment="CENTER" ellipsisString=":" prefHeight="25.0" prefWidth="18.0" text=":" textAlignment="CENTER" />
-                  <TextField fx:id="portField" prefHeight="25.0" prefWidth="83.0" promptText="Port" text="53535" />
-        <Button fx:id="button" layoutX="239.0" layoutY="161.0" onAction="#handleButtonAction" prefHeight="25.0" prefWidth="151.0" text="Connect">
-<HBox.margin>
-<Insets left="4.0" />
-</HBox.margin>
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor></Button>
-</children>
-<VBox.margin>
-<Insets />
-</VBox.margin></HBox>
-            <StackPane stylesheets="@../styles/Styles.css">
-               <children>
-                  <ImageView fitHeight="300.0" fitWidth="400.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
-                     <image>
-                        <Image url="@../img/Cons-Air.png" />
-                     </image>
-                  </ImageView>
-                  <TextArea fx:id="textarea" editable="false" layoutX="14.0" layoutY="90.0" opacity="0.76" prefHeight="99999.0" prefWidth="99999.0" style="-fx-text-fill: green;">
-      <VBox.margin>
-      <Insets top="6.0" />
-      </VBox.margin>
-                  </TextArea>
-                  <ProgressIndicator fx:id="loadingIndicator" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="100.0" prefWidth="100.0">
-                     <cursor>
-                        <Cursor fx:constant="WAIT" />
-                     </cursor></ProgressIndicator>
-               </children>
-            </StackPane>
-</children>
-<padding>
-<Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
-</padding></VBox>
+        <Label fx:id="label" layoutX="237.0" layoutY="73.0" minHeight="16" minWidth="69"/>
+        <VBox layoutX="14.0" layoutY="14.0" prefHeight="138.0" prefWidth="388.0" styleClass="rootPane"
+              stylesheets="@../styles/Styles.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+              AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <Text id="head" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 28;"
+                      text="Connect to server" wrappingWidth="244.7109375"/>
+                <HBox prefHeight="100.0" prefWidth="457.0">
+                    <children>
+                        <TextField fx:id="ipField" prefHeight="25.0" prefWidth="178.0" promptText="IP of Erlang server"
+                                   text="127.0.0.1" HBox.hgrow="ALWAYS"/>
+                        <Label alignment="CENTER" ellipsisString=":" prefHeight="25.0" prefWidth="18.0" text=":"
+                               textAlignment="CENTER"/>
+                        <TextField fx:id="portField" prefHeight="25.0" prefWidth="83.0" promptText="Port" text="53535"/>
+                        <Button fx:id="button" layoutX="239.0" layoutY="161.0" onAction="#handleButtonAction"
+                                prefHeight="25.0" prefWidth="151.0" text="Connect">
+                            <HBox.margin>
+                                <Insets left="4.0"/>
+                            </HBox.margin>
+                            <cursor>
+                                <Cursor fx:constant="HAND"/>
+                            </cursor>
+                        </Button>
+                    </children>
+                    <VBox.margin>
+                        <Insets/>
+                    </VBox.margin>
+                </HBox>
+                <StackPane stylesheets="@../styles/Styles.css">
+                    <children>
+                        <ImageView fitHeight="300.0" fitWidth="400.0" pickOnBounds="true" preserveRatio="true"
+                                   StackPane.alignment="CENTER">
+                            <image>
+                                <Image url="@../img/Cons-Air.png"/>
+                            </image>
+                        </ImageView>
+                        <TextArea fx:id="textarea" editable="false" layoutX="14.0" layoutY="90.0" opacity="0.76"
+                                  prefHeight="99999.0" prefWidth="99999.0" style="-fx-text-fill: green;">
+                            <VBox.margin>
+                                <Insets top="6.0"/>
+                            </VBox.margin>
+                        </TextArea>
+                        <ProgressIndicator fx:id="loadingIndicator" maxHeight="-Infinity" maxWidth="-Infinity"
+                                           prefHeight="100.0" prefWidth="100.0">
+                            <cursor>
+                                <Cursor fx:constant="WAIT"/>
+                            </cursor>
+                        </ProgressIndicator>
+                    </children>
+                </StackPane>
+            </children>
+            <padding>
+                <Insets bottom="14.0" left="14.0" right="14.0" top="14.0"/>
+            </padding>
+        </VBox>
     </children>
-   <rotationAxis>
-      <Point3D x="0.3" y="0.5" z="0.3" />
-   </rotationAxis>
+    <rotationAxis>
+        <Point3D x="0.3" y="0.5" z="0.3"/>
+    </rotationAxis>
 </AnchorPane>

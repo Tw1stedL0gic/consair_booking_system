@@ -5,14 +5,14 @@
  */
 package ospp.booking.bookingfx;
 
-import javafx.scene.Node;
-
 /**
- *
  * @author Andreas
  */
-public interface ControlledScreen{
-    public void setScreenParent(ScreenMaster sm);
-    public void onScreen();
-    public void offScreen();
+public interface ControlledScreen {
+
+	public void setScreenParent(ScreenMaster sm);
+
+	public void onScreen();
+
+	public void offScreen();
 }
