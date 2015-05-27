@@ -101,11 +101,11 @@ Jobbade med rapport, presentation och fixade till så att vi kan göra en demons
 ## Vecka 22
 
 ##### Måndag
-
+Jobbade med det sista innan inlämning av rapport. Tidsåtgång 1h
 ##### Tisdag
-
+Förberedde genrep av slutpresentation. Tidsåtgång 1h
 ##### Onsdag
-
+Skrivande av rapport och diskussion om utveckling av GUIt. Tidsåtgång 5h 30 min
 ##### Torsdag
 
 ##### Fredag
