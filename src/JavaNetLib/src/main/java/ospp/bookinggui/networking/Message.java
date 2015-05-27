@@ -144,14 +144,14 @@ public class Message {
 				case REQ_FLIGHT_DETAILS_RESP:
 					return new RequestFlightDetailsRespMsg(timestamp, body);
 
-				case TERMINATE_SERVER:
-					return new TerminateServerMsg(timestamp);
-
 				case REQ_SEAT_SUGGESTION:
 					return new RequestSeatSuggestionMsg(timestamp, body[0]);
 
 				case REQ_SEAT_SUGGESTION_RESP:
 					return new RequestSeatSuggestionRespMsg(timestamp, body);
+
+				case TERMINATE_SERVER:
+					return new TerminateServerMsg(timestamp);
 
 				case REQ_SEAT_MAP:
 				case REQ_SEAT_MAP_RESP:
