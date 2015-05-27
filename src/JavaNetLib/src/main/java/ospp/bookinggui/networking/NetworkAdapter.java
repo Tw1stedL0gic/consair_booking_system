@@ -9,9 +9,21 @@ import java.util.logging.Logger;
 
 public class NetworkAdapter {
 
+	private static final   Logger  logger      = Logger.getLogger(NetworkAdapter.class.getName());
+	/**
+	 * The value of this variable can be used to tell whether or not
+	 * a working connection to the server is established and alive.
+	 * <p/>
+	 * WARNING! You are only allowed to read this value!
+	 * Setting this value to false if it is true can have unpredictable consequences.
+	 */
 	public static volatile boolean isConnected = false;
 
-	private static final Logger logger = Logger.getLogger(NetworkAdapter.class.getName());
+	/**
+	 * Determines the timeout for each read call on the underlying InputStream
+	 * from the created socket. If a read on the stream is blocking for a longer period
+	 * than the value of this variable an IOException will be triggered.
+	 */
 	public static int so_timeout_millis = 30000;
 	private final Mailbox<Message> mailbox;
 
