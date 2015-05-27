@@ -1,20 +1,19 @@
 package ospp.pivotgui;
 
+import org.apache.pivot.beans.BXMLSerializer;
 import org.apache.pivot.collections.Map;
-import org.apache.pivot.wtk.*;
+import org.apache.pivot.wtk.Application;
+import org.apache.pivot.wtk.DesktopApplicationContext;
+import org.apache.pivot.wtk.Display;
+import org.apache.pivot.wtk.Window;
 
 public class Main implements Application {
 
 	private Window window = null;
 
 	public void startup(Display display, Map<String, String> map) throws Exception {
-		this.window = new Window();
-
-		Label l = new Label("FooBar");
-
-		window.setContent(l);
-		window.setTitle("FooBar");
-
+		BXMLSerializer bxmlSerializer = new BXMLSerializer();
+		window = (Window) bxmlSerializer.readObject(Main.class, "hello.bxml");
 		window.open(display);
 	}
 
