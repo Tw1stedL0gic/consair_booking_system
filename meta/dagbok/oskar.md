@@ -97,11 +97,13 @@ laggt till kommentarer till filerna som jag har jobbat med.
 ## Vecka 22
 
 ##### Måndag
-
+Fixade med slids tills tisdagen och fixade lite buggar så demo skulle funka till redovisningen
 ##### Tisdag
-
+Tränat med slidsen och forsätt med buggfix inför Presentation
+efter pres så gick jag igenom kod för servern med Carl och buggfixade.
+Gjorde om i makefilen och gjorde om i repot för bättre struktur.
 ##### Onsdag
-
+Gjort populerings script till MySQL servern för att lägga upp större volymer av data, bugg fixade lite med sql frågor. 
 ##### Torsdag
 
 ##### Fredag
