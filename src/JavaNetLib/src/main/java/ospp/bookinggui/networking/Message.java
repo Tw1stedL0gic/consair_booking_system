@@ -181,8 +181,7 @@ public class Message {
 
 	private static long retrieveTimestamp(String[] parts) throws MalformedMessageException {
 		try {
-			long timestamp = Long.valueOf(parts[1]);
-			return timestamp;
+			return Long.valueOf(parts[1]);
 		}
 		catch(NumberFormatException e) {
 			throw new MalformedMessageException("The timestamp is not a valid long!");
@@ -191,8 +190,7 @@ public class Message {
 
 	private static MessageType retrieveType(String[] parts) throws MalformedMessageException {
 		try {
-			MessageType type = MessageType.getType(Integer.valueOf(parts[0]));
-			return type;
+			return MessageType.getType(Integer.valueOf(parts[0]));
 		}
 		catch(NumberFormatException e) {
 			throw new MalformedMessageException("The message ID is not an integer!");
