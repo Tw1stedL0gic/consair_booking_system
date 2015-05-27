@@ -15,6 +15,7 @@
 -module(server).
 -export([start/0, start/1, connector_spawner/2, connector/5]).
 -include("server_utils.hrl").
+-include_lib("eunit/include/eunit.hrl").
 -define(Version_number, 0.8).
 
 %%--------------------------------------------------------------%%
@@ -83,10 +84,12 @@ connector_spawner(LSock, N) ->
 	    io:fwrite("*CS* ~p: Connections: ~p | Process terminated~n", [self(), N-1]),
 	    connector_spawner(LSock, N-1);
 	reload_code ->
-	    code:load_file(server),
 	    code:load_file(server_utils),
+	    code:purge(server_utils),
 	    code:load_file(package_handler),
+	    code:purge(package_handler),
 	    code:load_file(booking_agent),
+	    code:purge(booking_agent),
 	    connector_spawner(LSock, N)
     after 100 ->
 	    %% try connecting to other device for 100ms
@@ -150,12 +153,12 @@ connector(Sock, ID, Timeouts, User, Parent_PID) ->
        		    io:fwrite("C~p ~p (~p): Code reload request~n", [ID, self(), User]),    
 		    Parent_PID ! reload_code;
 		{ok, {admin, Response}} ->
-		    io:fwrite("C~p ~p (~p): Message send: ~p~n", [ID, self(), User, Response]),    
+		    io:fwrite("C~p ~p (~p): Message sent: ~p~n", [ID, self(), User, Response]),    
 		    gen_tcp:send(Sock, Response),
 		    io:fwrite("C~p ~p (~p): Logged in as Admin~n", [ID, self(), User]),
 		    connector(Sock, ID, 0, admin, Parent_PID);
 		{ok, {New_user, Response}} ->
-		    io:fwrite("C~p ~p (~p): Message send: ~p~n", [ID, self(), User, Response]),    
+		    io:fwrite("C~p ~p (~p): Message sent: ~p~n", [ID, self(), User, Response]),    
 		    gen_tcp:send(Sock, Response),
 		    io:fwrite("C~p ~p (~p): Logged in as ~p~n", [ID, self(), User, New_user]),
 		    connector(Sock, ID, 0, New_user, Parent_PID);
@@ -167,3 +170,37 @@ connector(Sock, ID, Timeouts, User, Parent_PID) ->
 		    Parent_PID ! {error, Error}
 	    end
     end.	  
+
+
+
+
+%%--------------------------------------------------------------%%
+%%TESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTE%%
+%%--------------------------------------------------------------%%
+
+%% startup_test() ->
+
+%%     %% open
+%%     spawn(server, start, [?PORT]),
+    
+%%     ?assertMatch({error, eaddrinuse}, server:start(?PORT)), 
+%%     %% fail opening on already open port
+%%     %% ?assertMatch({error, eaddrinuse}, server:start()), 
+%%     %% close
+%%     ?assertMatch(ok, server:stop()).
+   
+no_server_test() ->
+    %% send before opening
+    ?assertMatch({error, econnrefused}, connect_send_and_receive({?HEARTBEAT}, ?PORT)),
+    ?assertMatch({error, econnrefused}, connect_send_and_receive({?HEARTBEAT}, ?ALT_PORT)).
+
+login_test() ->
+    %% login
+    ?assertMatch({ok, _}, connect_send_and_receive({?LOGIN, ["fake", "user"]},   ?ALT_PORT)),
+    ?assertMatch({ok, _}, connect_send_and_receive({?LOGIN, ["carl", "asdasd"]}, ?ALT_PORT)),
+    ?assertMatch({ok, _}, connect_send_and_receive({?LOGIN, ["pelle", "asd"]},   ?ALT_PORT)),
+    
+    
+    
+    server:stop().
+     

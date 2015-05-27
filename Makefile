@@ -1,18 +1,26 @@
 ERLC_FLAGS=-Wall
 
-SOURCES=$(wildcard src/*.erl src/backend/*.erl src/DatabaseBackend/*.erl)
+DIRECTORIES=src/ src/backend/ src/DatabaseBackend/
 
-HEADERS=$(wildcard src/*.hrl src/backend/*.hrl src/DatabaseBackend/*.hrl)
+SOURCES=$(wildcard $(DIRECTORIES:/=/*.erl))
 
-OBJECTS:=$(SOURCES:src/%.erl=ebin/%.beam)
+HEADERS=$(wildcard $(DIRECTORIES)*.hrl)
+
+BEAMS:=$(addprefix ebin/, $(notdir $(SOURCES:.erl=.beam)))
 
 APPNAME= ConsAir_Bookingsystem
 
 .PHONY: doc doc_url skeleton start_server
 
-all: $(OBJECTS)
+all: $(BEAMS)
 
-ebin/%.beam: src/%.erl 
+ebin/%.beam: src/%.erl
+	erlc $(ERLC_FLAGS) -o ebin/ $<
+
+ebin/%.beam: src/backend/%.erl
+	erlc $(ERLC_FLAGS) -o ebin/ $<
+
+ebin/%.beam: src/DatabaseBackend/%.erl
 	erlc $(ERLC_FLAGS) -o ebin/ $<
 
 clean:
@@ -29,8 +37,11 @@ doc_url:
 	@echo "EDoc index page available at file://$(PWD)/doc/index.html"
 	@echo
 
-start_server: all
-	erl -pa ebin/ -s server -s init stop -noshell
+start_server: all server-messages/current-session
+
+server-messages/current-session:
+	gnome-terminal -x sh -c "erl -pa ebin/ -s server -s init stop -noshell | tee server-messages/current-session; bash;"
+	./server-messages/save-session
 
 stop_server: all
 	erl -pa ebin/ -s server_utils stop_server -s init stop -noshell
@@ -57,6 +68,10 @@ test: $(OBJECTS)
 
 testv: $(OBJECTS)
 	erl -noshell -pa ebin -eval 'eunit:test([$(OBJECTS_LIST)], [verbose])' -s init stop
+
+test_server: ebin/server.beam start_server
+	erl -noshell -pa ebin -eval "eunit:test(server, [])" -s init stop
+	erl -pa ebin/ -s server_utils stop_server -s init stop -noshell	
 
 test_%: ebin/%.beam
 	erl -noshell -pa ebin -eval "eunit:test($(subst test_,, $@), [])" -s init stop

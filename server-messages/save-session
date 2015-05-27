@@ -1,0 +1,2 @@
+_now=$(date +"%y-%m-%d-%H-%M-%S")
+mv server-messages/current-session server-messages/$_now

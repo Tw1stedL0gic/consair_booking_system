@@ -37,7 +37,7 @@ handle_package({?LOGIN, [Username, Password]}, User) -> %% ID 1 - Handshake
     end;
   
 handle_package({?HEARTBEAT}, User) -> 
-    {User, translate_package({?HEARTBEAT})}; 
+    {ok, translate_package({?HEARTBEAT})}; 
 
 handle_package({?DISCONNECT}, User) -> 
     case logout(User) of
