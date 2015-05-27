@@ -33,7 +33,10 @@ start_server: all
 	erl -pa ebin/ -s server -s init stop -noshell
 
 stop_server: all
-	erl -pa ebin/ -s server stop -s init stop -noshell
+	erl -pa ebin/ -s server_utils stop_server -s init stop -noshell
+
+reload_code: all
+	erl -pa ebin/ -s server_utils reload_code -s init stop -noshell
 
 client_terminal:
 	java -jar src/JavaNetLib/target/JavaNetLib.jar
