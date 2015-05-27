@@ -1,0 +1,1 @@
+-define(REG_EXP_SEPERATOR, "&"). %% must be enclosed in quotes

@@ -63,7 +63,8 @@ start(Port) ->
 	    end,
 	    connector_spawner(LSock, 0);
 	{error, eaddrinuse} ->
-	    io:fwrite("Port busy~n");
+	    io:fwrite("Port busy~n"),
+	    {error, eaddrinuse};
 	_ ->
 	    {error, could_not_listen}		
     end.
@@ -165,14 +166,17 @@ connector(Sock, ID, Timeouts, User, Parent_PID) ->
 		{ok, exit} ->
 		    Parent_PID ! exit;
 		{ok, {admin, Response}} ->
+		    io:fwrite("C~p ~p (~p): Message send: ~p~n", [ID, self(), User, Response]),    
 		    gen_tcp:send(Sock, Response),
 		    io:fwrite("C~p ~p (~p): Logged in as Admin~n", [ID, self(), User]),
 		    connector(Sock, ID, 0, admin, Parent_PID);
 		{ok, {New_user, Response}} ->
+		    io:fwrite("C~p ~p (~p): Message send: ~p~n", [ID, self(), User, Response]),    
 		    gen_tcp:send(Sock, Response),
 		    io:fwrite("C~p ~p (~p): Logged in as ~p~n", [ID, self(), User, New_user]),
 		    connector(Sock, ID, 0, New_user, Parent_PID);
 		{ok, Response} ->
+		    io:fwrite("C~p ~p (~p): Message send: ~p~n", [ID, self(), User, Response]),    
 		    gen_tcp:send(Sock, Response),
 		    connector(Sock, ID, 0, User, Parent_PID);
 		{error, Error} ->

@@ -14,8 +14,8 @@
 
 startup_test() ->
     %% send before opening
-    ?assertMatch({error, econnrefused}, connect_send_and_receive(<<>>, ?PORT_A)),
-    ?assertMatch({error, econnrefused}, connect_send_and_receive(<<>>, ?PORT_B)),
+    ?assertMatch({error, econnrefused}, connect_send_and_receive({?HEARTBEAT}, ?PORT_A)),
+    ?assertMatch({error, econnrefused}, connect_send_and_receive({?HEARTBEAT}, ?PORT_B)),
 
     %% open
     spawn(server, start, [?PORT_A]),
@@ -28,15 +28,15 @@ startup_test() ->
    
 login_test() ->
     %% send before opening
-    ?assertMatch({error, econnrefused}, connect_send_and_receive(<<>>, ?PORT_A)),
-    ?assertMatch({error, econnrefused}, connect_send_and_receive(<<>>, ?PORT_B)),
+    ?assertMatch({error, econnrefused}, connect_send_and_receive({?HEARTBEAT}, ?PORT_A)),
+    ?assertMatch({error, econnrefused}, connect_send_and_receive({?HEARTBEAT}, ?PORT_B)),
 
     %% open
     spawn(server, start, [?PORT_B]),
-    %% send message
-    ?assertMatch({ok, _}, connect_send_and_receive(<<>>, ?PORT_B)),
-    ?assertMatch({ok, _}, connect_send_and_receive(<<"1&carl&asdasd&\n">>, ?PORT_B)),
-    ?assertMatch({ok, _}, connect_send_and_receive(<<"1&hej&fel&\n">>, ?PORT_B)),
+    %% login
+    ?assertMatch({ok, _}, connect_send_and_receive({?LOGIN, ["fake", "user"]},   ?PORT_B)),
+    ?assertMatch({ok, _}, connect_send_and_receive({?LOGIN, ["carl", "asdasd"]}, ?PORT_B)),
+    ?assertMatch({ok, _}, connect_send_and_receive({?LOGIN, ["pelle", "asd"]},   ?PORT_B)),
     
     
     

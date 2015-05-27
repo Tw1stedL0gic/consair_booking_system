@@ -1,49 +1,10 @@
 -module(package_handler).			
 %-export([handle_package/2]).
 -compile(export_all).
--import(server_utils, [translate_package/1, now_as_string_millis/0, list_to_regexp/2, flatten_tuples_to_list/1]).
+
+-include("server_utils.hrl").
+
 -include_lib("eunit/include/eunit.hrl").
-
--define(RegExpSeperator, "&"). %% Needs to be enclosed in quotes.
-
-%% Package IDs
-%% REQ = Request, RESP = Respond
--define(LOGIN,                         1).
--define(LOGIN_RESP,                    2).
--define(ERROR,                         3).
--define(DISCONNECT,                    4).
--define(INIT_BOOK,                     5).
--define(INIT_BOOK_RESP,                6).
--define(FIN_BOOK,                      7).
--define(FIN_BOOK_RESP,                 8).
--define(ABORT_BOOK,                    9).
--define(REQ_AIRPORTS,                 10).
--define(REQ_AIRPORTS_RESP,            11).
--define(SEARCH_ROUTE,                 12).
--define(SEARCH_ROUTE_RESP,            13).
--define(REQ_FLIGHT_DETAILS,           14).
--define(REQ_FLIGHT_DETAILS_RESP,      15).
--define(REQ_SEAT_SUGGESTION,          16).
--define(RESP_SEAT_SUGGESTION_RESP,    17).
--define(REQ_SEAT_MAP,                 -1).
--define(REQ_SEAT_MAP_RESP,            -1).
--define(TERMINATE_SERVER,             24).
-
--define(Heartbeat,             -1).
--define(REQSeatLock,          100).
--define(RESPSeatLock,         101).
-
-
-
-
-
-
--define(REQReceipt,            17).
--define(RESPReceipt,           18).
-
-
-
-
 
 %% @doc - A package handler which translates the received package from
 %% bitstring to a tuple, calls the appropriate function, and
@@ -75,8 +36,8 @@ handle_package({?LOGIN, [Username, Password]}, User) -> %% ID 1 - Handshake
 	    {ok, translate_package({?LOGIN_RESP, [3]})}
     end;
   
-handle_package({?Heartbeat, _}, _) -> 
-    translate_package(?Heartbeat); 
+handle_package({?HEARTBEAT}, User) -> 
+    {User, translate_package({?HEARTBEAT})}; 
 
 handle_package({?DISCONNECT}, User) -> 
     case logout(User) of
@@ -108,7 +69,7 @@ handle_package({?SEARCH_ROUTE, [Airport_A, Airport_B, Year, Month, Day]}, _) ->
     case booking_agent:flight_details(Airport_A, Airport_B, {Year, Month, Day}) of
 	{ok, Flight_list} ->
 	    {ok, translate_package({?SEARCH_ROUTE_RESP, 
-				    lists:map(flatten_tuples_to_list}, Flight_list)})};
+				    lists:map(flatten_tuples_to_list, Flight_list)})};
 	{error, ERROR} ->
 	    {error, ERROR}
     end;

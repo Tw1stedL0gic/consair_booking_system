@@ -1,10 +1,11 @@
 -module(server_utils).
--export([translate_package/1, now_as_string_millis/0, list_to_regexp/2, flatten_tuples_to_list/1, connect_send_and_receive/2, connect_send_and_receive_list/2]).
+-export([translate_package/1, now_as_string_millis/0, list_to_regexp/2, flatten_tuples_to_list/1, connect_send_and_receive_manual/2, connect_send_and_receive/2, connect_send_and_receive_list/2]).
 -define(REG_EXP_SEPERATOR, "&"). %% must be enclosed in quotes
 -define(CONNECTIONOPTIONS, [binary, {packet, 0}, {active, false}]).
+-define(DISCONNECT, 4).
 
 translate_package({ID}) ->
-    translate_package({ID, [now_as_string_millis()]});
+    list_to_binary(list_to_regexp([integer_to_list(ID) | [now_as_string_millis()]], ?REG_EXP_SEPERATOR));
 translate_package({ID, Message}) ->
     list_to_binary(list_to_regexp([integer_to_list(ID) | [now_as_string_millis() | Message]], ?REG_EXP_SEPERATOR));
 
@@ -16,7 +17,7 @@ translate_package(Message) ->
 	[] -> {list_to_integer(Timestamp), {list_to_integer(Message_ID)}};
 	_  -> {list_to_integer(Timestamp), {list_to_integer(Message_ID), Message_list}}
     end.
-
+    
 now_as_string_millis() ->
     {Mega_S, S, Micro_S} = now(),
     lists:append(lists:append(integer_to_list(Mega_S), integer_to_list(S)), integer_to_list(Micro_S div 1000)).  
@@ -54,19 +55,38 @@ flatten_tuples_to_list([Head | Tuples_list], Acc) ->
 
 
 
-connect_send_and_receive(Message, Port) ->
+connect_send_and_receive_manual(Message, Port) ->
     case gen_tcp:connect("localhost", Port, ?CONNECTIONOPTIONS) of
 	{ok, Sock} ->
 	    gen_tcp:send(Sock, Message),	    
-	    case gen_tcp:recv(Sock, 0, 5000) of
+	    case gen_tcp:recv(Sock, 0, 1000) of
 		{ok, Response} -> 
-		    gen_tcp:send(Sock, <<"4&\n">>),
+		    gen_tcp:send(Sock, translate_package({?DISCONNECT})),
 		    Response;
 		{error, Error} -> 
-		    gen_tcp:send(Sock, <<"4&\n">>),
+		    gen_tcp:send(Sock, translate_package({?DISCONNECT})),
 		    {error, Error};
 		Response -> 
-		    gen_tcp:send(Sock, <<"4&\n">>),
+		    gen_tcp:send(Sock, translate_package({?DISCONNECT})),
+		    Response
+	    end;
+	{error, Error} -> {error, Error}
+    end.
+
+
+connect_send_and_receive(Message, Port) ->
+    case gen_tcp:connect("localhost", Port, ?CONNECTIONOPTIONS) of
+	{ok, Sock} ->
+	    gen_tcp:send(Sock, translate_package(Message)),	    
+	    case gen_tcp:recv(Sock, 0, 1000) of
+		{ok, Response} -> 
+		    gen_tcp:send(Sock, translate_package({?DISCONNECT})),
+		    Response;
+		{error, Error} -> 
+		    gen_tcp:send(Sock, translate_package({?DISCONNECT})),
+		    {error, Error};
+		Response -> 
+		    gen_tcp:send(Sock, translate_package({?DISCONNECT})),
 		    Response
 	    end;
 	{error, Error} -> {error, Error}
@@ -77,10 +97,10 @@ connect_send_and_receive_list([Message_list], Port) ->
 	{ok, Sock} ->
 	    case connect_send_and_receive_list([Message_list], Sock, []) of
 		{ok, Response} ->
-		    gen_tcp:send(Sock, <<"4&\n">>),
+		    gen_tcp:send(Sock, translate_package({?DISCONNECT})),
 		    Response;
 		{error, Error} ->
-		    gen_tcp:send(Sock, <<"4&\n">>),
+		    gen_tcp:send(Sock, translate_package({?DISCONNECT})),
 		    {error, Error}
 	    end;
 	{error, Error} -> 
@@ -90,9 +110,9 @@ connect_send_and_receive_list([Message_list], Port) ->
 connect_send_and_receive_list([], _, Acc) ->
     {ok, Acc};
 
-connect_send_and_receive_list([Message | Message_list], Sock, Acc) ->
-    gen_tcp:send(Sock, Message),
-    case gen_tcp:recv(Sock, 0, 5000) of
+connect_send_and_receive_list([{ID, Message} | Message_list], Sock, Acc) ->
+    gen_tcp:send(Sock, translate_package({ID, Message})),
+    case gen_tcp:recv(Sock, 0, 1000) of
 	{error, Error} -> 
 	    {error, Error};
 	{ok, Response} -> 
