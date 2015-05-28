@@ -39,7 +39,7 @@
         <dependency>
             <groupId>ospp</groupId>
             <artifactId>javanetlib</artifactId>
-            <version>1.0</version>
+            <version>0.1-ALPHA</version>
         </dependency>
     </dependencies>
 
