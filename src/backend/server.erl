@@ -220,19 +220,20 @@ one_of_each_message_test() ->
     ?assertMatch({ok, _}, connect_send_and_receive({?REQ_SEAT_MAP,             []},   ?PORT)),
     ?assertMatch({ok, _}, connect_send_and_receive({?TERMINATE_SERVER,         []},   ?PORT)).
     
-%% sequential_stress_test() ->
-%%     Login_info_list = [[User, Pass] || User <- ["Carl", "Lucas", "Oskar", "Erik", "Andreas", "Wentin"], Pass <- ["hej", "hehe", "asd", "asdasd", "rp", "asd"]],
-%%     [?assertMatch({ok, _}, connect_send_and_receive({?LOGIN, Login_info},   ?PORT)) || Login_info <- Login_info_list].
+sequential_stress_test() ->
+    Login_info_list = [[User, Pass] || User <- ["Carl", "Lucas", "Oskar", "Erik", "Andreas", "Wentin"], Pass <- ["hej", "hehe", "asd", "asdasd", "rp", "asd"]],
+    [?assertMatch({ok, _}, connect_send_and_receive({?LOGIN, Login_info},   ?PORT)) || Login_info <- Login_info_list].
 
-%% concurrent_stress_test() ->
-%%     Login_info_list = [[User, Pass] || User <- ["Carl", "Lucas", "Oskar", "Erik", "Andreas", "Wentin"], Pass <- ["hej", "hehe", "asd", "asdasd", "rp", "asd"]],
-%%     ParentPID = self(),
-%%     [spawn(fun() -> 
-%% 		   ParentPID ! server_utils:connect_send_and_receive({?LOGIN, Login_info}, ?PORT) end) ||
-%% 	Login_info <- Login_info_list],
-%%     [?assertMatch({ok, _}, Answer) || Answer <- [receive X -> X end || _ <- Login_info_list]].
+concurrent_stress_test() ->
+    Login_info_list = [[User, Pass] || User <- ["Carl", "Lucas", "Oskar", "Erik", "Andreas", "Wentin"], Pass <- ["hej", "hehe", "asd", "asdasd", "rp", "asd"]],
+    ParentPID = self(),
+    [spawn(fun() -> 
+		   ParentPID ! server_utils:connect_send_and_receive({?LOGIN, Login_info}, ?PORT) end) ||
+	Login_info <- Login_info_list],
+    [?assertMatch({ok, _}, Answer) || Answer <- [receive X -> X end || _ <- Login_info_list]].
 
-stop_test() ->    
+stop_te
+st() ->    
     server_utils:stop_server().
      
 no_server_test() ->
