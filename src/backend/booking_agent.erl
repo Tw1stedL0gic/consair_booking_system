@@ -26,23 +26,23 @@
 %% Ouput: Failed or user level (error, user, admin)
 %% Done need som patternmatching to make it work, 1 for admin 0 not admin,[] - no user. 
 login(Username, Password) ->
-    {_,[{_,_,Name,Pass,Ulvl,_}]} = get_database:get_user_from_db(Username),
+    {_,User_list} = get_database:get_user_from_db(Username),
 
-    case Username =:= Name of
-	true ->
-	    case Password =:= Pass of
-		true->
-		    case Ulvl =:= 2 of
-			true ->
+    case User_list of
+	[] ->
+	    {error, no_such_user}; %% No such user
+	[{_,_,_,Pass,Ulvl,_}] ->
+	    case Pass of
+		Password->
+		    case Ulvl of
+			2 ->
 			    {ok, admin};
-			false ->
+			1 ->
 			    {ok, user}
 		    end;
-		false->
-		    {error, login_failed} %% Wrong pass
-	    end;
-	false ->
-	    {error, login_failed} %% No such user
+		_ ->
+		    {error, wrong_password} %% Wrong pass
+	    end
     end.
 
 %%---------------------------------------------------------------------%%
