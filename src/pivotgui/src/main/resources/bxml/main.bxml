@@ -1,5 +1,13 @@
-<Window title="Hello BXML!" maximized="true"
+<Window title="Pivot GUI" maximized="true"
         xmlns:bxml="http://pivot.apache.org/bxml"
         xmlns="org.apache.pivot.wtk">
-    <Label text="Hello BXML!" styles="{font:'Arial bold 24', color:'#ff0000', horizontalAlignment:'center', verticalAlignment:'center'}"/>
+    <BoxPane>
+        <Form>
+            <Form.Section heading="Please enter URL and port">
+                <TextInput bxml:id="url" prompt="URL"/>
+                <TextInput bxml:id="port" prompt="Port"/>
+                <PushButton bxml:id="connectButton" buttonData="Connect"/>
+            </Form.Section>
+        </Form>
+    </BoxPane>
 </Window>
