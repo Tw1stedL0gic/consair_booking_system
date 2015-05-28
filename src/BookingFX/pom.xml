@@ -112,10 +112,5 @@
             <version>0.1-ALPHA</version>
             <type>jar</type>
         </dependency>
-        <dependency>
-            <groupId>javafx</groupId>
-            <artifactId>javafx</artifactId>
-            <version>1.0</version>
-        </dependency>
     </dependencies>
 </project>
