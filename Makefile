@@ -40,8 +40,7 @@ doc_url:
 start_server: all server-messages/current-session
 
 server-messages/current-session:
-	gnome-terminal -x sh -c "erl -pa ebin/ -s server -s init stop -noshell | tee server-messages/current-session; bash;"
-	./server-messages/save-session
+	gnome-terminal -x sh -c "erl -pa ebin/ -s server -s init stop -noshell | tee server-messages/current-session; ./server-messages/save-session; bash;"
 
 stop_server: all
 	erl -pa ebin/ -s server_utils stop_server -s init stop -noshell
@@ -69,7 +68,7 @@ test: $(OBJECTS)
 testv: $(OBJECTS)
 	erl -noshell -pa ebin -eval 'eunit:test([$(OBJECTS_LIST)], [verbose])' -s init stop
 
-test_server: ebin/server.beam start_server
+test_server: ebin/server.beam start_server server-messages/current-session
 	erl -noshell -pa ebin -eval "eunit:test(server, [])" -s init stop
 	erl -pa ebin/ -s server_utils stop_server -s init stop -noshell	
 
