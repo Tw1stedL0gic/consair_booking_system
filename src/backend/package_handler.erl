@@ -32,19 +32,28 @@ handle_package({?LOGIN, [Username, Password]}, User) -> %% ID 1 - Handshake
 	{ok, admin} ->
 	    logout(User),
 	    {ok, {admin, translate_package({?LOGIN_RESP, [2]})}};
-	{error, login_failed} ->
-	    {ok, translate_package({?LOGIN_RESP, [3]})}
+	{error, no_such_user} ->
+	    {ok, translate_package({?LOGIN_RESP, [3]})};
+	{error, wrong_password} ->
+	    {ok, translate_package({?LOGIN_RESP, [3]})};
+	{error, Error} ->
+	    {error, Error}
     end;
   
-handle_package({?HEARTBEAT}, User) -> 
+handle_package({?HEARTBEAT}, _) -> 
     {ok, translate_package({?HEARTBEAT})}; 
 
 handle_package({?DISCONNECT}, User) -> 
-    case logout(User) of
-	ok ->
+    case User of
+	null ->
 	    {ok, disconnect};
-	{error, Error} ->
-	    {error, Error}
+	_ ->
+	    case logout(User) of
+		ok ->
+		    {ok, disconnect};
+		{error, Error} ->
+		    {error, Error}
+	    end
     end;
 
 %%--------------------------------------------------------------%%
