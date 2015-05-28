@@ -1,5 +1,5 @@
 -module(server_utils).
--export([translate_package/1, now_as_string_millis/0, list_to_regexp/2, flatten_tuples_to_list/1, connect_send_and_receive_manual/2, connect_send_and_receive_manual/3, connect_send_and_receive/2, connect_send_and_receive/3, connect_send_and_receive_list/2, connect_send_and_receive_list/3, reload_code/0,reload_code/1, stop_server/0, stop_server/1]).
+-export([translate_package/1, now_as_string_millis/0, list_to_regexp/2, flatten_tuples_to_list/1, connect_send_and_receive_manual/2, connect_send_and_receive_manual/3, connect_send_and_receive/2, connect_send_and_receive/3, connect_send_and_receive_list/2, connect_send_and_receive_list/3, reload_code/0,reload_code/1, stop_server/0, stop_server/1,format_position_as_mod/2, format_position_as_mod/4, fill_with_white_space/2]).
 -define(REG_EXP_SEPERATOR, "&"). %% must be enclosed in quotes
 -define(PORT, 53535).
 -define(CONNECTIONOPTIONS, [binary, {packet, 0}, {active, false}]).
@@ -67,6 +67,34 @@ flatten_tuples_to_list([Head | Tuples_list], Acc) ->
 
 %%---------------------------------------------------------------------%%
 
+format_position_as_mod(N, Mod) ->
+    format_position_as_mod(N, Mod, $-, $x).
+
+format_position_as_mod(N, Mod, CharA, CharB) ->
+    format_position_as_mod(N, Mod, CharA, CharB, []).
+
+format_position_as_mod(_, Mod, _, _, Acc) when length(Acc) =:= Mod ->
+    Acc;
+
+format_position_as_mod(-1, Mod, CharA, CharB, Acc) ->
+    format_position_as_mod(0, Mod, CharB, CharA, Acc);
+
+format_position_as_mod(N, Mod, CharA, CharB, Acc) ->
+    Position = length(Acc) + 1,
+    case (((N-1) rem Mod) + 1) of
+	Position ->
+	    format_position_as_mod(N, Mod, CharA, CharB, lists:append(Acc, [CharB]));
+	_ ->
+	    format_position_as_mod(N, Mod, CharA, CharB, lists:append(Acc, [CharA]))
+    end.
+	
+%%---------------------------------------------------------------------%%
+
+fill_with_white_space(String, N) ->	
+    lists:append(String, [$  || _ <- lists:seq(1,N-length(String))]).  
+
+%%---------------------------------------------------------------------%%
+
 connect_send_and_receive_manual(Message, Port) ->
     connect_send_and_receive_manual(Message, "localhost", Port).
 
@@ -77,13 +105,13 @@ connect_send_and_receive_manual(Message, IP, Port) ->
 	    case gen_tcp:recv(Sock, 0, 1000) of
 		{ok, Response} -> 
 		    gen_tcp:send(Sock, translate_package({?DISCONNECT})),
-		    Response;
+		    {ok, Response};
 		{error, Error} -> 
 		    gen_tcp:send(Sock, translate_package({?DISCONNECT})),
 		    {error, Error};
 		Response -> 
 		    gen_tcp:send(Sock, translate_package({?DISCONNECT})),
-		    Response
+		    {ok, Response}
 	    end;
 	{error, Error} -> {error, Error}
     end.
@@ -98,13 +126,13 @@ connect_send_and_receive(Message, IP, Port) ->
 	    case gen_tcp:recv(Sock, 0, 1000) of
 		{ok, Response} -> 
 		    gen_tcp:send(Sock, translate_package({?DISCONNECT})),
-		    Response;
+		    {ok, Response};
 		{error, Error} -> 
 		    gen_tcp:send(Sock, translate_package({?DISCONNECT})),
 		    {error, Error};
 		Response -> 
 		    gen_tcp:send(Sock, translate_package({?DISCONNECT})),
-		    Response
+		    {ok, Response}
 	    end;
 	{error, Error} -> {error, Error}
     end.

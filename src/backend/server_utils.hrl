@@ -1,4 +1,4 @@
--import(server_utils, [translate_package/1, now_as_string_millis/0, list_to_regexp/2, flatten_tuples_to_list/1, connect_send_and_receive_manual/2, connect_send_and_receive/2, connect_send_and_receive_list/2, reload_code/0,reload_code/1, stop_server/0, stop_server/1]).
+-import(server_utils, [translate_package/1, now_as_string_millis/0, list_to_regexp/2, flatten_tuples_to_list/1, connect_send_and_receive_manual/2, connect_send_and_receive/2, connect_send_and_receive_list/2, reload_code/0,reload_code/1, stop_server/0, stop_server/1, format_position_as_mod/2, format_position_as_mod/4, fill_with_white_space/2]).
 
 -define(REG_EXP_SEPERATOR, "&"). %% must be enclosed in quotes
 
@@ -49,3 +49,26 @@
 -define(RESPReceipt,                  18).
 
 
+
+-define(WRITE_CONNECTION(String, Arguments), 
+	io:format(" C"
+		  ++ fill_with_white_space(integer_to_list(ID), 3) 
+		  ++ format_position_as_mod(ID, 5)
+		  ++ " | " 
+		  ++ fill_with_white_space(pid_to_list(self()), 10)
+		  ++ " | " 
+		  ++ fill_with_white_space(case is_atom(User) of true -> atom_to_list(User); _ -> User end, 14)
+		  ++ " | " 
+		  ++ String, 
+		  Arguments)).
+
+-define(WRITE_SPAWNER(String, Arguments), 
+	io:format("*CS* " 
+		  ++ format_position_as_mod(-1, 5) 
+		  ++ " | " 
+		  ++ fill_with_white_space(pid_to_list(self()), 10)
+		  ++ " | " 
+		  ++ "Connections: ~p"
+		  ++ " | " 
+		  ++ String, 
+		  [N | Arguments])).
