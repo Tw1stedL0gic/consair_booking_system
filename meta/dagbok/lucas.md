@@ -131,9 +131,14 @@ Mer jobb på meddelandena.
 Arbetade mer på testning och meddelandetolkning.
 Vi började även testa anslutning mellan biblioteket och servern med bra resultat.
 
-##### Tisdag
+##### Tisdag - Arbetstid: ~5 timmar
+Meddelanden osv.
 
-##### Onsdag
+##### Onsdag - Arbetstid: ~5 timmar
+Arbetade på att försöka få igång JavaFX på min egen dator så jag
+kunde arbeta tillsammans med Erik och Andreas.
+Det tog ett tag men sen fick jag igång det efter en massa buggtestande.
+Jag började sedan titta på om det skulle gå att skriva ett annat GUI i Apache Pivot.
 
 ##### Torsdag
 
