@@ -13,7 +13,7 @@
 %% here is a change
 
 -module(server).
--export([start/0, start/1, connector_spawner/2, connector/5]).
+-export([start/0, start/1, connector_spawner/2, connector_inbox/6, connector_handler/5]).
 -include("server_utils.hrl").
 -include_lib("eunit/include/eunit.hrl").
 -define(Version_number, 0.8).
@@ -100,8 +100,9 @@ connector_spawner(LSock, N) ->
 	    case gen_tcp:accept(LSock, 100) of
 		{ok, Sock} ->
 		    %% spawn process to handle this connection
-		    NewPID = spawn(?MODULE, connector, [Sock, N+1, 0, null, self()]),
-		    ?WRITE_SPAWNER("New connection established: ~p~n", [NewPID]),
+		    New_connector_handler = spawn(?MODULE, connector_handler, [Sock, N+1, 0, null, self()]),
+		    spawn(?MODULE, connector_inbox, [Sock, N+1, 0, null, self(), New_connector_handler]),
+		    ?WRITE_SPAWNER("New connection established: ~p~n", [New_connector_handler]),
 		    connector_spawner(LSock, N+1);
 		{error, timeout} ->
 		    connector_spawner(LSock, N);
@@ -110,37 +111,36 @@ connector_spawner(LSock, N) ->
 	    end
     end.
 
-
-%% @doc Connector, which communicates with the client. 
-%% it waits 60 seconds for a message, then issues a 
-%% timeout. After the defined allowed timeouts it will
-%% terminate the communication. 
-%% In the case of a message it will handle it accordingl
-
-%% Connection timed out (10 timeouts).
-connector(_, ID, ?ALLOWEDTIMEOUTS, User, Parent_PID) ->
+connector_inbox(__, ID, ?ALLOWEDTIMEOUTS, User, Parent_PID, Handler_PID) ->
     ?WRITE_CONNECTION("~p timeouts reached, connection terminated~n", [?ALLOWEDTIMEOUTS]),
-    Parent_PID ! disconnect;
-    %% send message to client that it is timed out
-    %% revert all database changes
 
-connector(Sock, ID, Timeouts, User, Parent_PID) ->
-    %% announce established connection to client and terminal
-    case gen_tcp:recv(Sock, 0, 60000) of 
-	{error, timeout} -> %% in case of timeout, reloop.
-	    %% iterate a counter, which will warn client when timeouting too much
-	    %% after 10 minutes it will break the connection.
-	    ?WRITE_CONNECTION("Timeout ~p, ~p tries remaining~n", [Timeouts+1, ?ALLOWEDTIMEOUTS-Timeouts]), 
-	    connector(Sock, ID, Timeouts+1, User, Parent_PID);
-	{error, closed} -> %% in case of connection closed, tell parent. RECODE THIS TO IMPLEMENT HEARTBEAT
-	    ?WRITE_CONNECTION("Connection unexpectantly closed, logging out user.~n", []),
-	    package_handler:logout(User),
-	    Parent_PID ! disconnect;
-	{error, Error} -> %% In case of error, print error and announce termination to parent
+    Handler_PID ! disconnect,
+    Parent_PID  ! disconnect;
+
+connector_inbox(Sock, ID, Timeouts, User, Parent_PID, Handler_PID) ->
+    case gen_tcp:recv(Sock, 0, 60000) of
+	{error, timeout} ->
+	    ?WRITE_CONNECTION("Timeout ~p, ~p tries remaining~n", [Timeouts+1, ?ALLOWEDTIMEOUTS - Timeouts]),
+	    connector_inbox(Sock, ID, Timeouts+1, User, Parent_PID, Handler_PID);
+	{error, closed} ->
+	    Handler_PID ! {error, closed};
+	{error, Error} ->
 	    ?WRITE_CONNECTION("{error, ~p}~n", [Error]),
-	    Parent_PID ! disconnect;	
+	    Parent_PID ! disconnect;
+	{ok, Package} ->
+	    Package_list = lists:droplast(re:split(Package, ?MESSAGE_SEPERATOR)),
+					  
+	    %%---------- SEND TO HANDLER ------------%%
+	    pass_message_list(Package_list, Handler_PID),
+	    
+	    connector_inbox(Sock, ID, Timeouts, User, Parent_PID, Handler_PID)
+	end.
+
+
+connector_handler(Sock, ID, Timeouts, User, Parent_PID) ->
+    receive
 	{ok, Package} -> %% In case of package handle and responde
-	    ?WRITE_CONNECTION("Message received:      ~p~n", [Package]),
+	    ?WRITE_CONNECTION("Message received: <<<<< ~p~n", [Package]),
 
 	    %% Timestamp calculation
 	    {Incoming_timestamp, Handled_package} = package_handler:handle_package(Package, User),
@@ -160,25 +160,47 @@ connector(Sock, ID, Timeouts, User, Parent_PID) ->
        		    ?WRITE_CONNECTION("Code reload request~n", []),    
 		    Parent_PID ! reload_code;
 		{ok, {admin, Response}} ->
-		    ?WRITE_CONNECTION("Message sent:         ~p~n", [Response]),    
+		    ?WRITE_CONNECTION("Message sent:     >>>>> ~p~n", [Response]),    
 		    gen_tcp:send(Sock, Response),
 		    ?WRITE_CONNECTION("Logged in as Admin~n", []),
-		    connector(Sock, ID, 0, admin, Parent_PID);
+		    connector_handler(Sock, ID, 0, admin, Parent_PID);
 		{ok, {New_user, Response}} ->
-		    ?WRITE_CONNECTION("Message sent:          ~p~n", [Response]),    
+		    ?WRITE_CONNECTION("Message sent:     >>>>> ~p~n", [Response]),    
 		    gen_tcp:send(Sock, Response),
 		    ?WRITE_CONNECTION("Logged in as ~p~n", [New_user]),
-		    connector(Sock, ID, 0, New_user, Parent_PID);
+		    connector_handler(Sock, ID, 0, New_user, Parent_PID);
 		{ok, Response} ->
-		    ?WRITE_CONNECTION("Message send:          ~p~n", [Response]),    
+		    ?WRITE_CONNECTION("Message send:     >>>>>  ~p~n", [Response]),    
 		    gen_tcp:send(Sock, Response),
-		    connector(Sock, ID, 0, User, Parent_PID);
+		    connector_handler(Sock, ID, 0, User, Parent_PID);
 		{error, Error} ->
 		    Parent_PID ! {error, Error}
+	    end;
+	disconnect ->
+	    ?WRITE_CONNECTION("Connection unexpectantly closed, logging out user.~n", []),
+	    case package_handler:logout(User) of 
+		ok -> 
+		    ok;
+		{error, Error} -> 
+		    Parent_PID ! {error, Error},
+		    {error, Error}
+	    end;
+	{error, closed} ->
+	    ?WRITE_CONNECTION("Connection unexpentantly closed, logging out user. ~n", []),
+	    case package_handler:logout(User) of
+		{error, no_user} ->
+		    ok;
+		{error, Error} ->
+		    Parent_PID ! {error, Error};
+		{ok} ->
+		    Parent_PID ! disconnect
 	    end
-    end.	  
 
-
+    after 5000 -> 
+	    connector_handler(Sock, ID, Timeouts, User, Parent_PID)
+    end.
+	
+	      
 
 
 %%--------------------------------------------------------------%%

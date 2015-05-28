@@ -255,9 +255,9 @@ translate_package_test() ->
     List_of_numbers = [1, 2, 3, 4, 5, 6, 7, 8],
     List_of_mixed = ["a", 1, "b", 2, "c", 3, "d", 4],
 
-    ?assertMatch(<<"1&a&b&c&d&e&f&\n">>, translate_package({1, List_of_strings})),
-    ?assertMatch(<<"2&1&2&3&4&5&6&7&8&\n">>, translate_package({2, List_of_numbers})),
-    ?assertMatch(<<"3&a&1&b&2&c&3&d&4&\n">>, translate_package({3, List_of_mixed})).
+    ?assertMatch(<<"1&a&b&c&d&e&f&">>, translate_package({1, List_of_strings})),
+    ?assertMatch(<<"2&1&2&3&4&5&6&7&8&">>, translate_package({2, List_of_numbers})),
+    ?assertMatch(<<"3&a&1&b&2&c&3&d&4&&">>, translate_package({3, List_of_mixed})).
 
 tuple_to_list_test() ->
     Airport_A = {2, "ARN", "Arlanda Airport"},

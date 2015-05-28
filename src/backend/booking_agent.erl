@@ -300,7 +300,9 @@ start_booking(User, Seat_id) ->
 		    {error, no_such_seat};
 		{error, Error} ->
 		    {error, Error}
-	    end
+	    end;
+	{error, Error} ->
+	    {error, Error}
     end.
 
 %%---------------------------------------------------------------------%%
