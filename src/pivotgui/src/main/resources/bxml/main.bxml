@@ -1,7 +1,7 @@
-<Window title="Pivot GUI" maximized="true"
+<Window title="Connect" maximized="true"
         xmlns:bxml="http://pivot.apache.org/bxml"
         xmlns="org.apache.pivot.wtk">
-    <BoxPane>
+    <BoxPane styles="{horizontalAlignment:'center', verticalAlignment:'center'}">
         <Form>
             <Form.Section heading="Please enter URL and port">
                 <TextInput bxml:id="url" prompt="URL"/>
@@ -9,5 +9,6 @@
                 <PushButton bxml:id="connectButton" buttonData="Connect"/>
             </Form.Section>
         </Form>
+        <ActivityIndicator bxml:id="indicator"/>
     </BoxPane>
 </Window>
