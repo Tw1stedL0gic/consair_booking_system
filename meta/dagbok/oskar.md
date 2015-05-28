@@ -38,7 +38,6 @@ satt hemma och läste på om databaser och server inteface i erlang 3h
 Suttit och fixat med server pga om desigen av java interface  1,5h
 ## Vecka 18
 
-1
 ##### Måndag
 
 ##### Tisdag
@@ -105,7 +104,7 @@ Gjorde om i makefilen och gjorde om i repot för bättre struktur.
 ##### Onsdag
 Gjort populerings script till MySQL servern för att lägga upp större volymer av data, bugg fixade lite med sql frågor. 
 ##### Torsdag
-
+har fixat så att man kan installera in database utan att gå in i sqlservern samt skrivt Readme till alla db filer, samt att påbörjat att fixa en makefil till dessa. 
 ##### Fredag
 
 ## Vecka 23
