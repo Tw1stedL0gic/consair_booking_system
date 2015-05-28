@@ -1,8 +1,5 @@
-lägg till dessa om i MYSQL eller via EMMA börja i denna ordning
+How to add population to the database.
 
-1 USERS
-2 AIRPORTS
-3 FLIGHTS
-4 SEATS
+Run SQscript.sh
 
-
+This will populate the DB
