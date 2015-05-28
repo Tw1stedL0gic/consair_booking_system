@@ -232,8 +232,7 @@ concurrent_stress_test() ->
 	Login_info <- Login_info_list],
     [?assertMatch({ok, _}, Answer) || Answer <- [receive X -> X end || _ <- Login_info_list]].
 
-stop_te
-st() ->    
+stop_test() ->    
     server_utils:stop_server().
      
 no_server_test() ->
