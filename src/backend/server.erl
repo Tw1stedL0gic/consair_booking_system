@@ -58,7 +58,8 @@ start(Port) ->
 	    end,
 	    connector_spawner(LSock, 0);
 	{error, eaddrinuse} ->
-	    io:fwrite("Port busy~n"),
+	    N = -1,
+	    ?WRITE_SPAWNER("Port ~p busy~n", [Port]),
 	    {error, eaddrinuse};
 	_ ->
 	    {error, could_not_listen}		
@@ -78,10 +79,10 @@ connector_spawner(LSock, N) ->
     %% receive message from other processes for 100ms
     receive
 	exit ->        %% if received exit -> exit the loop (connection processes are still alive)
-	    io:fwrite("*CS* ~p: Connections: ~p | Exit called~n", [self(), N]),
+	    ?WRITE_SPAWNER("Exit called~n", []),
 	    gen_tcp:close(LSock);
 	disconnect ->  %% if received terminated -> reduce amount of connections
-	    io:fwrite("*CS* ~p: Connections: ~p | Process terminated~n", [self(), N-1]),
+	    ?WRITE_SPAWNER("Process terminated~n", []),
 	    connector_spawner(LSock, N-1);
 	reload_code ->
 	    code:load_file(server_utils),
@@ -90,6 +91,9 @@ connector_spawner(LSock, N) ->
 	    code:purge(package_handler),
 	    code:load_file(booking_agent),
 	    code:purge(booking_agent),
+	    connector_spawner(LSock, N);
+	{error, Error} ->
+	    ?WRITE_SPAWNER("Error received! ~p~n", [{error, Error}]),
 	    connector_spawner(LSock, N)
     after 100 ->
 	    %% try connecting to other device for 100ms
@@ -97,7 +101,7 @@ connector_spawner(LSock, N) ->
 		{ok, Sock} ->
 		    %% spawn process to handle this connection
 		    NewPID = spawn(?MODULE, connector, [Sock, N+1, 0, null, self()]),
-		    io:fwrite("*CS* ~p: Connections: ~p | New connection established: ~p~n", [self(), N+1, NewPID]),
+		    ?WRITE_SPAWNER("New connection established: ~p~n", [NewPID]),
 		    connector_spawner(LSock, N+1);
 		{error, timeout} ->
 		    connector_spawner(LSock, N);
@@ -115,7 +119,7 @@ connector_spawner(LSock, N) ->
 
 %% Connection timed out (10 timeouts).
 connector(_, ID, ?ALLOWEDTIMEOUTS, User, Parent_PID) ->
-    io:fwrite("C~p ~p (~p): ~p timeouts reached, connection terminated~n", [ID, self(), User, ?ALLOWEDTIMEOUTS]),
+    ?WRITE_CONNECTION("~p timeouts reached, connection terminated~n", [?ALLOWEDTIMEOUTS]),
     Parent_PID ! disconnect;
     %% send message to client that it is timed out
     %% revert all database changes
@@ -126,44 +130,47 @@ connector(Sock, ID, Timeouts, User, Parent_PID) ->
 	{error, timeout} -> %% in case of timeout, reloop.
 	    %% iterate a counter, which will warn client when timeouting too much
 	    %% after 10 minutes it will break the connection.
-	    io:fwrite("C~p ~p (~p): Timeout ~p, ~p tries remaining~n", [ID, self(), User, Timeouts+1, ?ALLOWEDTIMEOUTS-Timeouts]), 
+	    ?WRITE_CONNECTION("Timeout ~p, ~p tries remaining~n", [Timeouts+1, ?ALLOWEDTIMEOUTS-Timeouts]), 
 	    connector(Sock, ID, Timeouts+1, User, Parent_PID);
 	{error, closed} -> %% in case of connection closed, tell parent. RECODE THIS TO IMPLEMENT HEARTBEAT
-	    io:fwrite("C~p ~p (~p): Connection unexpectantly closed, logging out user.~n", [ID, self(), User]),
+	    ?WRITE_CONNECTION("Connection unexpectantly closed, logging out user.~n", []),
 	    package_handler:logout(User),
 	    Parent_PID ! disconnect;
 	{error, Error} -> %% In case of error, print error and announce termination to parent
-	    io:fwrite("C~p ~p (~p): {error, ~p}~n", [ID, self(), User, Error]),
+	    ?WRITE_CONNECTION("{error, ~p}~n", [Error]),
 	    Parent_PID ! disconnect;	
 	{ok, Package} -> %% In case of package handle and responde
-	    io:fwrite("C~p ~p (~p): Message received: ~p~n", [ID, self(), User, Package]),
+	    ?WRITE_CONNECTION("Message received: ~p~n", [Package]),
 
 	    %% Timestamp calculation
-	    {Timestamp, Handled_package} = package_handler:handle_package(Package, User),
+	    {Incoming_timestamp, Handled_package} = package_handler:handle_package(Package, User),
 	    {Mega_S, S, Micro_S} = now(),
-	    Time_taken = ((((Mega_S * 1000) + S) * 1000) + (Micro_S rem 1000)) - Timestamp,
-	    io:fwrite("C~p ~p (~p): Time to handle package: ~p~n", [ID, self(), User, Time_taken]),
+	    Time_taken = ((((Mega_S * 1000000) + S) * 1000000) + Micro_S) div 1000 - Incoming_timestamp,
+	    ?WRITE_CONNECTION("Time to handle package: ~p~n", [Time_taken]),
 
 	    %% case to handle package
 	    case Handled_package of
 		{ok, exit} ->
-       		    io:fwrite("C~p ~p (~p): Exit request~n", [ID, self(), User]),    
+       		    ?WRITE_CONNECTION("Exit request~n", []),    
 		    Parent_PID ! exit;
+		{ok, disconnect} ->
+		    ?WRITE_CONNECTION("Disconnecting~n", []),
+		    Parent_PID ! disconnect;
 		{ok, reload_code} ->
-       		    io:fwrite("C~p ~p (~p): Code reload request~n", [ID, self(), User]),    
+       		    ?WRITE_CONNECTION("Code reload request~n", []),    
 		    Parent_PID ! reload_code;
 		{ok, {admin, Response}} ->
-		    io:fwrite("C~p ~p (~p): Message sent: ~p~n", [ID, self(), User, Response]),    
+		    ?WRITE_CONNECTION("Message sent: ~p~n", [Response]),    
 		    gen_tcp:send(Sock, Response),
-		    io:fwrite("C~p ~p (~p): Logged in as Admin~n", [ID, self(), User]),
+		    ?WRITE_CONNECTION("Logged in as Admin~n", []),
 		    connector(Sock, ID, 0, admin, Parent_PID);
 		{ok, {New_user, Response}} ->
-		    io:fwrite("C~p ~p (~p): Message sent: ~p~n", [ID, self(), User, Response]),    
+		    ?WRITE_CONNECTION("Message sent: ~p~n", [Response]),    
 		    gen_tcp:send(Sock, Response),
-		    io:fwrite("C~p ~p (~p): Logged in as ~p~n", [ID, self(), User, New_user]),
+		    ?WRITE_CONNECTION("Logged in as ~p~n", [New_user]),
 		    connector(Sock, ID, 0, New_user, Parent_PID);
 		{ok, Response} ->
-		    io:fwrite("C~p ~p (~p): Message send: ~p~n", [ID, self(), User, Response]),    
+		    ?WRITE_CONNECTION("Message send: ~p~n", [Response]),    
 		    gen_tcp:send(Sock, Response),
 		    connector(Sock, ID, 0, User, Parent_PID);
 		{error, Error} ->
@@ -189,18 +196,32 @@ connector(Sock, ID, Timeouts, User, Parent_PID) ->
 %%     %% close
 %%     ?assertMatch(ok, server:stop()).
    
-no_server_test() ->
-    %% send before opening
-    ?assertMatch({error, econnrefused}, connect_send_and_receive({?HEARTBEAT}, ?PORT)),
-    ?assertMatch({error, econnrefused}, connect_send_and_receive({?HEARTBEAT}, ?ALT_PORT)).
 
 login_test() ->
     %% login
-    ?assertMatch({ok, _}, connect_send_and_receive({?LOGIN, ["fake", "user"]},   ?ALT_PORT)),
-    ?assertMatch({ok, _}, connect_send_and_receive({?LOGIN, ["carl", "asdasd"]}, ?ALT_PORT)),
-    ?assertMatch({ok, _}, connect_send_and_receive({?LOGIN, ["pelle", "asd"]},   ?ALT_PORT)),
+    ?assertMatch({ok, _}, connect_send_and_receive({?LOGIN, ["fake", "user"]},   ?PORT)),
+    ?assertMatch({ok, _}, connect_send_and_receive({?LOGIN, ["carl", "asdasd"]}, ?PORT)),
+    ?assertMatch({ok, _}, connect_send_and_receive({?LOGIN, ["pelle", "asd"]},   ?PORT)).
     
     
-    
-    server:stop().
+sequential_stress_test() ->
+    Login_info_list = [[User, Pass] || User <- ["Carl", "Lucas", "Oskar", "Erik", "Andreas", "Wentin"], Pass <- ["hej", "hehe", "asd", "asdasd", "rp", "asd"]],
+    [?assertMatch({ok, _}, connect_send_and_receive({?LOGIN, Login_info},   ?PORT)) || Login_info <- Login_info_list].
+
+concurrent_stress_test() ->
+    Login_info_list = [[User, Pass] || User <- ["Carl", "Lucas", "Oskar", "Erik", "Andreas", "Wentin"], Pass <- ["hej", "hehe", "asd", "asdasd", "rp", "asd"]],
+    ParentPID = self(),
+    [spawn(fun() -> 
+		   ParentPID ! server_utils:connect_send_and_receive({?LOGIN, Login_info}, ?PORT) end) ||
+	Login_info <- Login_info_list],
+    ?assertEqual(length(Login_info_list), length([receive X -> X end || _ <- Login_info_list])).
+
+
+
+stop_test() ->    
+    server_utils:stop_server().
      
+no_server_test() ->
+    %% send before opening
+    ?assertMatch({error, econnrefused}, connect_send_and_receive({?HEARTBEAT}, ?PORT)),
+    ?assertMatch({error, econnrefused}, connect_send_and_receive({?HEARTBEAT}, ?PORT)).
