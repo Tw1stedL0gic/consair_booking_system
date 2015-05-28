@@ -140,7 +140,7 @@ connector(Sock, ID, Timeouts, User, Parent_PID) ->
 	    ?WRITE_CONNECTION("{error, ~p}~n", [Error]),
 	    Parent_PID ! disconnect;	
 	{ok, Package} -> %% In case of package handle and responde
-	    ?WRITE_CONNECTION("Message received: ~p~n", [Package]),
+	    ?WRITE_CONNECTION("Message received:      ~p~n", [Package]),
 
 	    %% Timestamp calculation
 	    {Incoming_timestamp, Handled_package} = package_handler:handle_package(Package, User),
@@ -160,17 +160,17 @@ connector(Sock, ID, Timeouts, User, Parent_PID) ->
        		    ?WRITE_CONNECTION("Code reload request~n", []),    
 		    Parent_PID ! reload_code;
 		{ok, {admin, Response}} ->
-		    ?WRITE_CONNECTION("Message sent: ~p~n", [Response]),    
+		    ?WRITE_CONNECTION("Message sent:         ~p~n", [Response]),    
 		    gen_tcp:send(Sock, Response),
 		    ?WRITE_CONNECTION("Logged in as Admin~n", []),
 		    connector(Sock, ID, 0, admin, Parent_PID);
 		{ok, {New_user, Response}} ->
-		    ?WRITE_CONNECTION("Message sent: ~p~n", [Response]),    
+		    ?WRITE_CONNECTION("Message sent:          ~p~n", [Response]),    
 		    gen_tcp:send(Sock, Response),
 		    ?WRITE_CONNECTION("Logged in as ~p~n", [New_user]),
 		    connector(Sock, ID, 0, New_user, Parent_PID);
 		{ok, Response} ->
-		    ?WRITE_CONNECTION("Message send: ~p~n", [Response]),    
+		    ?WRITE_CONNECTION("Message send:          ~p~n", [Response]),    
 		    gen_tcp:send(Sock, Response),
 		    connector(Sock, ID, 0, User, Parent_PID);
 		{error, Error} ->
@@ -203,20 +203,34 @@ login_test() ->
     ?assertMatch({ok, _}, connect_send_and_receive({?LOGIN, ["carl", "asdasd"]}, ?PORT)),
     ?assertMatch({ok, _}, connect_send_and_receive({?LOGIN, ["pelle", "asd"]},   ?PORT)).
     
+
+one_of_each_message_test() ->
+    ?assertMatch({ok, _}, connect_send_and_receive({?LOGIN,                    ["pelle", "asd"]},   ?PORT)),
+    ?assertMatch({error, timeout}, connect_send_and_receive({?ERROR,                    []},   ?PORT)),
+    ?assertMatch({ok, _}, connect_send_and_receive_list([{?LOGIN, ["pelle", "asd"]}, {?INIT_BOOK,                ["1"]}],   ?PORT)),
+    ?assertMatch({ok, _}, connect_send_and_receive({?ABORT_BOOK,               []},   ?PORT)),
+    ?assertMatch({ok, _}, connect_send_and_receive({?INIT_BOOK,                ["1"]},   ?PORT)),
+    ?assertMatch({ok, _}, connect_send_and_receive({?FIN_BOOK,                 []},   ?PORT)),
+
+    ?assertMatch({ok, _}, connect_send_and_receive({?REQ_AIRPORTS,             []},   ?PORT)),
+    ?assertMatch({ok, _}, connect_send_and_receive({?REQ_AIRPORTS,             ["1"]},   ?PORT)),
+    ?assertMatch({ok, _}, connect_send_and_receive({?SEARCH_ROUTE,             []},   ?PORT)),
+    ?assertMatch({ok, _}, connect_send_and_receive({?REQ_FLIGHT_DETAILS,       []},   ?PORT)),
+    ?assertMatch({ok, _}, connect_send_and_receive({?REQ_SEAT_SUGGESTION,      []},   ?PORT)),
+    ?assertMatch({ok, _}, connect_send_and_receive({?REQ_SEAT_MAP,             []},   ?PORT)),
+    ?assertMatch({ok, _}, connect_send_and_receive({?TERMINATE_SERVER,         []},   ?PORT)).
     
-sequential_stress_test() ->
-    Login_info_list = [[User, Pass] || User <- ["Carl", "Lucas", "Oskar", "Erik", "Andreas", "Wentin"], Pass <- ["hej", "hehe", "asd", "asdasd", "rp", "asd"]],
-    [?assertMatch({ok, _}, connect_send_and_receive({?LOGIN, Login_info},   ?PORT)) || Login_info <- Login_info_list].
+%% sequential_stress_test() ->
+%%     Login_info_list = [[User, Pass] || User <- ["Carl", "Lucas", "Oskar", "Erik", "Andreas", "Wentin"], Pass <- ["hej", "hehe", "asd", "asdasd", "rp", "asd"]],
+%%     [?assertMatch({ok, _}, connect_send_and_receive({?LOGIN, Login_info},   ?PORT)) || Login_info <- Login_info_list].
 
-concurrent_stress_test() ->
-    Login_info_list = [[User, Pass] || User <- ["Carl", "Lucas", "Oskar", "Erik", "Andreas", "Wentin"], Pass <- ["hej", "hehe", "asd", "asdasd", "rp", "asd"]],
-    ParentPID = self(),
-    [spawn(fun() -> 
-		   ParentPID ! server_utils:connect_send_and_receive({?LOGIN, Login_info}, ?PORT) end) ||
-	Login_info <- Login_info_list],
-    ?assertEqual(length(Login_info_list), length([receive X -> X end || _ <- Login_info_list])).
-
-
+%% concurrent_stress_test() ->
+%%     Login_info_list = [[User, Pass] || User <- ["Carl", "Lucas", "Oskar", "Erik", "Andreas", "Wentin"], Pass <- ["hej", "hehe", "asd", "asdasd", "rp", "asd"]],
+%%     ParentPID = self(),
+%%     [spawn(fun() -> 
+%% 		   ParentPID ! server_utils:connect_send_and_receive({?LOGIN, Login_info}, ?PORT) end) ||
+%% 	Login_info <- Login_info_list],
+%%     [?assertMatch({ok, _}, Answer) || Answer <- [receive X -> X end || _ <- Login_info_list]].
 
 stop_test() ->    
     server_utils:stop_server().

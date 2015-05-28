@@ -10,6 +10,7 @@
 
 -module(booking_agent).
 -compile(export_all).
+-include("server_utils.hrl").
 %%-export([loop/1, get/1, login/1, validate/1, heartbeat/1, disconnect/1]).
 
 
@@ -174,7 +175,7 @@ seat_lock(Seat_ID) ->
     Data = get_database:get_seats_id_from_db(Seat_ID),
     case Data of
 	{_,[{_,_,_,_,_,_,_,_,_,_,Lock_s}]} ->
-	    Lock_s;    
+	    Lock_s;
 	_ ->
 	    {error,no_seat}
     end.
@@ -272,20 +273,34 @@ find_chain_of_seats([Seat | Seat_list], Chain_list, Chain_row, Chain_size) ->
 
 start_booking(User, Seat_id) ->
     %% record time of seat locking so that in case of crash, it can be cleared
-    {_,[{_,User_id,_,_,_,_}]} = get_database:get_user_from_db(User),
-    get_database:update_seat_lock(Seat_id,1),
-    get_database:update_seat_user(Seat_id,User_id),
-    %% timer:sleep(000)
-    %% case get seat user_id
-    %%    User -> ok
-    %%    - -> Åerror
-    timer:sleep(1000),
-    Check = get_dabase:get_filter_seats_from_user_id(User_id),
-    case Check of
-	{ok,[]} ->
-	    {error,seat_booked};
-	{_,[{_,_,_,_,_,_,_,_,_,_,_}]}->
-	    ok
+    case  get_database:get_user_from_db(User) of
+	{ok, []} ->
+	    {error, no_such_user};
+	{ok,[{_,User_id,_,_,_,_}]} ->
+	    case seat_lock(Seat_id) of
+		?LOCK_S_AVAILABLE ->
+		    get_database:update_seat_lock(Seat_id,1),
+		    get_database:update_seat_user(Seat_id,User_id),
+		    
+		    timer:sleep(1000),
+		    Check = get_dabase:get_filter_seats_from_user_id(User_id),
+		    case Check of
+			{ok, []} ->
+			    {error,seat_booked};
+			{ok, _}->
+			    ok;
+			{error, Error} ->
+			    {error, Error}
+		    end;
+		?LOCK_S_LOCKED ->
+		    {error,seat_locked};
+		?LOCK_S_BOOKED ->
+		    {error,seat_booked};
+		{error, no_such_seat} ->
+		    {error, no_such_seat};
+		{error, Error} ->
+		    {error, Error}
+	    end
     end.
 
 %%---------------------------------------------------------------------%%

@@ -58,7 +58,34 @@ handle_package({?DISCONNECT}, User) ->
 	    end
     end;
 
+handle_package({?ERROR, Error}, _) ->
+    {java_error, Error};
+
 %%--------------------------------------------------------------%%
+
+handle_package({?INIT_BOOK, [_ | Seat_ID_list]}, User) ->
+    case booking_agent:start_booking(User, Seat_ID_list) of
+	ok ->
+	    {ok, translate_package({?INIT_BOOK_RESP, [?INIT_SUCCESS, ?Book_time]})};
+	{error, seat_locked} ->
+	    {ok, translate_package({?INIT_BOOK_RESP, [?INIT_LOCKED, ?Book_time]})};
+	{error, seat_booked} ->
+	    {ok, translate_package({?INIT_BOOK_RESP, [?INIT_BOOKED, ?Book_time]})};
+	{error, no_such_seat} ->
+	    {ok, translate_package({?INIT_BOOK_RESP, [?INIT_DID_NOT_EXIST, ?Book_time]})};
+	{error, Error} ->
+	    {error, Error}
+    end;
+
+handle_package({?FIN_BOOK}, User) -> 
+    case booking_agent:finalize_booking(User) of
+	{ok, Success_code} ->
+	    {ok, translate_package({?FIN_BOOK_RESP, [Success_code]})};
+	{error, Error} ->
+	    {error, Error}
+    end;
+    
+
 
 handle_package({?REQ_AIRPORTS}, _) -> 
     case booking_agent:airport_list() of
@@ -130,22 +157,7 @@ handle_package({?REQSeatLock, Seat_ID}, User) ->
 handle_package({?REQ_SEAT_SUGGESTION, _Message}, _User) -> 
     {error, not_yet_implemented};
    
-handle_package({?INIT_BOOK, [_ | Seat_ID_list]}, User) ->
-    case booking_agent:start_booking(User, Seat_ID_list) of
-	{ok, {Success_code, Book_time}} ->
-	    {ok, translate_package({?INIT_BOOK_RESP, [Success_code, Book_time]})};
-	{error, ERROR} ->
-	    {error, ERROR}
-    end;
 
-handle_package({?FIN_BOOK}, User) -> 
-    case booking_agent:finalize_booking(User) of
-	{ok, Success_code} ->
-	    {ok, translate_package({?FIN_BOOK_RESP, [Success_code]})};
-	{error, ERROR} ->
-	    {error, ERROR}
-    end;
-    
 handle_package({?REQReceipt, _Message}, _User) -> 
     % booking_agent:receipt(),
     {error, not_yet_implemented};

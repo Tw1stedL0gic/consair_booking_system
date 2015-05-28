@@ -10,7 +10,21 @@
 -define(CONNECTIONOPTIONS, [binary, {packet, 0}, {active, false}]).
 -define(ALLOWEDTIMEOUTS, 10). %% Amount of minutes allowed before connection is terminated
 -define(ADMIN_ALLOWEDTIMEOUTS, 20). %% Amount of minutes allowed before admin connection is terminated
+-define(Book_time, 10). %% Minutes before users locked seat is unlocked
 
+
+%% Codes
+
+%% SEAT LOCK
+-define(LOCK_S_AVAILABLE, 0).
+-define(LOCK_S_LOCKED,    1).
+-define(LOCK_S_BOOKED,    2).
+
+%% BOOK RESPONSE CODE
+-define(INIT_SUCCESS,       1).
+-define(INIT_LOCKED,        2).
+-define(INIT_BOOKED,        3).
+-define(INIT_DID_NOT_EXIST, 4).
 
 
 %% Package IDs
@@ -30,7 +44,7 @@
 -define(REQ_FLIGHT_DETAILS,           14).
 -define(REQ_FLIGHT_DETAILS_RESP,      15).
 -define(REQ_SEAT_SUGGESTION,          16).
--define(RESP_SEAT_SUGGESTION_RESP,    17).
+-define(REQ_SEAT_SUGGESTION_RESP,    17).
 -define(REQ_SEAT_MAP,                 -1).
 -define(REQ_SEAT_MAP_RESP,            -1).
 -define(TERMINATE_SERVER,             24).
