@@ -140,7 +140,8 @@ kunde arbeta tillsammans med Erik och Andreas.
 Det tog ett tag men sen fick jag igång det efter en massa buggtestande.
 Jag började sedan titta på om det skulle gå att skriva ett annat GUI i Apache Pivot.
 
-##### Torsdag
+##### Torsdag - Arbetstid: ~4 timmar
+Arbetade på pivot guit.
 
 ##### Fredag
 
