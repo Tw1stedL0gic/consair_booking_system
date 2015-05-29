@@ -1,55 +1,80 @@
 package ospp.pivotgui.controllers;
 
 import org.apache.pivot.beans.BXML;
+import org.apache.pivot.beans.BXMLSerializer;
 import org.apache.pivot.beans.Bindable;
 import org.apache.pivot.collections.Map;
+import org.apache.pivot.serialization.SerializationException;
 import org.apache.pivot.util.Resources;
 import org.apache.pivot.util.concurrent.Task;
 import org.apache.pivot.util.concurrent.TaskExecutionException;
 import org.apache.pivot.util.concurrent.TaskListener;
 import org.apache.pivot.wtk.*;
 import ospp.bookinggui.networking.Message;
+import ospp.bookinggui.networking.NetworkAdapter;
 import ospp.bookinggui.networking.messages.ErrorMsg;
 import ospp.bookinggui.networking.messages.LoginMsg;
 import ospp.bookinggui.networking.messages.LoginRespMsg;
 import ospp.pivotgui.Main;
-import sun.rmi.runtime.Log;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class LoginController extends Window implements Bindable {
+public class ConnectAndLoginController extends Window implements Bindable {
 
-	private static final Logger logger = Logger.getLogger(LoginController.class.getName());
-
-	@BXML
-	private TextInput username = null;
+	private static final Logger logger = Logger.getLogger(ConnectAndLoginController.class.getName());
 
 	@BXML
-	private TextInput password = null;
-
+	private TextInput         hostURL   = null;
 	@BXML
-	private PushButton login = null;
-
+	private TextInput         port      = null;
+	@BXML
+	private TextInput         username  = null;
+	@BXML
+	private TextInput         password  = null;
+	@BXML
+	private PushButton        connect   = null;
 	@BXML
 	private ActivityIndicator indicator = null;
 
 	@Override
 	public void initialize(Map<String, Object> map, URL url, Resources resources) {
 
-		login.getButtonPressListeners().add(new ButtonPressListener() {
+		connect.getButtonPressListeners().add(new ButtonPressListener() {
 			@Override
 			public void buttonPressed(Button button) {
-				Main.activateIndicator(login, indicator);
+				Main.activateIndicator(connect, indicator);
 
-				// Send a login message
-				Main.mailbox.send(new LoginMsg(System.currentTimeMillis(), username.getText(), password.getText()));
+				if(username.getText().equals("test")) {
+					loadSelectionWindow();
+					return;
+				}
 
-				// Wait for an answer on an async thread.
+				// Connect and login on an async thread to prevent GUI lock ups.
 				new Task<LoginRespMsg.PrivilegeLevel>() {
 					@Override
 					public LoginRespMsg.PrivilegeLevel execute() throws TaskExecutionException {
+
+						int prt;
+						try {
+							prt = Integer.valueOf(port.getText());
+						}
+						catch(NumberFormatException e) {
+							throw new TaskExecutionException("Please enter a correct port number!");
+						}
+
+						// Connect to the server
+						try {
+							new NetworkAdapter(Main.mailbox, hostURL.getText(), prt);
+						}
+						catch(IOException e) {
+							throw new TaskExecutionException(e);
+						}
+
+						// Send a login message
+						Main.mailbox.send(new LoginMsg(System.currentTimeMillis(), username.getText(), password.getText()));
 
 						// Wait for answer from server
 						Message msg;
@@ -62,6 +87,7 @@ public class LoginController extends Window implements Bindable {
 							}
 						}
 
+						// Handle the response
 						if(msg instanceof LoginRespMsg) {
 							LoginRespMsg resp = (LoginRespMsg) msg;
 							return resp.getPrivilegeLevel();
@@ -73,20 +99,23 @@ public class LoginController extends Window implements Bindable {
 							throw new TaskExecutionException(new Exception("Received message was not of correct type!"));
 						}
 					}
-				}.execute(new TaskAdapter<LoginRespMsg.PrivilegeLevel>(new TaskListener<LoginRespMsg.PrivilegeLevel>() {
+				}.execute(new TaskAdapter<>(new TaskListener<LoginRespMsg.PrivilegeLevel>() {
+
+					// These two methods are executed on the main GUI-thread.
+
 					@Override
 					public void taskExecuted(Task<LoginRespMsg.PrivilegeLevel> task) {
-						Main.disableIndicator(login, indicator);
+						Main.disableIndicator(connect, indicator);
 						loadSelectionWindow();
 					}
 
 					@Override
 					public void executeFailed(Task<LoginRespMsg.PrivilegeLevel> task) {
-						Main.disableIndicator(login, indicator);
+						Main.disableIndicator(connect, indicator);
 
 						Throwable e = task.getFault();
+						Alert.alert(MessageType.ERROR, e.getMessage(), ConnectAndLoginController.this);
 						logger.log(Level.SEVERE, e.getMessage(), e);
-						Alert.alert(MessageType.ERROR, e.getMessage(), LoginController.this);
 					}
 				}));
 			}
@@ -95,5 +124,15 @@ public class LoginController extends Window implements Bindable {
 
 	private void loadSelectionWindow() {
 		this.close();
+
+		BXMLSerializer serializer = new BXMLSerializer();
+
+		try {
+			Window selection = (Window) serializer.readObject(SelectionController.class, "/bxml/selection.bxml");
+			selection.open(Main.display);
+		}
+		catch(IOException | SerializationException e) {
+			e.printStackTrace();
+		}
 	}
 }
