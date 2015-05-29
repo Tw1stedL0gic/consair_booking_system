@@ -204,9 +204,22 @@ Den sitter nu ihop med java adaptern. Behöver lite fix med att tolk databas med
 
 ##### Onsdag
 
+11:00 - 16:00
+
+
+21:00 - 24:00
+
 ##### Torsdag
 
+00:00 - 05:00
+
+Late night progging
+
+21:00 - 24:00
+
 ##### Fredag
+
+00:00 - 04:00
 
 ## Vecka 23
 
