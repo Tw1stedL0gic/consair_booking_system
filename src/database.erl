@@ -1,2 +1,0 @@
--moduel(database).
--export([]).

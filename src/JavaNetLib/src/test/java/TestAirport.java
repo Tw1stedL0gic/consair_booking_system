@@ -2,6 +2,8 @@ import org.junit.Test;
 import ospp.bookinggui.Airport;
 
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class TestAirport {
 
@@ -20,5 +22,10 @@ public class TestAirport {
 		};
 
 		assertArrayEquals(expected, body);
+	}
+
+	@Test
+	public void testArgAmount() {
+		assertEquals(3, Airport.ARG_AMOUNT);
 	}
 }

@@ -8,13 +8,14 @@ import ospp.bookinggui.networking.messages.ErrorMsg;
 import ospp.bookinggui.networking.runnables.PacketListener;
 
 import java.io.ByteArrayInputStream;
+import java.io.UnsupportedEncodingException;
 
 import static org.junit.Assert.*;
 
 public class TestPacketListener {
 
 	@Test(timeout = 500)
-	public void testOne() {
+	public void testOne() throws UnsupportedEncodingException {
 		ByteArrayInputStream input = new ByteArrayInputStream("1&1337&yo&lo&".getBytes());
 
 		Mailbox<Message> mailbox = new Mailbox<>();
@@ -35,7 +36,7 @@ public class TestPacketListener {
 	}
 
 	@Test(timeout = 500)
-	public void testFail1() {
+	public void testFail1() throws UnsupportedEncodingException {
 		ByteArrayInputStream input = new ByteArrayInputStream("1&1337&".getBytes());
 
 		Mailbox<Message> mailbox = new Mailbox<>();
@@ -51,14 +52,16 @@ public class TestPacketListener {
 		Message in = mailbox.getOldestIncoming();
 		Message out = mailbox.getOldestOutgoing();
 
-		assertNull(in);
+		assertNotNull(in);
 		assertNotNull(out);
 
+		assertTrue(in instanceof ErrorMsg);
 		assertTrue(out instanceof ErrorMsg);
 
-		ErrorMsg err = (ErrorMsg) out;
+		ErrorMsg errIn = (ErrorMsg) in;
+		ErrorMsg errOut = (ErrorMsg) out;
 
-		String err_msg = err.getBody()[0];
-		assertEquals("Could not parse message! The body is not correctly formed!", err_msg);
+		assertEquals("The connection to the server was terminated!", errIn.getErrorMessage());
+		assertEquals("Could not parse message! The body is not correctly formed!", errOut.getErrorMessage());
 	}
 }

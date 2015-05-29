@@ -33,14 +33,14 @@ public class Message {
 
 	/**
 	 * Creates a message with the given parameters.
-	 *
+	 * <p/>
 	 * WARNING! If this constructor is called manually and not from
 	 * a child message constructor, you need to make absolutely sure that the way you call
 	 * it complies with the defined protocol!
 	 *
-	 * @param type The type of the message.
+	 * @param type      The type of the message.
 	 * @param timestamp The timestamp of the message.
-	 * @param body The body of the message.
+	 * @param body      The body of the message.
 	 */
 	public Message(MessageType type, long timestamp, String... body) {
 		this.TYPE = type;
@@ -54,7 +54,7 @@ public class Message {
 		}
 	}
 
-	private boolean isNull(String[] a) {
+	private static boolean isNull(String[] a) {
 		if(a == null) {
 			return true;
 		}
@@ -83,11 +83,6 @@ public class Message {
 
 		String[] parts = data.split(Message.SEPARATOR);
 
-		// Remove the URL encoding from the message, we no longer need it.
-		for(int i = 0; i < parts.length; i++) {
-			parts[i] = URLDecoder.decode(parts[i], "UTF8");
-		}
-
 		if(parts.length < Message.HEADER_SIZE) {
 			throw new MalformedMessageException("Could not parse message! The message is too small!");
 		}
@@ -110,6 +105,21 @@ public class Message {
 				case ERROR:
 					return new ErrorMsg(timestamp, body[0]);
 
+				case INIT_BOOK:
+					return new InitBookMsg(timestamp, body[0]);
+
+				case INIT_BOOK_RESP:
+					return new InitBookRespMsg(timestamp, body[0], body[1]);
+
+				case FIN_BOOK:
+					return new FinBookMsg(timestamp);
+
+				case FIN_BOOK_RESP:
+					return new FinBookRespMsg(timestamp, body[0]);
+
+				case ABORT_BOOK:
+					return new AbortBookMsg(timestamp);
+
 				case REQ_AIRPORTS:
 					String iata = body == null ? null : body[0];
 					return new RequestAirportsMsg(timestamp, iata);
@@ -117,18 +127,27 @@ public class Message {
 				case REQ_AIRPORTS_RESP:
 					return new RequestAirportsRespMsg(timestamp, body);
 
+				case SEARCH_ROUTE:
+					return new SearchAirportRouteMsg(timestamp, body[0], body[1]);
+
 				case SEARCH_ROUTE_RESP:
 					return new SearchAirportRouteRespMsg(timestamp, body);
 
-				case INIT_BOOK:
-				case FIN_BOOK:
-				case FIN_BOOK_RESP:
-				case ABORT_BOOK:
-				case SEARCH_ROUTE:
 				case REQ_FLIGHT_DETAILS:
+					return new RequestFlightDetailsMsg(timestamp, body[0]);
+
 				case REQ_FLIGHT_DETAILS_RESP:
+					return new RequestFlightDetailsRespMsg(timestamp, body);
+
 				case REQ_SEAT_SUGGESTION:
+					return new RequestSeatSuggestionMsg(timestamp, body[0]);
+
 				case REQ_SEAT_SUGGESTION_RESP:
+					return new RequestSeatSuggestionRespMsg(timestamp, body);
+
+				case TERMINATE_SERVER:
+					return new TerminateServerMsg(timestamp);
+
 				case REQ_SEAT_MAP:
 				case REQ_SEAT_MAP_RESP:
 				case REQ_PASSENGER_LIST:
@@ -157,8 +176,7 @@ public class Message {
 
 	private static long retrieveTimestamp(String[] parts) throws MalformedMessageException {
 		try {
-			long timestamp = Long.valueOf(parts[1]);
-			return timestamp;
+			return Long.valueOf(parts[1]);
 		}
 		catch(NumberFormatException e) {
 			throw new MalformedMessageException("The timestamp is not a valid long!");
@@ -167,8 +185,7 @@ public class Message {
 
 	private static MessageType retrieveType(String[] parts) throws MalformedMessageException {
 		try {
-			MessageType type = MessageType.getType(Integer.valueOf(parts[0]));
-			return type;
+			return MessageType.getType(Integer.valueOf(parts[0]));
 		}
 		catch(NumberFormatException e) {
 			throw new MalformedMessageException("The message ID is not an integer!");
@@ -190,7 +207,7 @@ public class Message {
 		message.append(this.TIMESTAMP).append(Message.SEPARATOR);
 
 		for(String arg : this.BODY) {
-			message.append(URLEncoder.encode(arg, "UTF8")).append(Message.SEPARATOR);
+			message.append(arg).append(Message.SEPARATOR);
 		}
 
 		return message.toString();

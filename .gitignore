@@ -1,4 +1,5 @@
 *.swp
+*.beam
 *.idea/
 *.iml
 *target/

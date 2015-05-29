@@ -1,4 +1,4 @@
-# Dagbok för Lucas Arnström
+﻿# Dagbok för Lucas Arnström
 
 OSPP (1DT096) 2015 - Grupp 4
 
@@ -35,27 +35,49 @@ Kopierade över vår "Peer Review" till overleaf och rättade till formateringen
 Arbetade på vår reflektion tillsammans med Andreas och Erik.
 
 ##### Torsdag - Arbetstid: ~3 timmar
-Arbatede fram ett paket/meddelandeprotokoll mellan vår backend och frontend.
+Arbetade fram ett paket/meddelandeprotokoll mellan vår backend och frontend.
 
-##### Fredag
+##### Fredag - Arbetstid: ~3 timmar
+Började på nätverksdelen för java programmet.
+
+##### Lördag - Arbetstid: ~5 timmar
+Arbetade med tolkning av de bytes java programmet får från erlang servern.
+Detta är lite struligt eftersom det inte finns några unsigned datatyper i Java.
+
+Började på en sammanfattning av vårt nätverksprotokoll i latex.
+
+##### Söndag - Arbetstid: ~1 timme
+Startade med PacketListener i java delen.
 
 ## Vecka 18
 
-##### Måndag
+##### Måndag - Arbetstid: ~3 timmar
+Arbetade mer med paketen. Hur de ska avkodas och kodas till och från byte-listor.
+Började skriva på unittester för paketen, hittade mycket trams.
 
-##### Tisdag
+##### Tisdag - Arbetstid: ~2 timmar
+Utvecklade fler unittester och lagade de problem som dessa tester påvisade.
 
 ##### Onsdag
 
-##### Torsdag
+##### Torsdag - Arbetstid: ~2 timmar
+Skrev om det mesta av koden jag arbetat på då allt hade resulterat i sen röra.
+Det börjar bli lite bättre struktur nu.
 
-##### Fredag
+##### Fredag - Arbetstid: ~2-3 timmar
+En massa buggtestande.
+
+##### Lördag - Arbetstid: ~1 timme
+Mer buggtestning.
 
 ## Vecka 19
 
-##### Måndag
+##### Måndag - Arbetstid: ~4 timmar
+Arbetade med gruppen. Vi fick igång kommunikation mellan java klienten och erlang servern.
+De kan kommunicera nu, men bara väldigt grundläggande saker. Vi måste arbeta mer på det.
 
-##### Tisdag
+##### Tisdag - Arbetstid: ?
+Buggtestande, buggtestande, buggtestande.
 
 ##### Onsdag
 
@@ -64,6 +86,7 @@ Arbatede fram ett paket/meddelandeprotokoll mellan vår backend och frontend.
 ##### Fredag
 
 ## Vecka 20
+Jag har arbetat till och från hela den här och förra veckan, glömde skriva dagbok och minns inte vilka dagar jag arbetade, vad jag gjorde specifikt varje dag eller hur länge jag arbetade.
 
 ##### Måndag
 
@@ -71,25 +94,42 @@ Arbatede fram ett paket/meddelandeprotokoll mellan vår backend och frontend.
 
 ##### Onsdag
 
-##### Torsdag
+##### Torsdag - Arbetstid: ~2 timmar
+Mer arbete på meddelandena.
 
-##### Fredag
+##### Fredag - Arbetstid: ~3 timmar
+Fixade fler meddelanden till biblioteket och tester.
+
+##### Lördag - Arbetstid: ~1 timme
+Samma som ovan.
+
+##### Söndag - Arbetstid: ~2 timmar
+Meddelanden.
 
 ## Vecka 21
 
-##### Måndag
+##### Måndag - Arbetstid: ~3 timmar
+Delade upp testerna i test suites.
+Mer jobb på meddelanden och unit-tester.
 
-##### Tisdag
+##### Tisdag - Arbetstid: ~3-4 timmar
+Vi bestämde oss för att göra om hela strukturen kring meddelanden.
+Så jag arbetade på att skriva om 80% av vårt bibliotek.
 
-##### Onsdag
+##### Onsdag - Arbetstid: ~3 timmar
+Arbetade med avtolkning av de nya meddelanden.
+Samt mer tester. Man kan aldrig få för många tester.
 
-##### Torsdag
+##### Torsdag - Arbetstid: ~4 timmar
+Mer jobb på meddelandena.
 
 ##### Fredag
 
 ## Vecka 22
 
-##### Måndag
+##### Måndag - Arbetstid: ~6-7 timmar
+Arbetade mer på testning och meddelandetolkning.
+Vi började även testa anslutning mellan biblioteket och servern med bra resultat.
 
 ##### Tisdag
 

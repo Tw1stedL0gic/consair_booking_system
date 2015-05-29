@@ -3,6 +3,7 @@ package ospp.bookinggui.networking.runnables;
 import ospp.bookinggui.exceptions.MalformedMessageException;
 import ospp.bookinggui.networking.Mailbox;
 import ospp.bookinggui.networking.Message;
+import ospp.bookinggui.networking.NetworkAdapter;
 import ospp.bookinggui.networking.messages.ErrorMsg;
 
 import java.io.*;
@@ -20,19 +21,19 @@ public class PacketListener implements Runnable {
 
 	/**
 	 * Creates a PacketListener.
-	 *
+	 * <p/>
 	 * A PacketListener reads each line of the InputStream and attempts to parse
 	 * them as messages using Message.parseMessage().
-	 *
+	 * <p/>
 	 * If the parsing was successful, the packet listener will add the new message to the inbox of the
 	 * given mailbox and continue on reading the input stream.
 	 *
-	 * @param m The mailbox to add new messages to.
+	 * @param m  The mailbox to add new messages to.
 	 * @param is The InputStream the packet listener should read.
 	 */
-	public PacketListener(Mailbox<Message> m, InputStream is) {
+	public PacketListener(Mailbox<Message> m, InputStream is) throws UnsupportedEncodingException {
 		this.mailbox = m;
-		this.input = new BufferedReader(new InputStreamReader(is));
+		this.input = new BufferedReader(new InputStreamReader(is, "UTF8"));
 	}
 
 	@Override
@@ -61,6 +62,8 @@ public class PacketListener implements Runnable {
 			}
 
 			logger.severe("END OF STREAM!");
+			mailbox.receive(new ErrorMsg(System.currentTimeMillis(), "The connection to the server was terminated!"));
+			NetworkAdapter.isConnected = false;
 		}
 		catch(IOException e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);

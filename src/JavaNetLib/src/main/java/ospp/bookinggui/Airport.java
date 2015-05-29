@@ -1,8 +1,15 @@
 package ospp.bookinggui;
 
+import java.lang.reflect.Field;
+
 public class Airport {
 
-	public static final int ARG_AMOUNT = 3;
+	public static final int ARG_AMOUNT;
+
+	static {
+		Field[] fields = Airport.class.getDeclaredFields();
+		ARG_AMOUNT = fields.length - 1;
+	}
 
 	private final String ID;
 	private final String IATA;
@@ -31,9 +38,9 @@ public class Airport {
 
 	public static Airport[] parseBodyToArray(String[] body, int offset) {
 
-		if((body.length - offset) % 3 != 0) {
-			throw new IllegalArgumentException("Airport.parseBodyToArray() was given an array not divisable by three after subtracting the offset!");
-		}
+//		if((body.length - offset) % 3 != 0) {
+//			throw new IllegalArgumentException("Airport.parseBodyToArray() was given an array not divisable by three after subtracting the offset!");
+//		}
 
 		Airport[] ports = new Airport[body.length / 3];
 

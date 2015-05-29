@@ -12,16 +12,20 @@ public class TestFlight {
 	@Test
 	public void createBody1() {
 
-		Airport airport = new Airport("12", "ARN", "Arlanda");
+		Airport from = new Airport("12", "ARN", "Arlanda");
+		Airport to = new Airport("13", "FOO", "FooBar");
 
-		Date date = new Date("1992", "03", "31", "12", "00", "00");
+		Date departure = new Date("1992", "03", "31", "12", "00", "00");
+		Date arrival = new Date("2015", "05", "25", "15", "32", "20");
 
-		Flight f = new Flight("TJOFRÄS", airport, date, "2");
+		Flight f = new Flight("TJOFRÄS", from, to, departure, arrival, "2");
 
 		String[] expected_body = new String[] {
 			"TJOFRÄS",
 			"12", "ARN", "Arlanda",
+			"13", "FOO", "FooBar",
 			"1992", "03", "31", "12", "00", "00",
+			"2015", "05", "25", "15", "32", "20",
 			"2"
 		};
 
@@ -33,27 +37,43 @@ public class TestFlight {
 		String[] data = new String[] {
 			"TJOFRÄS",
 			"12", "ARN", "Arlanda",
+			"13", "FOO", "FooBar",
 			"1992", "03", "31", "12", "00", "00",
+			"2015", "05", "25", "15", "32", "20",
 			"2"
 		};
 
-		Flight f = Flight.parseBody(data, 0);
+		Flight flight = Flight.parseBody(data, 0);
 
-		assertEquals("TJOFRÄS", f.getFlightID());
-		assertEquals("2", f.getFlightNumber());
+		assertEquals("TJOFRÄS", flight.getFlightID());
+		assertEquals("2", flight.getFlightNumber());
 
-		Airport a = f.getAirport();
-		Date d = f.getDate();
+		Airport from = flight.getFrom();
+		Airport to = flight.getTo();
 
-		assertEquals("12", a.getAirportID());
-		assertEquals("ARN", a.getIATA());
-		assertEquals("Arlanda", a.getName());
+		Date departure = flight.getDeparture();
+		Date arrival = flight.getArrival();
 
-		assertEquals("1992", d.getYear());
-		assertEquals("03", d.getMonth());
-		assertEquals("31", d.getDay());
-		assertEquals("12", d.getHour());
-		assertEquals("00", d.getMinute());
-		assertEquals("00", d.getSecond());
+		assertEquals("12", from.getAirportID());
+		assertEquals("ARN", from.getIATA());
+		assertEquals("Arlanda", from.getName());
+
+		assertEquals("13", to.getAirportID());
+		assertEquals("FOO", to.getIATA());
+		assertEquals("FooBar", to.getName());
+
+		assertEquals("1992", departure.getYear());
+		assertEquals("03", departure.getMonth());
+		assertEquals("31", departure.getDay());
+		assertEquals("12", departure.getHour());
+		assertEquals("00", departure.getMinute());
+		assertEquals("00", departure.getSecond());
+
+		assertEquals("2015", arrival.getYear());
+		assertEquals("05", arrival.getMonth());
+		assertEquals("25", arrival.getDay());
+		assertEquals("15", arrival.getHour());
+		assertEquals("32", arrival.getMinute());
+		assertEquals("20", arrival.getSecond());
 	}
 }

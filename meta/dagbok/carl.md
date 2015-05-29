@@ -1,4 +1,4 @@
-# Dagbok för Förnamn Efternamn
+# Dagbok för Carl Wingårdh
 
 OSPP (1DT096) 2015 - Grupp 04
 
@@ -52,7 +52,13 @@ Efter presentationen jobbade jag med den skriftliga rapporten. Eftersom jag komm
 
 ##### Fredag
 
+Nationen
+
 ## Vecka 17
+
+Uppgift: Peer review, reflektion och prototyp. 
+Timmar: 6:30
+Reflektion: Att få information om hemtentan förstörde verkligen min plan för veckan. Jag hade knutit upp mig på nationsarbete och en fest på onsdag och torsdag som inte skulle vara ett problem eftersom jag skulle arbete med gruppen under dagen, men eftersom jag helt plötsligt hade en tenta att skriva så hade jag ingen tid för projektet. 
 
 ##### Måndag
 
@@ -68,15 +74,35 @@ Vi hade inte riktigt det mötet som jag hade förväntat, istället satt vi och 
 
 ##### Onsdag
 
+Jag fick reda på Tisdag om en hemtenta som skulle in på Fredag, så jag sa till gruppen att jag inte kommer hinna jobba på projektet under de nästa tre dagarna. 
+
 ##### Torsdag
 
+Hemtenta
+
 ##### Fredag
+
+Hemtenta
+
+##### Lördag
+
+11:30 - 13:00
+
+Jobbade lite hemifrån med formattering och dokumentation. Det var ett effektivt sätt att försöka komma ikapp med vad resten av laget har jobbat med (har också pratat med dem lite och läst genom deras dagböcker).
 
 ## Vecka 18
 
 ##### Måndag
 
+13:30 - 15:15
+
+Gick på milstolpemöte 1. Vi satt sen och bestämde lite om hur valborgsveckan kommer se ut. 
+
 ##### Tisdag
+
+13:30 - 15:30
+
+Jag och Andreas satt och jobbade lite på servern och simulationen. Jag har läst på så mycket jag kan om gen_tcp. Jag skrev en alternativ lösning till hur vi hanterar kopplingen mellan två enheter. Eftersom det bara var jag och Andreas så kunde jag dock inte diskutera den med nån. Jag gör väl det genom Facebook. 
 
 ##### Onsdag
 
@@ -88,6 +114,12 @@ Vi hade inte riktigt det mötet som jag hade förväntat, istället satt vi och 
 
 ##### Måndag
 
+5:40
+
+10:00 - 15:40
+
+Jobbade med Lucas för att få Erlang och Java att prata med varandra. Kom ganska långt med att skicka från Erlang till Java. Nästa steg är att skicka från Java till Erlang, vilket jag tror kommer bli lite problematiskt (eftersom jag inte riktigt känner mig säker i vad Java kommer skicka för nåt).
+
 ##### Tisdag
 
 ##### Onsdag
@@ -96,11 +128,29 @@ Vi hade inte riktigt det mötet som jag hade förväntat, istället satt vi och 
 
 ##### Fredag
 
+4:30 
+
+11:00 - 15:30
+
+Jobbade hemifrån på en prototyp för Erlang backend. Jag har lyckats få en server terminal att hantera flera andra client terminaler samtidigt. Det lyckades och jag ska applicera detta på det egentliga programmet. 
+
 ## Vecka 20
 
 ##### Måndag
 
+5:00
+
+08:45 - 09:45, 13:00 - 17:00
+
+Jobbade på morgonen och eftermiddagen på min prototyp. Har fått en fungerande prototype och har applicerat min prototyp på den egentliga servern. 
+
 ##### Tisdag
+
+4:00
+
+11:00 - 15:00
+
+Nu har vi en server som svarar på meddelanden. Jag har gjort en seperat fil som hanterar paketen, detta är för att skapa en gräns mellan snackandet och tänkandet i servern. 
 
 ##### Onsdag
 
@@ -112,13 +162,33 @@ Vi hade inte riktigt det mötet som jag hade förväntat, istället satt vi och 
 
 ##### Måndag
 
+10:00 - 16:00
+
+Möte med Karl. Kändes lite tråkigt och omitverat. Men Karl gav oss den spark i röven vi behövde och vi strukturerade vårt arbete på ett sätt som har gjort att det hela känns betydligt bättre. Vi har klippt bort väldigt mycket, men det känns som att det är för vårt eget bästa. 
+
 ##### Tisdag
+
+11:00 - 16:00
+
+Jag och Lucas har nu strukturerat hur våra meddelanden ska se ut. Jag har också dokumenterat hur booking_agent ska formattera sina svar så att jag kan börja översätta dess meddelanden. Kommer kanske brancha ut och använda mig av hårdkodade svar för att testa functionalitet. 
 
 ##### Onsdag
 
+10:00 - 17:00
+
+Jobbade mycket med Oskar för att få booking agent att prata med databas. Han har nu tagit över den delen av projektet och det känns väldit skönt. Att tolka meddelanden och formattera dem tar mycket längre tid än jag förväntade mig. 
+
 ##### Torsdag
 
+10:30 - 17:00
+
+Fortsatte med att tolka och formattera paket. När jag har gjort klart detta tänker jag hårdkoda lite svar från booking agent och försöka sätta ihop en server som ger svar. 
+
 ##### Fredag
+
+##### Söndag
+
+Satt och kodade lite och förberedde för presentationen. 
 
 ## Vecka 22
 

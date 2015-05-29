@@ -33,8 +33,11 @@ Gick igenom saker som skrevs igår 1h
 ##### Torsdag
 påbörjat jobb med interface mellan erlang och java samt att tittat på saker inför demo (måndag) 11-
 ##### Fredag
-
+satt hemma och läste på om databaser och server inteface i erlang 3h
+##### Satarday
+Suttit och fixat med server pga om desigen av java interface  1,5h
 ## Vecka 18
+
 1
 ##### Måndag
 
@@ -61,27 +64,36 @@ påbörjat jobb med interface mellan erlang och java samt att tittat på saker i
 ## Vecka 20
 
 ##### Måndag
-
+JObbat med databasen ca 5 h
 ##### Tisdag
-
+jobbat med databasen och med rapport och dokumentation ca 3 h
 ##### Onsdag
-
+jobbat med databasen
 ##### Torsdag
-
+jobbat med databasen
 ##### Fredag
-
+jobbat med databasen
+##### Lördag
+Rapport och  / database
+##### Söndag 
+Rapport och  /Laggt till alla frågor och db funktioner till bookinghandler
 ## Vecka 21
 
 ##### Måndag
-
+Refactoring DB pga dåliga desigen val i början, samt att skriver om den Sql frågor som behövs
 ##### Tisdag
-
+Fixar med buggar från refackoring av databasen och håller på att fixa dessa 
 ##### Onsdag
-
+Upptäckte idag att det finns stora brister i hur amnesia hanterar sql det kommer att bli en massor med frågor för att kunna hantera den datan som vi vill ha ut.
 ##### Torsdag
-
+Fixar med de mer komplexa Sql frågorna
 ##### Fredag
-
+Bugg fixar sql kod / det kommer bli mera och mera sql frågor 
+##### Lördag
+Satt med rapport och fixade lite med kod till booking_agent (att sätta ihop filerna som kontrollerar db med den delen av servern som kallar på dem)
+##### Söndag
+Suttit med sammankopplingen mellan booking_agent och med get_database och fortsatt med det som pysslades med igår samt att vi har hållt på med persetationen
+laggt till kommentarer till filerna som jag har jobbat med.
 ## Vecka 22
 
 ##### Måndag
