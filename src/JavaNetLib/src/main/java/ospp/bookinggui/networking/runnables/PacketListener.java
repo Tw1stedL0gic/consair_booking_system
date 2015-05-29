@@ -3,6 +3,7 @@ package ospp.bookinggui.networking.runnables;
 import ospp.bookinggui.exceptions.MalformedMessageException;
 import ospp.bookinggui.networking.Mailbox;
 import ospp.bookinggui.networking.Message;
+import ospp.bookinggui.networking.NetworkAdapter;
 import ospp.bookinggui.networking.messages.ErrorMsg;
 
 import java.io.*;
@@ -61,6 +62,8 @@ public class PacketListener implements Runnable {
 			}
 
 			logger.severe("END OF STREAM!");
+			mailbox.receive(new ErrorMsg(System.currentTimeMillis(), "The connection to the server was terminated!"));
+			NetworkAdapter.isConnected = false;
 		}
 		catch(IOException e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);
