@@ -115,7 +115,7 @@ public class SelectionController extends Window implements Bindable {
 				final String fromAirport = (String) fromList.getSelectedItem();
 				final String toAirport = (String) toList.getSelectedItem();
 
-				if(fromAirport.equals("MissingFlight") || toAirport.equals("MissingFlight")) {
+				if(fromAirport.equals("MissingAirports") || toAirport.equals("MissingAirports")) {
 					Alert.alert(MessageType.ERROR,
 						"\"MissingFlight\" is not a legal selection! Please wait for the client to load the airports!",
 						SelectionController.this);

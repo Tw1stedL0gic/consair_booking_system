@@ -34,13 +34,13 @@
                         <!-- FROM LIST -->
                         <ScrollPane horizontalScrollBarPolicy="fill"
                                     verticalScrollBarPolicy="fill_to_capacity">
-                            <ListView bxml:id="fromList" selectMode="single"/>
+                            <ListView bxml:id="fromList" selectMode="single" listData="['MissingAirports']"/>
                         </ScrollPane>
 
                         <!-- TO LIST -->
                         <ScrollPane horizontalScrollBarPolicy="fill"
                                     verticalScrollBarPolicy="fill_to_capacity">
-                            <ListView bxml:id="toList" selectMode="single"/>
+                            <ListView bxml:id="toList" selectMode="single" listData="['MissingAirports']"/>
                         </ScrollPane>
                     </TablePane.Row>
                 </TablePane>
