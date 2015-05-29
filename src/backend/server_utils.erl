@@ -62,11 +62,14 @@ flatten_tuples_to_list(Tuple) ->
 flatten_tuples_to_list([], Acc) ->
     Acc;
 
-flatten_tuples_to_list([Head | Tuple_list], Acc) when is_tuple(Head)->
-    flatten_tuples_to_list(lists:append(tuple_to_list(Head), Tuple_list), Acc);
+flatten_tuples_to_list([Head | Tuple_list], Acc) when is_tuple(Head) ->
+    flatten_tuples_to_list(tuple_to_list(Head) ++ Tuple_list, Acc);
 
-flatten_tuples_to_list([Head | Tuples_list], Acc) ->
-    flatten_tuples_to_list(Tuples_list, lists:append(Acc, [Head])).
+flatten_tuples_to_list([Head | Tuple_list], Acc) when is_list(Head) ->
+    flatten_tuples_to_list(Tuple_list, Acc ++ flatten_tuples_to_list(Head));
+
+flatten_tuples_to_list([Head | Tuple_list], Acc) ->
+    flatten_tuples_to_list(Tuple_list, Acc ++ [Head]).
 
 %%---------------------------------------------------------------------%%
 
@@ -105,7 +108,7 @@ connect_send_and_receive_manual(Message, IP, Port) ->
     case gen_tcp:connect(IP, Port, ?CONNECTIONOPTIONS) of
 	{ok, Sock} ->
 	    gen_tcp:send(Sock, Message),	    
-	    case gen_tcp:recv(Sock, 0, 1000) of
+	    case gen_tcp:recv(Sock, 0, 500) of
 		{ok, Response} -> 
 		    gen_tcp:send(Sock, translate_package({?DISCONNECT})),
 		    {ok, Response};
@@ -126,7 +129,7 @@ connect_send_and_receive(Message, IP, Port) ->
     case gen_tcp:connect(IP, Port, ?CONNECTIONOPTIONS) of
 	{ok, Sock} ->
 	    gen_tcp:send(Sock, translate_package(Message)),	    
-	    case gen_tcp:recv(Sock, 0, 1000) of
+	    case gen_tcp:recv(Sock, 0, 500) of
 		{ok, Response} -> 
 		    gen_tcp:send(Sock, translate_package({?DISCONNECT})),
 		    {ok, Response};
@@ -149,7 +152,7 @@ connect_send_and_receive_list(Message_list, IP, Port) when is_integer(Port) ->
 	    case connect_send_and_receive_list(Message_list, Sock, []) of
 		{ok, Response} ->
 		    gen_tcp:send(Sock, translate_package({?DISCONNECT})),
-		    Response;
+		    {ok, Response};
 		{error, Error} ->
 		    gen_tcp:send(Sock, translate_package({?DISCONNECT})),
 		    {error, Error}
@@ -163,7 +166,9 @@ connect_send_and_receive_list([], _, Acc) when is_list(Acc) ->
 
 connect_send_and_receive_list([Message | Message_list], Sock, Acc) when is_list(Acc) ->
     gen_tcp:send(Sock, translate_package(Message)),
-    case gen_tcp:recv(Sock, 0, 1000) of
+    case gen_tcp:recv(Sock, 0, 500) of
+	{error, timeout} ->
+	    connect_send_and_receive_list(Message_list, Sock, Acc);
 	{error, Error} -> 
 	    {error, Error};
 	{ok, Response} -> 

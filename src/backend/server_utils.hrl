@@ -1,11 +1,7 @@
 -import(server_utils, [translate_package/1, now_as_string_millis/0, list_to_regexp/2, flatten_tuples_to_list/1, connect_send_and_receive_manual/2, connect_send_and_receive/2, connect_send_and_receive_list/2, reload_code/0,reload_code/1, stop_server/0, stop_server/1, format_position_as_mod/2, format_position_as_mod/4, fill_with_white_space/2, pass_message_list/2]).
 
-%% RegExp seperators
 
--define(ELEMENT_SEPERATOR, "&"). %% must be enclosed in quotes
--define(MESSAGE_SEPERATOR, "\n").
-
-
+-define(VERSION, "0.8").
 
 -define(PORT, 53535).
 -define(ALT_PORT, 53335).
@@ -13,6 +9,13 @@
 -define(ALLOWEDTIMEOUTS, 10). %% Amount of minutes allowed before connection is terminated
 -define(ADMIN_ALLOWEDTIMEOUTS, 20). %% Amount of minutes allowed before admin connection is terminated
 -define(Book_time, 10). %% Minutes before users locked seat is unlocked
+
+
+
+%% RegExp seperators
+
+-define(ELEMENT_SEPERATOR, "&"). 
+-define(MESSAGE_SEPERATOR, "\n").
 
 
 %% Codes
@@ -66,25 +69,60 @@
 
 
 
--define(WRITE_CONNECTION(String, Arguments), 
+-define(WRITE_CONNECTION(String, Arguments, Code), 
 	io:format(" C"
 		  ++ fill_with_white_space(integer_to_list(ID), 3) 
 		  ++ format_position_as_mod(ID, 5)
 		  ++ " | " 
 		  ++ fill_with_white_space(pid_to_list(self()), 10)
 		  ++ " | " 
-		  ++ fill_with_white_space(case is_atom(User) of true -> atom_to_list(User); _ -> User end, 14)
-		  ++ " | " 
+		  ++ fill_with_white_space(case is_list(User) of true -> User; _ -> atom_to_list(User) end, 14)
+		  ++ " | "
+		  ++ Code
+		  ++ " | "
 		  ++ String, 
 		  Arguments)).
 
--define(WRITE_SPAWNER(String, Arguments), 
+-define(WRITE_SPAWNER(String, Arguments, Code), 
 	io:format("*CS* " 
 		  ++ format_position_as_mod(-1, 5) 
 		  ++ " | " 
 		  ++ fill_with_white_space(pid_to_list(self()), 10)
 		  ++ " | " 
 		  ++ "Connections: ~p"
+		  ++ " | "
+		  ++ Code
 		  ++ " | " 
 		  ++ String, 
 		  [N | Arguments])).
+
+
+-define(DRAW_LOGO, 
+
+	io:fwrite("                                             ~n"),
+	io:fwrite("     CCCCCCCCCCCCCCC                         ~n"),
+	io:fwrite("     C      c      C    C                    ~n"),
+	io:fwrite("     C      C     CCCCCCCCC                  ~n"),
+	io:fwrite("     C      C     CCCCCCCCC                  ~n"),
+	io:fwrite("     C  CC  C      C    C                    ~n"),
+	io:fwrite("     CCCCCCCCCCCCCCC                         ~n"),
+	io:fwrite("        CC                                   ~n"),
+	io:fwrite("        CC                                   ~n"),
+	io:fwrite("       CCCC       CONS-AIR BOOKING SYSTEM    ~n"),
+	io:fwrite("        CC              VERSION: "++ ?VERSION ++ "          ~n"),
+	io:fwrite("                                             ~n")).
+
+-define(BEAUTIFUL_LINE, "========================================================-=-=-=-=-=-=-=-=-=-=---------------~n").
+
+-define(DRAW_TITLE(String),
+	
+	io:fwrite(?BEAUTIFUL_LINE),
+	io:fwrite(String ++ "~n"),
+	io:fwrite(?BEAUTIFUL_LINE)).
+
+
+-define(DRAW_TABLE_HEADER,
+	
+	io:fwrite(?BEAUTIFUL_LINE),
+	io:fwrite(" Connection |    PID     |  Login / #Con  |   | Message~n"),
+	io:fwrite(?BEAUTIFUL_LINE)).
