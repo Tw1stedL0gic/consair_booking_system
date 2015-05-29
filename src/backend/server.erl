@@ -159,17 +159,17 @@ connector_handler(Sock, ID, Timeouts, User, Parent_PID) ->
        		    ?WRITE_CONNECTION("Code reload request~n", [], "R"),    
 		    Parent_PID ! reload_code;
 		{ok, {admin, Response}} ->
-		    ?WRITE_CONNECTION("Message sent:     >>>>> ~p~n", [Response], ">"),    
+%%		    ?WRITE_CONNECTION("Message sent:     >>>>> ~p~n", [Response], ">"),    
 		    gen_tcp:send(Sock, Response),
 		    ?WRITE_CONNECTION("Logged in as Admin~n", [], " "),
 		    connector_handler(Sock, ID, 0, admin, Parent_PID);
 		{ok, {New_user, Response}} ->
-		    ?WRITE_CONNECTION("Message sent:     >>>>> ~p~n", [Response], ">"),    
+%%		    ?WRITE_CONNECTION("Message sent:     >>>>> ~p~n", [Response], ">"),    
 		    gen_tcp:send(Sock, Response),
 		    ?WRITE_CONNECTION("Logged in as ~p~n", [New_user], " "),
 		    connector_handler(Sock, ID, 0, New_user, Parent_PID);
 		{ok, Response} ->
-		    ?WRITE_CONNECTION("Message send:     >>>>>  ~p~n", [Response], ">"),    
+%%		    ?WRITE_CONNECTION("Message send:     >>>>>  ~p~n", [Response], ">"),    
 		    gen_tcp:send(Sock, Response),
 		    connector_handler(Sock, ID, 0, User, Parent_PID);
 		{error, Error} ->
