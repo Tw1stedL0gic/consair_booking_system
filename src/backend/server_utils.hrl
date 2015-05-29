@@ -100,21 +100,41 @@
 		  ++ String, 
 		  [N | Arguments])).
 
+-define(DRAW_LOGO,
+	io:fwrite("                                                                                                        ~n"),
+	io:fwrite("                                                                                                        ~n"),
+	io:fwrite("                                                                                                        ~n"),
+	io:fwrite("  CONS AIR BOOKING SYSTEM                                                  sMMN/                        ~n"),
+	io:fwrite("     VERSION "++?VERSION++"                                                 `:+o/     hMMMo    `:+sy/              ~n"),
+	io:fwrite("                                                                 sMMMMo     :ooo. `hMMMMMN`             ~n"),
+	io:fwrite("                                                                `hMMMMMy`   oMMMs` dMMMo..              ~n"),
+	io:fwrite("                                                                /NMMNMMMm:  +NMMNo /MMMd                ~n"),
+	io:fwrite("                                                 -+oyhy/        +NMMmmMMMN/ `mMMMm` mMMM:               ~n"),
+	io:fwrite("                                      `-://-`  `yNMMMMMd    `.- oNMMN.yMMMN+ oNMMN/ +MMMh               ~n"),
+	io:fwrite("             ./shdmdy/             -sdNMMMMMNo`+NMMNs++--ydNMMMhsNMMNdNNMMMN+`mMMM+ `mMMN-              ~n"),
+	io:fwrite("           `yMMMMMMMMs   :sdmNds:  hMMMMNNMMMMh/NMMMmy+-oNMMMMMmmMMMMMMMNMMMN+oMMMm` +MMMy              ~n"),
+	io:fwrite("           hMMMh-``.-` `hMMMMMMMMh./NMMMh`yMMMMo/mMMMMMMNNy+/-. sMMMNs/:-hMMMNyNMMM/ `hhy+              ~n"),
+	io:fwrite("          .NMMN`       oNMMNsoNMMMd:dMMMN-.NMMMm` :/mNMMMMs     sMMMN- -oohMNNd+o+-    -//-             ~n"),
+	io:fwrite("          .NMMN.       yMMMN- +NMMMy/NMMMs sMMMN+ :.dNNMMMd     oNMMm. `-//+/.  -:.     :///.           ~n"),
+	io:fwrite("           dMMM+       oNMMNo `mMMMN.dMMMN.-NMMMm/NMMMMMMN/     `/:-`    `.:///:-///:::://////////:`    ~n"),
+	io:fwrite("           /MMMm`      .mMMMm- yMMMN-+NMMMs yMMMNohdNNmh+.                  `.-:////////////////-.`     ~n"),
+	io:fwrite("            dMMMh`    `:sNMMMNhNMMMd `mMMMd .os+:                                `..-------..``         ~n"),
+	io:fwrite("            .dMMMm+::yNMNmdNMMMMMNh.  .::.                                                              ~n"),
+	io:fwrite("             `sNMMMMMMMMN+ -+sso/os:                                                                    ~n"),
+	io:fwrite("               `/syyso/.         .ss-                                                                   ~n"),
+	io:fwrite("                                  -ss/             ..                                                   ~n"),
+	io:fwrite("                                   -oso-           -so.                                                 ~n"),
+	io:fwrite("                                    `/sso:` :+-     +ss:                                                ~n"),
+	io:fwrite("                                      `/oss+:oso/:::/sss+...`                                           ~n"),
+	io:fwrite("                                         ./ossssssssssssssssso/                                         ~n"),
+	io:fwrite("                                            `-:/+ossssssoo+/:.`                                         ~n"),
+	io:fwrite("                                                    ```                                                 ~n"),
+	io:fwrite("                                                                                                        ~n"),
+	io:fwrite("                                                                                                        ~n")).
+                                                                                                    
+                                                                                                    
+                                                                                                 
 
--define(DRAW_LOGO, 
-
-	io:fwrite("                                             ~n"),
-	io:fwrite("     CCCCCCCCCCCCCCC                         ~n"),
-	io:fwrite("     C      c      C    C                    ~n"),
-	io:fwrite("     C      C     CCCCCCCCC                  ~n"),
-	io:fwrite("     C      C     CCCCCCCCC                  ~n"),
-	io:fwrite("     C  CC  C      C    C                    ~n"),
-	io:fwrite("     CCCCCCCCCCCCCCC                         ~n"),
-	io:fwrite("        CC                                   ~n"),
-	io:fwrite("        CC                                   ~n"),
-	io:fwrite("       CCCC       CONS-AIR BOOKING SYSTEM    ~n"),
-	io:fwrite("        CC              VERSION: "++ ?VERSION ++ "          ~n"),
-	io:fwrite("                                             ~n")).
 
 -define(BEAUTIFUL_LINE, "========================================================-=-=-=-=-=-=-=-=-=-=---------------~n").
 

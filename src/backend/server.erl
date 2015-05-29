@@ -42,6 +42,7 @@ start(Port) ->
 	    %% spawn new process and let this one die 
 	    %% spawn(?MODULE, connector_spawner, [LSock, 0]);
 	    %% continue in same process
+	    ?DRAW_LOGO,
 	    ?DRAW_TITLE("SERVER INITIATED, Version number" ++ ?VERSION),
 	    ?DRAW_TABLE_HEADER,
 	    case lists:keyfind(addr, 1, element(2, lists:keyfind("wlan0", 1, element(2, inet:getifaddrs())))) of
@@ -59,6 +60,7 @@ start(Port) ->
 	    connector_spawner(LSock, 0);
 	{error, eaddrinuse} ->
 	    ?DRAW_TITLE("Port " ++ integer_to_list(Port) ++ " busy "),
+	    ?DRAW_LOGO,
 	    {error, eaddrinuse};
 	_ ->
 	    {error, could_not_listen}		
