@@ -92,6 +92,9 @@ Jobbade lite hemifrån med formattering och dokumentation. Det var ett effektivt
 
 ## Vecka 18
 
+Valborgsveckan. Nuff said. 
+Timmar: 3:45
+
 ##### Måndag
 
 13:30 - 15:15
@@ -112,9 +115,9 @@ Jag och Andreas satt och jobbade lite på servern och simulationen. Jag har läs
 
 ## Vecka 19
 
-##### Måndag
+10:10
 
-5:40
+##### Måndag
 
 10:00 - 15:40
 
@@ -128,25 +131,22 @@ Jobbade med Lucas för att få Erlang och Java att prata med varandra. Kom gansk
 
 ##### Fredag
 
-4:30 
-
 11:00 - 15:30
 
 Jobbade hemifrån på en prototyp för Erlang backend. Jag har lyckats få en server terminal att hantera flera andra client terminaler samtidigt. Det lyckades och jag ska applicera detta på det egentliga programmet. 
 
 ## Vecka 20
 
-##### Måndag
+Lite halvproduktiv vecka. Tagget för projektet börjar dö och det märks. 
+9:00
 
-5:00
+##### Måndag
 
 08:45 - 09:45, 13:00 - 17:00
 
 Jobbade på morgonen och eftermiddagen på min prototyp. Har fått en fungerande prototype och har applicerat min prototyp på den egentliga servern. 
 
 ##### Tisdag
-
-4:00
 
 11:00 - 15:00
 
@@ -159,6 +159,9 @@ Nu har vi en server som svarar på meddelanden. Jag har gjort en seperat fil som
 ##### Fredag
 
 ## Vecka 21
+
+Inspirerande möte med Karl. Vi måste börja jobbade hårdare, och vi lyckades med det den här veckan. 
+24:30
 
 ##### Måndag
 
@@ -192,6 +195,9 @@ Satt och kodade lite och förberedde för presentationen.
 
 ## Vecka 22
 
+Produktiviteten har ökat maximalt, för mig i alla fall. Jag har blivit intresserad i projektet och det äär sjukt nice att servern har börjat funka och kan svara på meddelanden. Nu är det sista kvar, debugging. :(
+34:00
+
 ##### Måndag
 
 ##### Tisdag
@@ -206,20 +212,31 @@ Den sitter nu ihop med java adaptern. Behöver lite fix med att tolk databas med
 
 11:00 - 16:00
 
+Jobbade på skolan en massa. 
 
 21:00 - 24:00
+
+Fortsatte jobba hemma. Fick en massa inspiration och jobbade hemma. 
 
 ##### Torsdag
 
 00:00 - 05:00
 
-Late night progging
+Late night progging. Var hemma efter en redig kväll med programmering.
 
 21:00 - 24:00
+
+På kvällen fick jag inspiration igen och började tjöta. 
 
 ##### Fredag
 
 00:00 - 04:00
+
+Late night progging
+
+16:00 - 20:30
+
+Jobbade med Oskar. Fixade en massa buggar med databashämtning och sånt. 
 
 ## Vecka 23
 
