@@ -80,10 +80,10 @@ handle_package({?INIT_BOOK, [_ | Seat_ID_list_as_string]}, User) ->
 
 handle_package({?FIN_BOOK}, User) -> 
     case booking_agent:finalize_booking(User) of
-	{ok, Success_code} ->
-	    {ok, translate_package({?FIN_BOOK_RESP, [Success_code]})};
-	{error, Error} ->
-	    {error, Error}
+	ok ->
+	    {ok, translate_package({?FIN_BOOK_RESP, [?FIN_BOOK_SUCCESS]})};
+	{error, _} ->
+	    {ok, translate_package({?FIN_BOOK_RESP, [?FIN_BOOK_FAIL]})}
     end;
     
 

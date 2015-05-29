@@ -31,6 +31,10 @@
 -define(INIT_BOOKED,        3).
 -define(INIT_DID_NOT_EXIST, 4).
 
+%% FINALIZE BOOK RESPONSE CODE
+-define(FIN_BOOK_SUCCESS, 1).
+-define(FIN_BOOK_FAIL,    2).
+
 
 %% Package IDs
 -define(LOGIN,                         1).
