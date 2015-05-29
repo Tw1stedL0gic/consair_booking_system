@@ -66,7 +66,7 @@ flatten_tuples_to_list([Head | Tuple_list], Acc) when is_tuple(Head) ->
     flatten_tuples_to_list(tuple_to_list(Head) ++ Tuple_list, Acc);
 
 flatten_tuples_to_list([Head | Tuple_list], Acc) when is_list(Head) ->
-    flatten_tuples_to_list(Tuple_list, Acc ++ flatten_tuples_to_list(Head));
+    flatten_tuples_to_list(Tuple_list, Acc ++ flatten_tuples_to_list(Head, []));
 
 flatten_tuples_to_list([Head | Tuple_list], Acc) ->
     flatten_tuples_to_list(Tuple_list, Acc ++ [Head]).

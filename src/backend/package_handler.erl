@@ -90,7 +90,7 @@ handle_package({?FIN_BOOK}, User) ->
 handle_package({?REQ_AIRPORTS}, _) -> 
     case booking_agent:airport_list() of
 	{ok, Airport_list} ->
-	    {ok, translate_package({?REQ_AIRPORTS_RESP, flatten_tuples_to_list(Airport_list)})};
+	    {ok, translate_package({?REQ_AIRPORTS_RESP, flatten_tuples_to_list(Airport_list)})}; 
 	{error, Error} ->
 	    {error, Error}
     end;
