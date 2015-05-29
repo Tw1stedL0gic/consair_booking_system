@@ -83,11 +83,6 @@ public class Message {
 
 		String[] parts = data.split(Message.SEPARATOR);
 
-		// Remove the URL encoding from the message, we no longer need it.
-		for(int i = 0; i < parts.length; i++) {
-			parts[i] = URLDecoder.decode(parts[i], "UTF8");
-		}
-
 		if(parts.length < Message.HEADER_SIZE) {
 			throw new MalformedMessageException("Could not parse message! The message is too small!");
 		}
@@ -212,7 +207,7 @@ public class Message {
 		message.append(this.TIMESTAMP).append(Message.SEPARATOR);
 
 		for(String arg : this.BODY) {
-			message.append(URLEncoder.encode(arg, "UTF8")).append(Message.SEPARATOR);
+			message.append(arg).append(Message.SEPARATOR);
 		}
 
 		return message.toString();
