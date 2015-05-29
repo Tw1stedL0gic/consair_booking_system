@@ -56,7 +56,7 @@ table(seats) ->
       %%{user_name, varchar, not_null}, 
       refers_to(user),
       {window, bool, not_null},
-      {ailside, bool, not_null}, 
+      {aisle, bool, not_null}, 
       {row, varchar, not_null},
       {col, varchar, not_null}, 
       {lock_s, integer, not_null}].

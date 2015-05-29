@@ -178,13 +178,12 @@ seat_lock(Seat_ID) ->
     %% return availability of Seat_ID in Flight_ID
     Data = get_database:get_seats_id_from_db(Seat_ID),
     case Data of
-	{_,[{_,_,_,_,_,_,_,_,_,_,Lock_s}]} ->
+	{_,[{_,_,_,_,_,_,_,_,_,Lock_s}]} ->
 	    Lock_s;
 	_ ->
 	    {error,no_seat}
     end.
     
-
 
 %%---------------------------------------------------------------------%%
 
