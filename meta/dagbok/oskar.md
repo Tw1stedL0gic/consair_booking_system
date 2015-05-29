@@ -106,7 +106,7 @@ Gjort populerings script till MySQL servern för att lägga upp större volymer 
 ##### Torsdag
 har fixat så att man kan installera in database utan att gå in i sqlservern samt skrivt Readme till alla db filer, samt att påbörjat att fixa en makefil till dessa. 
 ##### Fredag
-
+Suttit med bugg check med carl och med lucas medans vi har kopplat ihop våra moduler samt att jag har fixat med insall scripts och mappstruktur för DB, samt att skrivit readme för main page.
 ## Vecka 23
 
 ##### Måndag
