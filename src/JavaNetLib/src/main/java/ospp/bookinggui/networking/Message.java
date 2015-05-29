@@ -128,7 +128,7 @@ public class Message {
 					return new RequestAirportsRespMsg(timestamp, body);
 
 				case SEARCH_ROUTE:
-					return new SearchAirportRouteMsg(timestamp, body);
+					return new SearchAirportRouteMsg(timestamp, body[0], body[1]);
 
 				case SEARCH_ROUTE_RESP:
 					return new SearchAirportRouteRespMsg(timestamp, body);

@@ -6,29 +6,20 @@ import ospp.bookinggui.networking.MessageType;
 
 public class SearchAirportRouteMsg extends Message {
 
-	private final Airport from;
-	private final Airport to;
+	private final String from;
+	private final String to;
 
-	public SearchAirportRouteMsg(long timestamp, String[] body) {
-		super(MessageType.SEARCH_ROUTE, timestamp, body);
-		this.from = Airport.parseBody(body, 0);
-		this.to = Airport.parseBody(body, Airport.ARG_AMOUNT);
+	public SearchAirportRouteMsg(long timestamp, String from_id, String to_id) {
+		super(MessageType.SEARCH_ROUTE, timestamp, new String[]{from_id, to_id});
+		this.from = from_id;
+		this.to = to_id;
 	}
 
-	public static String[] constructBody(Airport from, Airport to) {
-		String[] body = new String[Airport.ARG_AMOUNT * 2];
-
-		System.arraycopy(from.createBody(), 0, body, 0, Airport.ARG_AMOUNT);
-		System.arraycopy(to.createBody(), 0, body, Airport.ARG_AMOUNT, Airport.ARG_AMOUNT);
-
-		return body;
-	}
-
-	public Airport getFrom() {
+	public String getFrom() {
 		return this.from;
 	}
 
-	public Airport getTo() {
+	public String getTo() {
 		return this.to;
 	}
 }
