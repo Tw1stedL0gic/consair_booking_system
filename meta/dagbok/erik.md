@@ -101,7 +101,7 @@ gui 3h
 ##### Tisdag
 2h nätverks interface snack
 ##### Onsdag
-
+8h bråka med java och gui
 ##### Torsdag
 
 ##### Fredag
