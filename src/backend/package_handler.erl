@@ -91,7 +91,7 @@ handle_package({?FIN_BOOK}, User) ->
 handle_package({?REQ_AIRPORTS}, _) -> 
     case booking_agent:airport_list() of
 	{ok, Airport_list} ->
-	    {ok, translate_package({?REQ_AIRPORTS_RESP, flatten_tuples_to_list(Airport_list)})}; 
+	    {ok, translate_package({?REQ_AIRPORTS_RESP, flatten_tuples_to_list(remove_first_element_in_tuples_list(Airport_list))})}; 
 	{error, Error} ->
 	    {error, Error}
     end;
@@ -99,7 +99,7 @@ handle_package({?REQ_AIRPORTS}, _) ->
 handle_package({?REQ_AIRPORTS, Airport_ID}, _) -> 
     case booking_agent:airport_list(Airport_ID) of
 	{ok, Airport_list} ->
-	    {ok, translate_package({?REQ_AIRPORTS_RESP, flatten_tuples_to_list(Airport_list)})};
+	    {ok, translate_package({?REQ_AIRPORTS_RESP, flatten_tuples_to_list(remove_first_element_in_tuples_list(Airport_list))})};
 	{error, Error} ->
 	    {error, Error}
     end;

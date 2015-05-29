@@ -1,5 +1,5 @@
 -module(server_utils).
--export([translate_package/1, now_as_string_millis/0, list_to_regexp/2, flatten_tuples_to_list/1, connect_send_and_receive_manual/2, connect_send_and_receive_manual/3, connect_send_and_receive/2, connect_send_and_receive/3, connect_send_and_receive_list/2, connect_send_and_receive_list/3, reload_code/0,reload_code/1, stop_server/0, stop_server/1,format_position_as_mod/2, format_position_as_mod/4, fill_with_white_space/2, pass_message_list/2]).
+-export([translate_package/1, now_as_string_millis/0, list_to_regexp/2, flatten_tuples_to_list/1, connect_send_and_receive_manual/2, connect_send_and_receive_manual/3, connect_send_and_receive/2, connect_send_and_receive/3, connect_send_and_receive_list/2, connect_send_and_receive_list/3, reload_code/0,reload_code/1, stop_server/0, stop_server/1,format_position_as_mod/2, format_position_as_mod/4, fill_with_white_space/2, pass_message_list/2, remove_first_element_in_tuples_list/1]).
 
 -define(ELEMENT_SEPERATOR, "&"). 
 -define(MESSAGE_SEPERATOR, "\n").
@@ -214,3 +214,12 @@ pass_message_list([Message | Message_list], PID) ->
     pass_message_list(Message_list, PID).
 
 %%---------------------------------------------------------------------%%
+
+remove_first_element_in_tuples_list(Tuple_list) ->
+    remove_first_element_in_tuples_list(Tuple_list, []).
+
+remove_first_element_in_tuples_list([], Acc) ->
+    Acc;
+remove_first_element_in_tuples_list([Tuple | Tuple_list], Acc) ->
+    [_ | All_but_first] = tuple_to_list(Tuple),
+    remove_first_element_in_tuples_list(Tuple_list, Acc ++ [list_to_tuple(All_but_first)]).
