@@ -39,7 +39,7 @@ login(Username, Password) ->
 			2 ->
 			    {ok, admin};
 			1 ->
-			    {ok, user}
+			    {ok, Username}
 		    end;
 		_ ->
 		    {error, wrong_password} %% Wrong pass
