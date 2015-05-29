@@ -22,16 +22,16 @@ handle_package({?LOGIN, [Username, Password]}, User) -> %% ID 1 - Handshake
     %% 0xff - failed
     
     case booking_agent:login(Username, Password) of
-	{ok, user} when User =:= null ->
-	    {ok, {user, translate_package({?LOGIN_RESP, [1]})}};
 	{ok, admin} when User =:= null ->
 	    {ok, {admin, translate_package({?LOGIN_RESP, [2]})}};
-	{ok, user} ->
-	    logout(User),
-	    {ok, {user, translate_package({?LOGIN_RESP, [1]})}};
+	{ok, New_user} when User =:= null ->
+	    {ok, {New_user, translate_package({?LOGIN_RESP, [1]})}};
 	{ok, admin} ->
 	    logout(User),
 	    {ok, {admin, translate_package({?LOGIN_RESP, [2]})}};
+	{ok, New_user} ->
+	    logout(User),
+	    {ok, {New_user, translate_package({?LOGIN_RESP, [1]})}};
 	{error, no_such_user} ->
 	    {ok, translate_package({?LOGIN_RESP, [3]})};
 	{error, wrong_password} ->
@@ -59,7 +59,7 @@ handle_package({?DISCONNECT}, User) ->
     end;
 
 handle_package({?ERROR, Error}, _) ->
-    {java_error, Error};
+    {client_error, Error};
 
 %%--------------------------------------------------------------%%
 
@@ -91,16 +91,16 @@ handle_package({?REQ_AIRPORTS}, _) ->
     case booking_agent:airport_list() of
 	{ok, Airport_list} ->
 	    {ok, translate_package({?REQ_AIRPORTS_RESP, flatten_tuples_to_list(Airport_list)})};
-	{error, ERROR} ->
-	    {error, ERROR}
+	{error, Error} ->
+	    {error, Error}
     end;
 
 handle_package({?REQ_AIRPORTS, Airport_ID}, _) -> 
     case booking_agent:airport_list(Airport_ID) of
 	{ok, Airport_list} ->
 	    {ok, translate_package({?REQ_AIRPORTS_RESP, flatten_tuples_to_list(Airport_list)})};
-	{error, ERROR} ->
-	    {error, ERROR}
+	{error, Error} ->
+	    {error, Error}
     end;
 	
 handle_package({?SEARCH_ROUTE, [Airport_A, Airport_B, Year, Month, Day]}, _) ->
@@ -108,8 +108,8 @@ handle_package({?SEARCH_ROUTE, [Airport_A, Airport_B, Year, Month, Day]}, _) ->
 	{ok, Flight_list} ->
 	    {ok, translate_package({?SEARCH_ROUTE_RESP, 
 				    lists:map(flatten_tuples_to_list, Flight_list)})};
-	{error, ERROR} ->
-	    {error, ERROR}
+	{error, Error} ->
+	    {error, Error}
     end;
 
 handle_package({?REQ_FLIGHT_DETAILS, Flight_ID}, admin) -> 
@@ -117,8 +117,8 @@ handle_package({?REQ_FLIGHT_DETAILS, Flight_ID}, admin) ->
 	{ok, Flight} ->
 	    {ok, translate_package({?REQ_FLIGHT_DETAILS_RESP,
 				    flatten_tuples_to_list(Flight)})};
-	{error, ERROR} ->
-	    {error, ERROR}
+	{error, Error} ->
+	    {error, Error}
     end;
 
 handle_package({?REQ_FLIGHT_DETAILS, Flight_ID}, _) -> 
@@ -126,8 +126,8 @@ handle_package({?REQ_FLIGHT_DETAILS, Flight_ID}, _) ->
 	{ok, Flight} ->
 	    {ok, translate_package({?REQ_FLIGHT_DETAILS_RESP,
 				    flatten_tuples_to_list(Flight)})};
-	{error, ERROR} ->
-	    {error, ERROR}
+	{error, Error} ->
+	    {error, Error}
     end;
 
 
@@ -141,8 +141,8 @@ handle_package({?REQSeatLock, Seat_ID, Flight_ID}, User) ->
 		_ ->
 		    {ok, translate_package({?RESPSeatLock, (case Lock of 2 -> 1; _ -> Lock end)})}
 	    end;
-	{error, ERROR} ->
-	    {error, ERROR}
+	{error, Error} ->
+	    {error, Error}
     end;
 
 
@@ -150,8 +150,8 @@ handle_package({?REQSeatLock, Seat_ID}, User) ->
     case booking_agent:seat_lock(Seat_ID, User) of
 	{ok, Lock} ->
 	    {ok, translate_package({?RESPSeatLock, Lock})};
-	{error, ERROR} ->
-	    {error, ERROR}
+	{error, Error} ->
+	    {error, Error}
     end;
 
 handle_package({?REQ_SEAT_SUGGESTION, _Message}, _User) -> 
