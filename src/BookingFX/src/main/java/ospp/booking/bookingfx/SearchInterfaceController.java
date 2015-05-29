@@ -17,7 +17,9 @@ import javafx.scene.control.*;
 import javafx.util.Duration;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
+import ospp.bookinggui.Airport;
 
 
 /**
@@ -68,6 +70,8 @@ public class SearchInterfaceController implements Initializable, ControlledScree
 	private Timeline   errorline;
 	private ScreenMaster myScreenMaster;
 
+        private ArrayList<Airport> airports = new ArrayList<>();
+        
 	@FXML
 	void adultDecClick(ActionEvent event) {
 		if(adultNr > 0) {
@@ -133,6 +137,7 @@ public class SearchInterfaceController implements Initializable, ControlledScree
 		myScreenMaster.adultpass = adultNr;
 	}
 
+        
 	/**
 	 * Initializes the controller class.
 	 */
@@ -156,8 +161,14 @@ public class SearchInterfaceController implements Initializable, ControlledScree
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 				System.out.println("Oldvalue " + oldValue + ". Newvalue " + newValue);
-				fromListView.getItems().removeAll(flygplatser);
-				fromListView.getItems().addAll(flygplatser);
+                                for(Airport a : airports){
+                                    fromListView.getItems().remove(a.getName());
+                                }
+                                for(Airport a : airports){
+                                    fromListView.getItems().add(a.getName());
+                                }
+				
+				
 
 				if(newValue.length() < 1) {
 					fromListView.visibleProperty().set(false);
@@ -166,7 +177,8 @@ public class SearchInterfaceController implements Initializable, ControlledScree
 					fromListView.visibleProperty().set(true);
 					String string = newValue;
 					for(int i = 0; i < string.length(); i++) {
-						for(String flygplats : flygplatser) {
+						for(Airport a : airports) {
+                                                        String flygplats = a.getName();
 							if(fromListView.getItems().contains(flygplats) && flygplats.toLowerCase().charAt(i) != string.toLowerCase().charAt(i)) {
 								fromListView.getItems().remove(flygplats);
 							}
@@ -197,8 +209,12 @@ public class SearchInterfaceController implements Initializable, ControlledScree
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 				System.out.println("Oldvalue " + oldValue + ". Newvalue " + newValue);
-				toListView.getItems().removeAll(flygplatser);
-				toListView.getItems().addAll(flygplatser);
+				for(Airport a : airports){
+                                    fromListView.getItems().remove(a.getName());
+                                }
+                                for(Airport a : airports){
+                                    fromListView.getItems().add(a.getName());
+                                }
 
 				if(newValue.length() < 1) {
 					toListView.visibleProperty().set(false);
@@ -207,7 +223,8 @@ public class SearchInterfaceController implements Initializable, ControlledScree
 					toListView.visibleProperty().set(true);
 					String string = newValue;
 					for(int i = 0; i < string.length(); i++) {
-						for(String flygplats : flygplatser) {
+						for(Airport a : airports) {
+                                                        String flygplats = a.getName();
 							if(toListView.getItems().contains(flygplats) && flygplats.toLowerCase().charAt(i) != string.toLowerCase().charAt(i)) {
 								toListView.getItems().remove(flygplats);
 							}
@@ -257,6 +274,7 @@ public class SearchInterfaceController implements Initializable, ControlledScree
 
 	@Override
 	public void onScreen() {
+                this.airports = myScreenMaster.model.airports;
 		fromField.setText("");
 		toField.setText("");
 		toCalendar.setValue(null);

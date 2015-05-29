@@ -6,7 +6,9 @@
 package ospp.booking.bookingfx;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -29,12 +31,16 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.util.Duration;
 import ospp.bookinggui.Airport;
+import ospp.bookinggui.Flight;
 import ospp.bookinggui.networking.Mailbox;
 import ospp.bookinggui.networking.Message;
 import ospp.bookinggui.networking.NetworkAdapter;
+import ospp.bookinggui.networking.messages.ErrorMsg;
 import ospp.bookinggui.networking.messages.LoginMsg;
 import ospp.bookinggui.networking.messages.LoginRespMsg;
 import ospp.bookinggui.networking.messages.RequestAirportsMsg;
+import ospp.bookinggui.networking.messages.RequestAirportsRespMsg;
+import ospp.bookinggui.networking.messages.SearchAirportRouteRespMsg;
 
 /**
  *
@@ -48,9 +54,9 @@ public class Model {
     //private ObservableList<Message> observeMailbox;
     
     
-    
-    private ArrayList<Airport> airports;
-    private StringProperty privilege_level = new SimpleStringProperty(null);
+    public ArrayList<Flight> flyghts = new ArrayList<Flight>();
+    public ArrayList<Airport> airports;
+    public StringProperty privilege_level = new SimpleStringProperty(null);
     public StringProperty privilege_level() { return this.privilege_level; }
     public BooleanProperty isConnected = new SimpleBooleanProperty(false);
     
@@ -72,7 +78,6 @@ public class Model {
         Duration duration = Duration.millis(10);
         EventHandler<ActionEvent> onFinished = new EventHandler<ActionEvent>() {
                     public void handle(ActionEvent t) {
-                            System.out.println("kollar brevlåda");
                             Message oldestIncoming = mailbox.getOldestIncoming();
                             if(oldestIncoming != null) {
                                     //observeMailbox.add(oldestIncoming);
@@ -86,6 +91,7 @@ public class Model {
 
             //add the keyframe to the timeline
             timeline.getKeyFrames().add(keyFrame);
+            timeline.play();
         
     }
     
@@ -93,8 +99,26 @@ public class Model {
         switch(m.getType()){
             case LOGIN_RESP:
                 mailbox.send(new RequestAirportsMsg(System.currentTimeMillis(), null));
-                this.privilege_level.set(((LoginRespMsg)(m)).privilege_level);
-                break;   
+                this.privilege_level.set(((LoginRespMsg)(m)).getPrivilegeLevel().name());
+                break;
+            case REQ_AIRPORTS_RESP:
+                Airport[] arr = ((RequestAirportsRespMsg)(m)).getAirports();
+                airports = new ArrayList(arr.length);
+                for(Airport a : arr){
+                    airports.add(a);
+                    System.out.println(a.getAirportID() + ", " + a.getName() + ", " + a.getIATA());
+                }
+                break;
+            case ERROR:
+                System.err.println( ((ErrorMsg)(m)).getErrorMessage());
+                break;
+            case SEARCH_ROUTE_RESP:
+                flyghts = new ArrayList<Flight>();
+                flyghts.addAll(Arrays.asList(((SearchAirportRouteRespMsg)(m)).getFlightList()));
+                
+                break;
+            default:
+                System.err.println(m.toString());
         }
     }
 
@@ -116,7 +140,13 @@ public class Model {
     }
     
     public void login(String userName, String password){
-        mailbox.send(new LoginMsg(System.currentTimeMillis(), userName, password));
+        LoginMsg lm = new LoginMsg(System.currentTimeMillis(), userName, password);
+        try {
+            System.out.println(lm.createMessage());
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        mailbox.send(lm);
     }
     
     

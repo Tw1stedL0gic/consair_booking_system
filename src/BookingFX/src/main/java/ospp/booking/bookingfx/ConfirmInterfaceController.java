@@ -12,6 +12,7 @@ import javafx.scene.control.Label;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.scene.control.ListView;
 
 /**
  * FXML Controller class
@@ -20,6 +21,10 @@ import java.util.ResourceBundle;
  */
 public class ConfirmInterfaceController implements Initializable, ControlledScreen {
 
+    
+        @FXML
+        private ListView<String> listview;
+        
 	@FXML
 	private Label flightLabel;
 	@FXML

@@ -71,6 +71,7 @@ public class FXMLController implements Initializable, ControlledScreen {
 		EventHandler<ActionEvent> onFinished = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent t) {
+                                
 				myScreenMaster.setScreen("welcome");
 			}
 		};
@@ -84,7 +85,19 @@ public class FXMLController implements Initializable, ControlledScreen {
 		
 
 		myScreenMaster.model.connect(ip, port);
-                myScreenMaster.model.login("carl", "asdasd");
+                myScreenMaster.model.isConnected.addListener(new ChangeListener<Boolean>(){
+
+                    @Override
+                    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                        if(newValue == true){
+                            myScreenMaster.model.login("carl", "asdasd");
+                            textarea.setText("connected!!!!");
+                            
+                            
+                        }
+                    }
+                });
+                
                 myScreenMaster.model.privilege_level().addListener(new ChangeListener<String>(){
 
                     @Override
@@ -99,7 +112,8 @@ public class FXMLController implements Initializable, ControlledScreen {
 
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
-		// TODO
+		ipField.setText("130.238.92.206");
+                ipField.setText("130.243.137.106");
 		loadingIndicator.setVisible(false);
 	}
 
