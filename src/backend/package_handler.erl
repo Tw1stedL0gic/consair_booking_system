@@ -104,8 +104,8 @@ handle_package({?REQ_AIRPORTS, Airport_ID}, _) ->
 	    {error, Error}
     end;
 	
-handle_package({?SEARCH_ROUTE, [Airport_A, Airport_B, Year, Month, Day]}, _) ->
-    case booking_agent:flight_details(Airport_A, Airport_B, {Year, Month, Day}) of
+handle_package({?SEARCH_ROUTE, [Airport_A_id, Airport_B_id, Year, Month, Day]}, _) ->
+    case booking_agent:flight_details(Airport_A_id, Airport_B_id, {Year, Month, Day}) of
 	{ok, Flight_list} ->
 	    {ok, translate_package({?SEARCH_ROUTE_RESP, 
 				    lists:map(flatten_tuples_to_list, Flight_list)})};
