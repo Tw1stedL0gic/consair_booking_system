@@ -181,7 +181,7 @@ seat_lock(Seat_ID) ->
 	{_,[{_,_,_,_,_,_,_,_,_,_,Lock_s}]} ->
 	    Lock_s;
 	_ ->
-	    {error,no_seat}
+	    {error, list_to_atom("no_seat_"++io:format("~p", [Seat_ID]))}
     end.
     
 
@@ -315,7 +315,7 @@ start_booking(User, Seat_id) ->
 %%TODO
 finalize_booking(User) ->
     {_,[{_,User_id,_,_,_,_}]} = get_database:get_user_from_db(User),
-    get_database:update_seat_lock_user(User_id),    
+    get_database:update_seat_lock_user(User_id, ?LOCK_S_BOOKED),    
     ok.
 
 %%---------------------------------------------------------------------%%
