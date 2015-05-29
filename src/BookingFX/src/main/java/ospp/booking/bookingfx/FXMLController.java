@@ -19,6 +19,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 
 public class FXMLController implements Initializable, ControlledScreen {
 
@@ -53,16 +55,16 @@ public class FXMLController implements Initializable, ControlledScreen {
 		loadingIndicator.visibleProperty().set(true);
 
 		//loadingIndicator.setVisible(true);
-		final Mailbox<Message> mailbox = myScreenMaster.getMailbox();
+		//final Mailbox<Message> mailbox = myScreenMaster.getMailbox();
 		ipField.setDisable(true);
 		portField.setDisable(true);
 		button.setDisable(true);
 		// if portField valed
 		int port = Integer.valueOf(portField.getText());
 		String ip = ipField.getText();
-		NetworkAdapter adapter;
+		//NetworkAdapter adapter;
 
-		Timeline timeline = new Timeline();
+		final Timeline timeline = new Timeline();
 		timeline.setCycleCount(1);
 		timeline.setAutoReverse(true);
 
@@ -79,19 +81,20 @@ public class FXMLController implements Initializable, ControlledScreen {
 				new KeyFrame(new Duration(3000), onFinished,
 					new KeyValue(rootPane.opacityProperty(), 0)));
 
-		timeline.play();
+		
 
-		try {
-			adapter = new NetworkAdapter(mailbox, ip, port);
+		myScreenMaster.model.connect(ip, port);
+                myScreenMaster.model.login("carl", "asdasd");
+                myScreenMaster.model.privilege_level().addListener(new ChangeListener<String>(){
 
+                    @Override
+                    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                        textarea.setText("privilege_level:\t" + newValue);
+                        timeline.play();
+                    }
+                    
+                });
 
-		}
-		catch(IOException ex) {
-			textarea.setText(ex.getMessage());
-			Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
-		}
-
-//        mailbox.send(new HandshakeMsg("foo", "bar"));
 	}
 
 	@Override

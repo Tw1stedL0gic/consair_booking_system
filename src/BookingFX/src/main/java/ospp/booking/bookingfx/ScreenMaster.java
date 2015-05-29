@@ -29,49 +29,21 @@ import java.util.LinkedList;
  */
 public class ScreenMaster extends StackPane {
 
+        public Model model;
 	public String chosenFlight = "";
 	public int    adultpass    = 0;
 	public int    childpass    = 0;
 	private Stage            stage;
-	private Mailbox<Message> mailbox;
-	private NetworkAdapter networkAdapter = null;
-	private Timeline                timeline;
-	private ObservableList<Message> observeMailbox;
+	
+	
 	private String                            activeScreen = null;
 	private HashMap<String, Parent>           screens      = new HashMap();
 	private HashMap<String, ControlledScreen> controllers  = new HashMap();
 	public ScreenMaster() {
 		super();
 		this.backgroundProperty().set(Background.EMPTY);
-		mailbox = new Mailbox<>();
-		observeMailbox = FXCollections.observableList(new LinkedList<Message>());
-
-		timeline = new Timeline();
-		timeline.setCycleCount(Timeline.INDEFINITE);
-		timeline.setAutoReverse(true);
-
-		//create a keyFrame, the keyValue is reached at time 2s
-		Duration duration = Duration.millis(10);
-		//one can add a specific action when the keyframe is reached
-		EventHandler<ActionEvent> onFinished = new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent t) {
-				Message oldestIncoming = mailbox.getOldestIncoming();
-				if(oldestIncoming != null) {
-					for(int i = 0; i < 10 && oldestIncoming != null; i++) {
-						observeMailbox.add(oldestIncoming);
-						oldestIncoming = mailbox.getOldestIncoming();
-					}
-				}
-			}
-
-
-		};
-
-		KeyFrame keyFrame = new KeyFrame(duration, onFinished);
-
-		//add the keyframe to the timeline
-		timeline.getKeyFrames().add(keyFrame);
-
+                this.model = new Model();
+		
         /*
         try {
             networkAdapter = new NetworkAdapter(mailbox, url, port);
@@ -82,22 +54,10 @@ public class ScreenMaster extends StackPane {
                 */
 	}
 
-	public NetworkAdapter getAdapter() {
-		return this.networkAdapter;
-	}
 
-	;
 
-	public void setAdapter(NetworkAdapter a) {
-		this.networkAdapter = a;
-		timeline.play();
-	}
 
-	;
 
-	public Mailbox<Message> getMailbox() {
-		return this.mailbox;
-	}
 
 	public void addScreen(String name, Parent screen, ControlledScreen cont) {
 		screens.put(name, screen);
