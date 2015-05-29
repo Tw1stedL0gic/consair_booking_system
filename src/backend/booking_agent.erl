@@ -39,7 +39,7 @@ login(Username, Password) ->
 			2 ->
 			    {ok, admin};
 			1 ->
-			    {ok, user}
+			    {ok, Username}
 		    end;
 		_ ->
 		    {error, wrong_password} %% Wrong pass
@@ -87,8 +87,12 @@ disconnect(Username) ->
 %%           {101, "LAX", "Los Angeles International Airport"}]}
 %% DONE SEE get_database:get_airport_from_db()
 airport_list() ->
-    get_database:get_airport_from_db().
-    
+    case get_database:get_airport_from_db() of
+	{ok, Airport_list} ->
+	    {ok, [{Airport_ID, IATA, Name} || {_, Airport_ID, IATA, Name} <- Airport_list]};
+	{error, Error} ->
+	    {error, Error}
+    end.
 
 %% In case of departure airport, return all airports which that airport
 %% has a route to. 
@@ -300,7 +304,9 @@ start_booking(User, Seat_id) ->
 		    {error, no_such_seat};
 		{error, Error} ->
 		    {error, Error}
-	    end
+	    end;
+	{error, Error} ->
+	    {error, Error}
     end.
 
 %%---------------------------------------------------------------------%%
