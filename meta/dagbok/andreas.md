@@ -107,7 +107,7 @@ Förberedde genrep av slutpresentation. Tidsåtgång 1h
 ##### Onsdag
 Skrivande av rapport och diskussion om utveckling av GUIt. Tidsåtgång 5h 30 min
 ##### Torsdag
-
+Skrivande och korrigerande av rapport 5h
 ##### Fredag
 
 ## Vecka 23
