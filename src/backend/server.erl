@@ -41,9 +41,8 @@ start(Port) ->
 	    %% spawn new process and let this one die 
 	    %% spawn(?MODULE, connector_spawner, [LSock, 0]);
 	    %% continue in same process
-	    io:fwrite("=============================~n"),
-	    io:fwrite("Server Initiated! Version ~p~n", [?Version_number]),
-	    io:fwrite("=============================~n"),
+	    ?DRAW_TITLE("SERVER INITIATED, Version number" ++ ?VERSION),
+	    ?DRAW_TABLE_HEADER,
 	    case lists:keyfind(addr, 1, element(2, lists:keyfind("wlan0", 1, element(2, inet:getifaddrs())))) of
 		false ->
 		    ok;
@@ -58,8 +57,7 @@ start(Port) ->
 	    end,
 	    connector_spawner(LSock, 0);
 	{error, eaddrinuse} ->
-	    N = -1,
-	    ?WRITE_SPAWNER("Port ~p busy~n", [Port]),
+	    ?DRAW_TITLE("Port " ++ integer_to_list(Port) ++ " busy "),
 	    {error, eaddrinuse};
 	_ ->
 	    {error, could_not_listen}		
@@ -79,10 +77,10 @@ connector_spawner(LSock, N) ->
     %% receive message from other processes for 100ms
     receive
 	exit ->        %% if received exit -> exit the loop (connection processes are still alive)
-	    ?WRITE_SPAWNER("Exit called~n", []),
+	    ?DRAW_TITLE("Exiting Server~nThank you for choosing Cons-Air"),
+	    ?DRAW_LOGO,
 	    gen_tcp:close(LSock);
 	disconnect ->  %% if received terminated -> reduce amount of connections
-	    ?WRITE_SPAWNER("Process terminated~n", []),
 	    connector_spawner(LSock, N-1);
 	reload_code ->
 	    code:load_file(server_utils),
@@ -93,7 +91,7 @@ connector_spawner(LSock, N) ->
 	    code:purge(booking_agent),
 	    connector_spawner(LSock, N);
 	{error, Error} ->
-	    ?WRITE_SPAWNER("Error received! ~p~n", [{error, Error}]),
+	    ?WRITE_SPAWNER("Error received! {error, ~p}~n", [Error], "E"),
 	    connector_spawner(LSock, N)
     after 100 ->
 	    %% try connecting to other device for 100ms
@@ -102,7 +100,7 @@ connector_spawner(LSock, N) ->
 		    %% spawn process to handle this connection
 		    New_connector_handler = spawn(?MODULE, connector_handler, [Sock, N+1, 0, null, self()]),
 		    spawn(?MODULE, connector_inbox, [Sock, N+1, 0, null, self(), New_connector_handler]),
-		    ?WRITE_SPAWNER("New connection established: ~p~n", [New_connector_handler]),
+		    ?WRITE_SPAWNER("New connection establishing: ~p~n", [New_connector_handler], "N"),
 		    connector_spawner(LSock, N+1);
 		{error, timeout} ->
 		    connector_spawner(LSock, N);
@@ -112,7 +110,7 @@ connector_spawner(LSock, N) ->
     end.
 
 connector_inbox(__, ID, ?ALLOWEDTIMEOUTS, User, Parent_PID, Handler_PID) ->
-    ?WRITE_CONNECTION("~p timeouts reached, connection terminated~n", [?ALLOWEDTIMEOUTS]),
+    ?WRITE_CONNECTION("~p timeouts reached, connection terminated~n", [?ALLOWEDTIMEOUTS], "D"),
 
     Handler_PID ! disconnect,
     Parent_PID  ! disconnect;
@@ -120,12 +118,12 @@ connector_inbox(__, ID, ?ALLOWEDTIMEOUTS, User, Parent_PID, Handler_PID) ->
 connector_inbox(Sock, ID, Timeouts, User, Parent_PID, Handler_PID) ->
     case gen_tcp:recv(Sock, 0, 60000) of
 	{error, timeout} ->
-	    ?WRITE_CONNECTION("Timeout ~p, ~p tries remaining~n", [Timeouts+1, ?ALLOWEDTIMEOUTS - Timeouts]),
+	    ?WRITE_CONNECTION("Timeout ~p, ~p tries remaining~n", [Timeouts+1, ?ALLOWEDTIMEOUTS - Timeouts], "T"),
 	    connector_inbox(Sock, ID, Timeouts+1, User, Parent_PID, Handler_PID);
 	{error, closed} ->
 	    Handler_PID ! {error, closed};
 	{error, Error} ->
-	    ?WRITE_CONNECTION("{error, ~p}~n", [Error]),
+	    ?WRITE_CONNECTION("{error, ~p}~n", [Error], "E"),
 	    Parent_PID ! disconnect;
 	{ok, Package} ->
 	    Package_list = lists:droplast(re:split(Package, ?MESSAGE_SEPERATOR)),
@@ -140,44 +138,49 @@ connector_inbox(Sock, ID, Timeouts, User, Parent_PID, Handler_PID) ->
 connector_handler(Sock, ID, Timeouts, User, Parent_PID) ->
     receive
 	{ok, Package} -> %% In case of package handle and responde
-	    ?WRITE_CONNECTION("Message received: <<<<< ~p~n", [Package]),
+	    ?WRITE_CONNECTION("Message received: <<<<< ~p~n", [Package], "<"),
 
 	    %% Timestamp calculation
 	    {Incoming_timestamp, Handled_package} = package_handler:handle_package(Package, User),
 	    {Mega_S, S, Micro_S} = now(),
 	    Time_taken = ((((Mega_S * 1000000) + S) * 1000000) + Micro_S) div 1000 - Incoming_timestamp,
-	    ?WRITE_CONNECTION("Time to handle package: ~p~n", [Time_taken]),
+	    ?WRITE_CONNECTION("Time to handle package: ~p~n", [Time_taken], " "),
 
 	    %% case to handle package
 	    case Handled_package of
 		{ok, exit} ->
-       		    ?WRITE_CONNECTION("Exit request~n", []),    
+       		    ?WRITE_CONNECTION("Exit request~n", [], "X"),    
 		    Parent_PID ! exit;
 		{ok, disconnect} ->
-		    ?WRITE_CONNECTION("Disconnecting~n", []),
+		    ?WRITE_CONNECTION("Disconnecting~n", [], "D"),
 		    Parent_PID ! disconnect;
 		{ok, reload_code} ->
-       		    ?WRITE_CONNECTION("Code reload request~n", []),    
+       		    ?WRITE_CONNECTION("Code reload request~n", [], "R"),    
 		    Parent_PID ! reload_code;
 		{ok, {admin, Response}} ->
-		    ?WRITE_CONNECTION("Message sent:     >>>>> ~p~n", [Response]),    
+		    ?WRITE_CONNECTION("Message sent:     >>>>> ~p~n", [Response], ">"),    
 		    gen_tcp:send(Sock, Response),
-		    ?WRITE_CONNECTION("Logged in as Admin~n", []),
+		    ?WRITE_CONNECTION("Logged in as Admin~n", [], " "),
 		    connector_handler(Sock, ID, 0, admin, Parent_PID);
 		{ok, {New_user, Response}} ->
-		    ?WRITE_CONNECTION("Message sent:     >>>>> ~p~n", [Response]),    
+		    ?WRITE_CONNECTION("Message sent:     >>>>> ~p~n", [Response], ">"),    
 		    gen_tcp:send(Sock, Response),
-		    ?WRITE_CONNECTION("Logged in as ~p~n", [New_user]),
+		    ?WRITE_CONNECTION("Logged in as ~p~n", [New_user], " "),
 		    connector_handler(Sock, ID, 0, New_user, Parent_PID);
 		{ok, Response} ->
-		    ?WRITE_CONNECTION("Message send:     >>>>>  ~p~n", [Response]),    
+		    ?WRITE_CONNECTION("Message send:     >>>>>  ~p~n", [Response], ">"),    
 		    gen_tcp:send(Sock, Response),
 		    connector_handler(Sock, ID, 0, User, Parent_PID);
 		{error, Error} ->
-		    Parent_PID ! {error, Error}
+       		    Parent_PID ! {error, Error},
+		    gen_tcp:send(Sock, translate_package({?ERROR, atom_to_list(Error)})),
+		    connector_handler(Sock, ID, 0, User, Parent_PID);
+		{client_error, Error} ->
+		    ?WRITE_CONNECTION("{client_error, ~p}~n", [Error], "E"),
+		    connector_handler(Sock, ID, 0, User, Parent_PID)
 	    end;
 	disconnect ->
-	    ?WRITE_CONNECTION("Connection unexpectantly closed, logging out user.~n", []),
+	    ?WRITE_CONNECTION("Connection unexpectantly closed, logging out user.~n", [], "D"),
 	    case package_handler:logout(User) of 
 		ok -> 
 		    ok;
@@ -186,7 +189,7 @@ connector_handler(Sock, ID, Timeouts, User, Parent_PID) ->
 		    {error, Error}
 	    end;
 	{error, closed} ->
-	    ?WRITE_CONNECTION("Connection unexpentantly closed, logging out user. ~n", []),
+	    ?WRITE_CONNECTION("Connection unexpentantly closed, logging out user. ~n", [], "D"),
 	    case package_handler:logout(User) of
 		{error, no_user} ->
 		    ok;
@@ -227,20 +230,41 @@ login_test() ->
     
 
 one_of_each_message_test() ->
-    ?assertMatch({ok, _}, connect_send_and_receive({?LOGIN,                    ["pelle", "asd"]},   ?PORT)),
-    ?assertMatch({error, timeout}, connect_send_and_receive({?ERROR,                    []},   ?PORT)),
-    ?assertMatch({ok, _}, connect_send_and_receive_list([{?LOGIN, ["pelle", "asd"]}, {?INIT_BOOK,                ["1"]}],   ?PORT)),
-    ?assertMatch({ok, _}, connect_send_and_receive({?ABORT_BOOK,               []},   ?PORT)),
-    ?assertMatch({ok, _}, connect_send_and_receive({?INIT_BOOK,                ["1"]},   ?PORT)),
-    ?assertMatch({ok, _}, connect_send_and_receive({?FIN_BOOK,                 []},   ?PORT)),
+    %% LOGIN 
+    ?assertMatch({ok, _}, connect_send_and_receive({?LOGIN, ["pelle", "asd"]}, ?PORT)),
+    %% ERROR
+    ?assertMatch({error, timeout}, connect_send_and_receive({?ERROR, ["Fake_error"]}, ?PORT)),
+    %% LOGIN AND INIT BOOK
+    ?assertMatch({ok, _}, connect_send_and_receive_list([{?LOGIN, ["pelle", "asd"]}, 
+							     {?INIT_BOOK, ["1"]}], ?PORT)),
 
+    %% LOGIN, INIT BOOK AND ABORT
+    ?assertMatch({ok, _}, connect_send_and_receive_list([{?LOGIN, ["pelle", "asd"]},
+							 {?INIT_BOOK, ["1"]},
+							 {?ABORT_BOOK, []}], ?PORT)),
+
+    %% LOGIN, INIT BOOK AND FIN
+    ?assertMatch({ok, _}, connect_send_and_receive_list([{?LOGIN, ["pelle", "asd"]},
+							 {?INIT_BOOK, ["1"]},
+							 {?FIN_BOOK, []}], ?PORT)),
+
+    %% REQ AIRPORTS
     ?assertMatch({ok, _}, connect_send_and_receive({?REQ_AIRPORTS,             []},   ?PORT)),
+
+    %% REQ CONNECTING AIRPORTS
     ?assertMatch({ok, _}, connect_send_and_receive({?REQ_AIRPORTS,             ["1"]},   ?PORT)),
+
+    %% SEARCH ROUTE
     ?assertMatch({ok, _}, connect_send_and_receive({?SEARCH_ROUTE,             []},   ?PORT)),
+
+    %% REQ FLIGHT DETAILS
     ?assertMatch({ok, _}, connect_send_and_receive({?REQ_FLIGHT_DETAILS,       []},   ?PORT)),
+
+    %% LOGIN AS ADMIN AND REQ FLIGHT DETAILS
     ?assertMatch({ok, _}, connect_send_and_receive({?REQ_SEAT_SUGGESTION,      []},   ?PORT)),
-    ?assertMatch({ok, _}, connect_send_and_receive({?REQ_SEAT_MAP,             []},   ?PORT)),
-    ?assertMatch({ok, _}, connect_send_and_receive({?TERMINATE_SERVER,         []},   ?PORT)).
+
+    %% REQ SEAT MAP
+    ?assertMatch({ok, _}, connect_send_and_receive({?REQ_SEAT_MAP,             []},   ?PORT)).
     
 sequential_stress_test() ->
     Login_info_list = [[User, Pass] || User <- ["Carl", "Lucas", "Oskar", "Erik", "Andreas", "Wentin"], Pass <- ["hej", "hehe", "asd", "asdasd", "rp", "asd"]],
@@ -255,8 +279,14 @@ concurrent_stress_test() ->
     [?assertMatch({ok, _}, Answer) || Answer <- [receive X -> X end || _ <- Login_info_list]].
 
 stop_test() ->    
-    server_utils:stop_server().
+    server_utils:start(?ALT_PORT),
+    ?assertMatch({error, timout}, connect_send_and_receive({?TERMINATE_SERVER, []}, ?ALT_PORT)).
      
+
+%% Function to close server, tests following this one are to test a closed server.
+stop_server_test() ->
+    server_utils:stop_server().
+
 no_server_test() ->
     %% send before opening
     ?assertMatch({error, econnrefused}, connect_send_and_receive({?HEARTBEAT}, ?PORT)),
