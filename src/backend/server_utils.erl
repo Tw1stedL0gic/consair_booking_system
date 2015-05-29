@@ -17,9 +17,9 @@
 %%---------------------------------------------------------------------%%
 
 translate_package({ID}) ->
-    list_to_binary(replace_space_with_plus(list_to_regexp([integer_to_list(ID) | [now_as_string_millis()]], ?ELEMENT_SEPERATOR)));
+    list_to_binary(list_to_regexp([integer_to_list(ID) | [now_as_string_millis()]], ?ELEMENT_SEPERATOR));
 translate_package({ID, Message}) ->
-    list_to_binary(replace_space_with_plus(list_to_regexp([integer_to_list(ID) | [now_as_string_millis() | Message]], ?ELEMENT_SEPERATOR)));
+    list_to_binary(list_to_regexp([integer_to_list(ID) | [now_as_string_millis() | Message]], ?ELEMENT_SEPERATOR));
 
 %% Translates from a regexp to a tuple with ID and message
 
@@ -214,12 +214,3 @@ pass_message_list([Message | Message_list], PID) ->
     pass_message_list(Message_list, PID).
 
 %%---------------------------------------------------------------------%%
-
-replace_space_with_plus(String) ->
-    lists:map(fun(Char) ->
-	       case Char of
-		   $ ->
-		       $+;
-		   _ ->
-		       Char
-	       end end, String).
