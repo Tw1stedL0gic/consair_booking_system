@@ -174,14 +174,15 @@ flight_details(Flight, admin) ->
 %% Example: 0, 1 or 2.
 
 
-seat_lock(Seat_ID) ->
+get_seat_lock(Seat_ID) ->
     %% return availability of Seat_ID in Flight_ID
     Data = get_database:get_seats_id_from_db(Seat_ID),
     case Data of
 	{_,[{_,_,_,_,_,_,_,_,_,Lock_s}]} ->
 	    Lock_s;
 	_ ->
-	    {error,no_seat}
+%%	    {error, list_to_atom("no_seat_"++io:format("~p", [Seat_ID]))}
+	    {error, no_seat}
     end.
     
 
@@ -280,18 +281,17 @@ start_booking(User, Seat_id) ->
 	{ok, []} ->
 	    {error, no_such_user};
 	{ok,[{_,User_id,_,_,_,_}]} ->
-	    case seat_lock(Seat_id) of
+	    case get_seat_lock(Seat_id) of
 		?LOCK_S_AVAILABLE ->
 		    get_database:update_seat_lock(Seat_id,1),
 		    get_database:update_seat_user(Seat_id,User_id),
 		    
-		    timer:sleep(1000),
-		    Check = get_dabase:get_filter_seats_from_user_id(User_id),
-		    case Check of
-			{ok, []} ->
-			    {error,seat_booked};
-			{ok, _}->
+		    timer:sleep(500),
+		    case get_database:get_user_from_seat(Seat_id) of
+			{ok, User_id} ->
 			    ok;
+			{ok, _}->
+			    {error,seat_booked};
 			{error, Error} ->
 			    {error, Error}
 		    end;
@@ -314,7 +314,7 @@ start_booking(User, Seat_id) ->
 %%TODO
 finalize_booking(User) ->
     {_,[{_,User_id,_,_,_,_}]} = get_database:get_user_from_db(User),
-    get_database:update_seat_lock_user(User_id),    
+    get_database:update_seat_lock_user(User_id, ?LOCK_S_BOOKED),    
     ok.
 
 %%---------------------------------------------------------------------%%

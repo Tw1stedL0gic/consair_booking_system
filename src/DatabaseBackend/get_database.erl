@@ -17,6 +17,11 @@
 %%-include_lib("amnesia/include/amnesia_db_def.hrl").
 %%-compile(export_all).
 
+get_user_from_seat(Seat_id) ->
+    {ok, Pid} = amnesia:open(consair_database),
+    {ok, [{_,_,_,_,User,_,_,_,_,_,_}]} = amnesia:fetch(Pid, seats, {"id=$1", [Seat_id]}),	
+    {ok, User}.
+    	
 
 %% @doc - get_user_from_db
 %% Input: Username

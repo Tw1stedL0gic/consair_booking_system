@@ -66,7 +66,12 @@ flatten_tuples_to_list([Head | Tuple_list], Acc) when is_tuple(Head) ->
     flatten_tuples_to_list(tuple_to_list(Head) ++ Tuple_list, Acc);
 
 flatten_tuples_to_list([Head | Tuple_list], Acc) when is_list(Head) ->
-    flatten_tuples_to_list(Tuple_list, Acc ++ flatten_tuples_to_list(Head, []));
+    case io_lib:printable_list(Head) of
+	true ->
+	    flatten_tuples_to_list(Tuple_list, Acc ++ [Head]);
+	_ ->
+	    flatten_tuples_to_list(Tuple_list, Acc ++ flatten_tuples_to_list(Head, []))
+    end;
 
 flatten_tuples_to_list([Head | Tuple_list], Acc) ->
     flatten_tuples_to_list(Tuple_list, Acc ++ [Head]).
@@ -208,4 +213,4 @@ pass_message_list([Message | Message_list], PID) ->
     PID ! {ok, Message},
     pass_message_list(Message_list, PID).
 
-
+%%---------------------------------------------------------------------%%
