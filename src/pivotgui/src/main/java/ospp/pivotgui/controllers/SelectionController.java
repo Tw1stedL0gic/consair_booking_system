@@ -1,10 +1,12 @@
 package ospp.pivotgui.controllers;
 
 import org.apache.pivot.beans.BXML;
+import org.apache.pivot.beans.BXMLSerializer;
 import org.apache.pivot.beans.Bindable;
 import org.apache.pivot.collections.ArrayList;
 import org.apache.pivot.collections.List;
 import org.apache.pivot.collections.Map;
+import org.apache.pivot.serialization.SerializationException;
 import org.apache.pivot.util.Resources;
 import org.apache.pivot.util.concurrent.Task;
 import org.apache.pivot.util.concurrent.TaskExecutionException;
@@ -19,6 +21,7 @@ import ospp.bookinggui.networking.messages.SearchAirportRouteMsg;
 import ospp.bookinggui.networking.messages.SearchAirportRouteRespMsg;
 import ospp.pivotgui.Main;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -153,7 +156,7 @@ public class SelectionController extends Window implements Bindable {
 				}.execute(new TaskAdapter<>(new TaskListener<Flight[]>() {
 					@Override
 					public void taskExecuted(Task<Flight[]> task) {
-						//TODO handle the received flights
+						loadBookingWindow(task.getResult());
 					}
 
 					@Override
@@ -176,6 +179,20 @@ public class SelectionController extends Window implements Bindable {
 		}
 		else {
 			sheet.close();
+		}
+	}
+
+	private void loadBookingWindow(Flight[] flights) {
+		this.close();
+		BXMLSerializer serializer = new BXMLSerializer();
+		BookController window;
+		try {
+			window = (BookController) serializer.readObject(BookController.class, "/bxml/book.bxml");
+			window.setFlights(flights);
+			window.open(Main.display);
+		}
+		catch(IOException | SerializationException e) {
+			e.printStackTrace();
 		}
 	}
 }

@@ -2,7 +2,7 @@
                                  xmlns:controllers="ospp.pivotgui.controllers"
                                  xmlns:bxml="http://pivot.apache.org/bxml"
                                  xmlns="org.apache.pivot.wtk">
-    <TablePane styles="{padding:5}">
+    <TablePane styles="{padding:10}">
         <columns>
             <TablePane.Column width="1*"/>
         </columns>
@@ -24,11 +24,13 @@
                         <TablePane.Column width="1*"/>
                     </columns>
 
+                    <!-- HEADER -->
                     <TablePane.Row height="50">
                         <Label text="From:" styles="{font:'Arial bold 18', verticalAlignment:'center'}"/>
                         <Label text="To:" styles="{font:'Arial bold 18', verticalAlignment:'center'}"/>
                     </TablePane.Row>
 
+                    <!-- LISTS -->
                     <TablePane.Row height="1*">
 
                         <!-- FROM LIST -->
