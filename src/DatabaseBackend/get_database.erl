@@ -186,11 +186,13 @@ update_seat_lock(Seat_id, Lock) ->
 %% Example: 1,2
 %% Output: Updates the lock for the seats books or reserved for User in the seats table
 
-update_seat_lock_user(User, Lock) ->
+update_seat_lock_user(User_id, Lock) ->
     {ok, Pid} = amnesia:open(consair_database),
-    {ok,[NewLock]} = amnesia:fetch(Pid, seats, {"user_id = $1",[User]}),
-    NewL = NewLock#seats{lock_s = Lock },
-    amnesia:update(Pid,NewL). %%Updates the lock
+    {ok, Users_seats} = amnesia:fetch(Pid, seats, {"user_id = $1",[User_id]}),
+
+    lists:map(fun(Seat) -> amnesia:update(Pid, Seat#seats{lock_s = Lock}) end, Users_seats).
+    %% NewL = Users_seats#seats{lock_s = Lock },
+    %% amnesia:update(Pid,NewL). %%Updates the lock
 
 %% @doc -update_seat_user
 %% Input: Seat_ID, User_ID
