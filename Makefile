@@ -51,6 +51,11 @@ reload_code: all
 client_terminal:
 	java -jar src/JavaNetLib/target/JavaNetLib.jar
 
+init_db: all
+	erl -pa ebin/ -run make_db init $(password) -s init stop -noshell
+	./DBfiles/SQL_load.sh
+
+
 ### EUnit ###
 
 # Make a comma separated list:

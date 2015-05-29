@@ -3,7 +3,7 @@
 %%---------------------------------------------------%%
 
 -module(make_db).
--export([make_db/1]).
+-export([init/1]).
 -include("consair_database.hrl").
 -include("amnesia.hrl").
 
@@ -12,5 +12,5 @@
 %%---------------------------------------------------%%
 
 
-make_db(PASSWORD)->
+init(PASSWORD)->
     amnesia:db_tool(consair_database, [{make_hdr, "."},make_db, {dba_user, "root"}, {dba_password, PASSWORD}]).
