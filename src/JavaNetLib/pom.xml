@@ -6,7 +6,7 @@
 
     <groupId>ospp</groupId>
     <artifactId>javanetlib</artifactId>
-    <version>0.1-ALPHA</version>
+    <version>1.2</version>
 
     <!-- This is the name of the compiled jar-file -->
     <name>JavaNetLib</name>

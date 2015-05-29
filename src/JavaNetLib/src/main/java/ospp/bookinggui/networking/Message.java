@@ -83,11 +83,6 @@ public class Message {
 
 		String[] parts = data.split(Message.SEPARATOR);
 
-		// Remove the URL encoding from the message, we no longer need it.
-		for(int i = 0; i < parts.length; i++) {
-			parts[i] = URLDecoder.decode(parts[i], "UTF8");
-		}
-
 		if(parts.length < Message.HEADER_SIZE) {
 			throw new MalformedMessageException("Could not parse message! The message is too small!");
 		}
@@ -116,8 +111,14 @@ public class Message {
 				case INIT_BOOK_RESP:
 					return new InitBookRespMsg(timestamp, body[0], body[1]);
 
+				case FIN_BOOK:
+					return new FinBookMsg(timestamp);
+
 				case FIN_BOOK_RESP:
 					return new FinBookRespMsg(timestamp, body[0]);
+
+				case ABORT_BOOK:
+					return new AbortBookMsg(timestamp);
 
 				case REQ_AIRPORTS:
 					String iata = body == null ? null : body[0];
@@ -127,7 +128,7 @@ public class Message {
 					return new RequestAirportsRespMsg(timestamp, body);
 
 				case SEARCH_ROUTE:
-					return new SearchAirportRouteMsg(timestamp, body);
+					return new SearchAirportRouteMsg(timestamp, body[0], body[1]);
 
 				case SEARCH_ROUTE_RESP:
 					return new SearchAirportRouteRespMsg(timestamp, body);
@@ -138,17 +139,21 @@ public class Message {
 				case REQ_FLIGHT_DETAILS_RESP:
 					return new RequestFlightDetailsRespMsg(timestamp, body);
 
-				case FIN_BOOK:
-				case ABORT_BOOK:
 				case REQ_SEAT_SUGGESTION:
+					return new RequestSeatSuggestionMsg(timestamp, body[0]);
+
 				case REQ_SEAT_SUGGESTION_RESP:
+					return new RequestSeatSuggestionRespMsg(timestamp, body);
+
+				case TERMINATE_SERVER:
+					return new TerminateServerMsg(timestamp);
+
 				case REQ_SEAT_MAP:
 				case REQ_SEAT_MAP_RESP:
 				case REQ_PASSENGER_LIST:
 				case REQ_PASSENGER_LIST_RESP:
 				case REQ_SEAT_MAP_ADMIN:
 				case REQ_SEAT_MAP_ADMIN_RESP:
-				case TERMINATE_SERVER:
 				default:
 					logger.warning("Message.parseMessage() is missing specific parsing for the type: " + type);
 					return new Message(type, timestamp, body);
@@ -171,8 +176,7 @@ public class Message {
 
 	private static long retrieveTimestamp(String[] parts) throws MalformedMessageException {
 		try {
-			long timestamp = Long.valueOf(parts[1]);
-			return timestamp;
+			return Long.valueOf(parts[1]);
 		}
 		catch(NumberFormatException e) {
 			throw new MalformedMessageException("The timestamp is not a valid long!");
@@ -181,8 +185,7 @@ public class Message {
 
 	private static MessageType retrieveType(String[] parts) throws MalformedMessageException {
 		try {
-			MessageType type = MessageType.getType(Integer.valueOf(parts[0]));
-			return type;
+			return MessageType.getType(Integer.valueOf(parts[0]));
 		}
 		catch(NumberFormatException e) {
 			throw new MalformedMessageException("The message ID is not an integer!");
@@ -204,7 +207,7 @@ public class Message {
 		message.append(this.TIMESTAMP).append(Message.SEPARATOR);
 
 		for(String arg : this.BODY) {
-			message.append(URLEncoder.encode(arg, "UTF8")).append(Message.SEPARATOR);
+			message.append(arg).append(Message.SEPARATOR);
 		}
 
 		return message.toString();
