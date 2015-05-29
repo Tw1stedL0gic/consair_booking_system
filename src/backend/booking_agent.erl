@@ -178,13 +178,14 @@ get_seat_lock(Seat_ID) ->
     %% return availability of Seat_ID in Flight_ID
     Data = get_database:get_seats_id_from_db(Seat_ID),
     case Data of
-	{_,[{_,_,_,_,_,_,_,_,_,Lock_s}]} ->
+	{_,[{_,_,_,_,_,_,_,_,_,_,Lock_s}]} ->
 	    Lock_s;
 	_ ->
 %%	    {error, list_to_atom("no_seat_"++io:format("~p", [Seat_ID]))}
 	    {error, no_seat}
     end.
     
+
 
 %%---------------------------------------------------------------------%%
 
@@ -275,7 +276,10 @@ find_chain_of_seats([Seat | Seat_list], Chain_list, Chain_row, Chain_size) ->
 %% booked and wait for payment. Time of seat locking will be recorded
 %% to make sure that a crash does not mean a endlessly locked seat.
 
-start_booking(User, Seat_id) ->
+start_booking(_, []) ->
+    ok;
+
+start_booking(User, [Seat_id | Seat_id_list]) ->
     %% record time of seat locking so that in case of crash, it can be cleared
     case  get_database:get_user_from_db(User) of
 	{ok, []} ->
@@ -289,7 +293,7 @@ start_booking(User, Seat_id) ->
 		    timer:sleep(500),
 		    case get_database:get_user_from_seat(Seat_id) of
 			{ok, User_id} ->
-			    ok;
+			    start_booking(User, Seat_id_list);
 			{ok, _}->
 			    {error,seat_booked};
 			{error, Error} ->
