@@ -2430,7 +2430,6 @@ insert into airport values
 	(6524,'MME','Teesside, England, United Kingdom TeesSide'),
 	(6525,'TFF','Tefe, Brazil Tefe Airport'),
 	(6526,'TGU','Tegucigalpa, Honduras Toncontin'),
-	(6527,'IKA – Tehran (Ahmadabad), Iran','Imam Khomeini International Airport'),
 	(6528,'THR','Tehran, Iran Mehrabad'),
 	(6529,'TLV','Tel Aviv Yafo, Israel BenGurion International'),
 	(6530,'SDV','Tel Aviv, Israel Sde Dov Airport'),

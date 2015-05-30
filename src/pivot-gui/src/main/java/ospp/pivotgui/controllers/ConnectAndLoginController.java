@@ -12,6 +12,7 @@ import org.apache.pivot.util.concurrent.TaskListener;
 import org.apache.pivot.wtk.*;
 import ospp.bookinggui.networking.Message;
 import ospp.bookinggui.networking.NetworkAdapter;
+import ospp.bookinggui.networking.messages.DisconnectMsg;
 import ospp.bookinggui.networking.messages.ErrorMsg;
 import ospp.bookinggui.networking.messages.LoginMsg;
 import ospp.bookinggui.networking.messages.LoginRespMsg;
@@ -91,6 +92,9 @@ public class ConnectAndLoginController extends Window implements Bindable {
 						if(msg instanceof LoginRespMsg) {
 							LoginRespMsg resp = (LoginRespMsg) msg;
 							return resp.getPrivilegeLevel();
+						}
+						else if(msg instanceof DisconnectMsg) {
+							throw new TaskExecutionException(new Exception("Received Disconnect message!"));
 						}
 						else if(msg instanceof ErrorMsg) {
 							throw new TaskExecutionException(new Exception(((ErrorMsg) msg).getErrorMessage()));
