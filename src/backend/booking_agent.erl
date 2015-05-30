@@ -134,6 +134,27 @@ route_search(airport, arrival_point, {{year, month, day},_}) ->
 
 %%---------------------------------------------------------------------%%
 
+%% @doc - Returns a list of flights between the two airports.. 
+%% Input: Departure airport ID, arrival airport ID, departure date.
+%% Example: 100, 101
+%% Output: List of fligth tuples excluding arrival_date, flight_id and price. 
+%% ({id, airport, arrival_point, departure_date, flight_id, price})
+%% Example: [{1111,
+%%            {100, "ARN", "Arlanda"},
+%%            {101, "LAX", "Los Angeles International Airport"},
+%%            {{2015,12,30},{11,59,59}}},
+%%           {1112,
+%%            {100, "ARN", "Arlanda"},
+%%            {101, "LAX", "Los Angeles International Airport"},
+%%            {{2015,12,30},{20,10,08}}}]
+
+
+route_search(Airport,Arrival_point)->
+    get_database:get_flights_from_to_airport (Airport,Arrival_point).
+
+
+%%---------------------------------------------------------------------%%
+
 %% @doc Returns all information about flight.
 %% Input:  Flight ID
 %% Example: 100
