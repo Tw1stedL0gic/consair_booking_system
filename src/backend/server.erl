@@ -1,20 +1,21 @@
 
 %% ------------------------
-%% @title Name Of This File
-%% @version 1.0.0
+%% @title Server
+%% @version 0.8
 %% {@date}
-%% @author Sir Derpatron the V 
-%% @doc Description of this file and a quick rundown of what the
-%% user will use it for. 
+%% @author Carl Wingårdh
+%% @doc This module opens up a server which will respond to
+%% messages. A port is opened, which can either be chosen with start/1
+%% or defaulted to a macro defined in server_utils.hrl.
 %% @end
 %% ------------------------
 
 %%Handles the server io for the booking. This is the abstraction layer for java / erlang%%
 
-%% here is a change
+
 
 -module(server).
--export([start/0, start/1, connector_spawner/2, connector_inbox/6, connector_handler/5]).
+-export([start/0, start/1, connector_inbox/6, connector_handler/5]).
 -include("server_utils.hrl").
 -include_lib("eunit/include/eunit.hrl").
 -define(Version_number, 0.8).
@@ -31,7 +32,6 @@ start() ->
 %% @doc Auxilary start function 
 %% Port is the port to use
 %% LSock is the listening sock. 
-
 -spec start(Port) -> ok when
       Port::integer().
 
@@ -50,7 +50,7 @@ start(Port) ->
 		    ok;
 		W_IP ->
 		    io:fwrite("Wireless IP Address: ~p~n", [element(2, W_IP)])
-	    end,
+ 	    end,
 	    case lists:keyfind(addr, 1, element(2, lists:keyfind("eth0", 1, element(2, inet:getifaddrs())))) of
 		false ->
 		    ok;
@@ -75,6 +75,11 @@ start(Port) ->
 %% N is the number of active connections
 
 %% Calling this function with N = 0 will close the server. 
+-spec connector_spawner(LSock, N) -> 
+			       {error, Error} | ok when
+      LSock::gen_tcp:socket(), 
+      N::integer(),
+      Error::atom().
 
 connector_spawner(LSock, N) ->
     %% receive message from other processes for 100ms
@@ -112,11 +117,29 @@ connector_spawner(LSock, N) ->
 	    end
     end.
 
-connector_inbox(__, ID, ?ALLOWEDTIMEOUTS, User, Parent_PID, Handler_PID) ->
+%% @doc 
+%% === Example ===
+%% <div class="example">```
+%% 
+%% '''
+%% </div>
+-spec connector_inbox(Sock, ID, Timeouts, User, Parent_PID, Handler_PID) -> 
+			     {ok, Package} | {error, Error} when
+      Sock::gen_tcp:socket(),
+      ID::integer(),
+      Timeouts::integer(),
+      User::string(),
+      Parent_PID::pid(),
+      Handler_PID::pid(),
+      Package::bitstring(),
+      Error::atom().
+
+connector_inbox(_, ID, ?ALLOWEDTIMEOUTS, User, Parent_PID, Handler_PID) ->
     ?WRITE_CONNECTION("~p timeouts reached, connection terminated~n", [?ALLOWEDTIMEOUTS], "D"),
 
     Handler_PID ! disconnect,
-    Parent_PID  ! disconnect;
+    Parent_PID  ! disconnect,
+    {error, timeout};
 
 connector_inbox(Sock, ID, Timeouts, User, Parent_PID, Handler_PID) ->
     case gen_tcp:recv(Sock, 0, 60000) of
@@ -136,7 +159,6 @@ connector_inbox(Sock, ID, Timeouts, User, Parent_PID, Handler_PID) ->
 	    
 	    connector_inbox(Sock, ID, Timeouts, User, Parent_PID, Handler_PID)
 	end.
-
 
 connector_handler(Sock, ID, Timeouts, User, Parent_PID) ->
     receive
