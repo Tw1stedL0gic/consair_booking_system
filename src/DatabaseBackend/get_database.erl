@@ -97,6 +97,12 @@ get_flights_from_to_airport (From,To)->
     Iata=get_airport_id_from_iata(To),
     amnesia:fetch(Pid, flights,{"airport_id=$1 and arrival_point=$2",[From,Iata]}).
 
+get_flights_date_to_from_airport (From,To,Date)->
+    {ok, Pid} = amnesia:open(consair_database),
+    Iata=get_airport_id_from_iata(To),
+    amnesia:fetch(Pid, flights,{"airport_id=$1 and arrival_point=$2 and departure_date =$3",[From,Iata,Date]}).
+    
+
 
 %% @doc - get_flight_from_db_f
 %% Input: Flight

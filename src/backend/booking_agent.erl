@@ -126,11 +126,11 @@ airport_list(Airport) ->
 %%            {101, "LAX", "Los Angeles International Airport"},
 %%            {{2015,12,30},{20,10,08}}}]
 
-route_search(airport, arrival_point, {{year, month, day},_}) ->
+route_search(Airport, Arrival_point, DateTime) ->
     %% search through database for route
     %% check if route exists
     %% check if date fits
-    ok.
+    get_database:get_flights_date_to_from_airport (Airport,Arrival_point,DateTime).
 
 %%---------------------------------------------------------------------%%
 
