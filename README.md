@@ -14,17 +14,17 @@ This program is a bookingsystem for an airliner/airport.
 ## Kompilera
 
 ####Compiling and loading the DB.
-First make sure that you have the following software installed.
-1: MySQL server ver: 5.5.43-0ubuntu0.14.04.1
-2: Amnesia ver: amnesia-1.6.2
-3: Erlang/OTP ver: 17
+###First make sure that you have the following software installed.
+1. MySQL server ver: 5.5.43-0ubuntu0.14.04.1
+2. Amnesia ver: amnesia-1.6.2
+3. Erlang/OTP ver: 17
 
-When you are installing the MySql-server you need to setup an root password make sure you have this in hand during this installation.
+###When you are installing the MySql-server you need to setup an root password make sure you have this in hand during this installation.
 
-When you have completede the prior-steps
-4: run make init_db password=<your SQL rootPassword>
+###When you have completede the prior-steps
+4. run make init_db password=<your SQL rootPassword>
    This will create the Database structure and run a load script for the Database you will need to enter your password one time per Database table.
-5: If you dont get any errors you are done.
+5. If you dont get any errors you are done.
  
 #### Compiling and testing Server
 
