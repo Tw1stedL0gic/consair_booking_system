@@ -128,7 +128,6 @@ public class SelectionController extends Window implements Bindable {
 				new Task<Flight[]>() {
 					@Override
 					public Flight[] execute() throws TaskExecutionException {
-
 						String fromId = loaded_airports.get(fromAirport).getAirportID();
 						String toId = loaded_airports.get(toAirport).getAirportID();
 
@@ -168,9 +167,6 @@ public class SelectionController extends Window implements Bindable {
 				}));
 			}
 		});
-
-		// Press the reload button to fetch the airports from the server.
-//		reloadButton.press();
 	}
 
 	private void openIndicator() {
