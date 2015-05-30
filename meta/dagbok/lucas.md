@@ -144,6 +144,10 @@ Jag började sedan titta på om det skulle gå att skriva ett annat GUI i Apache
 Arbetade på pivot guit.
 
 ##### Fredag
+Arbetade på pivot gui:t.
+
+##### Lördag
+Mer gui
 
 ## Vecka 23
 
