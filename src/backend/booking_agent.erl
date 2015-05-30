@@ -102,7 +102,12 @@ airport_list() ->
 %% Example: [{101, "LAX", "Los Angeles Internation Airport"}]
 %% DONE SEE get_database:get_airport_from_db_filter(Airport)
 airport_list(Airport) ->
-    get_database:get_airport_from_db_filter(Airport).
+    case get_database:get_airport_from_db_filter(Airport),
+	{ok, Airport_list} ->
+	    {ok, [{Airport_ID, IATA, Name} || {_, Airport_ID, IATA, Name} <- Airport_list]};
+	{error, Error} ->
+	    {error, Error}
+    end.
     
 
 %%---------------------------------------------------------------------%%
