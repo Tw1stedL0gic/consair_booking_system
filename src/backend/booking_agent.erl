@@ -349,8 +349,10 @@ finalize_booking(User) ->
 
 %%---------------------------------------------------------------------%%
 
-receipt(user) ->
-    ok.
+receipt(User) ->
+    {_,[{_,User_id,_,_,_,_}]} = get_database:get_user_from_db(User),
+    get_database:get_filter_seat_from_user_id(User_id),
+ok.
 
 %%---------------------------------------------------------------------%%
 
