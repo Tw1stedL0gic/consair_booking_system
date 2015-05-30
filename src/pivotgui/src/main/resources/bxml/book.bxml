@@ -35,7 +35,9 @@
 
         <!-- BUTTONS -->
         <TablePane.Row height="100">
-
+            <BoxPane styles="{verticalAlignment:'center', horizontalAlignment:'center'}">
+                <PushButton bxml:id="selectButton" buttonData="Select"/>
+            </BoxPane>
         </TablePane.Row>
     </TablePane>
 </controllers:BookController>
