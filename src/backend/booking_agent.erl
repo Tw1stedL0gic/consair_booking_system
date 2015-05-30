@@ -145,7 +145,7 @@ route_search(airport, arrival_point, {{year, month, day},_}) ->
 %%           {{2015,12,31},{10,32,00}},
 %%           SEAT_TABLE,
 %%           ARNLAX120}
-%% 
+ 
 flight_details(Flight) ->
     %% return all information about flight 
     %% In this function, booked and locked seats are both represented by 1, and available by 0. 
