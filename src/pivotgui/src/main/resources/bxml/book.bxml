@@ -1,6 +1,7 @@
 <controllers:BookController title="Book Seats" maximized="true"
                             xmlns:bxml="http://pivot.apache.org/bxml"
                             xmlns:controllers="ospp.pivotgui.controllers"
+                            xmlns:collections="org.apache.pivot.collections"
                             xmlns="org.apache.pivot.wtk">
     <TablePane bxml:id="mainTablePane" styles="{padding:10}">
         <columns>
@@ -10,30 +11,45 @@
         <!-- HEADER -->
         <TablePane.Row height="100">
             <BoxPane styles="{verticalAlignment:'center'}">
-                <Label text="Choose flight and book your seats:" styles="{font:'Arial bold 24'}"/>
+                <Label text="Please choose a flight" styles="{font:'Arial bold 24'}"/>
             </BoxPane>
         </TablePane.Row>
 
         <!-- FLIGHTS -->
         <TablePane.Row height="1*">
-            <ScrollPane styles="{padding:10}" horizontalScrollBarPolicy="fill"
-                        verticalScrollBarPolicy="fill_to_capacity">
-                <TableView bxml:id="flightTable">
+            <Border>
+                <ScrollPane horizontalScrollBarPolicy="fill"
+                            verticalScrollBarPolicy="fill_to_capacity">
 
-                    <columns>
-                        <TableView.Column name="flightID" width="50" headerData="Flight ID"/>
-                        <TableView.Column name="flightNumber" width="100" headerData="Flight Number"/>
-                        <TableView.Column name="fromAirport" width="200" headerData="From Airport"/>
-                        <TableView.Column name="toAirport" width="200" headerData="To Airport"/>
-                        <TableView.Column name="departure" width="200" headerData="Departure"/>
-                        <TableView.Column name="arrival" width="200" headerData="Arrival"/>
-                    </columns>
+                    <TableView bxml:id="flightTable" selectMode="single">
 
-                </TableView>
-            </ScrollPane>
+                        <columns>
+                            <TableView.Column name="flightID" width="50" headerData="Flight ID"/>
+                            <TableView.Column name="flightNumber" width="100" headerData="Flight Number"/>
+                            <TableView.Column name="fromAirport" width="200" headerData="From Airport"/>
+                            <TableView.Column name="toAirport" width="200" headerData="To Airport"/>
+                            <TableView.Column name="departure" width="130" headerData="Departure"/>
+                            <TableView.Column name="arrival" width="130" headerData="Arrival"/>
+                        </columns>
+
+                        <!-- Test data -->
+                        <collections:HashMap flightID="1" flightNumber="12" fromAirport="Arlanda" toAirport="Heathrow"
+                                             departure="2015-05-13 12:00:00" arrival="1999-03-43 13:00:00"/>
+                        <collections:HashMap flightID="1" flightNumber="12" fromAirport="Arlanda" toAirport="Heathrow"
+                                             departure="2015-05-13 12:00:00" arrival="1999-03-43 13:00:00"/>
+                        <collections:HashMap flightID="1" flightNumber="12" fromAirport="Arlanda" toAirport="Heathrow"
+                                             departure="2015-05-13 12:00:00" arrival="1999-03-43 13:00:00"/>
+
+                    </TableView>
+
+                    <columnHeader>
+                        <TableViewHeader tableView="$flightTable"/>
+                    </columnHeader>
+                </ScrollPane>
+            </Border>
         </TablePane.Row>
 
-        <!-- BUTTONS -->
+        <!-- BUTTONS ETC -->
         <TablePane.Row height="100">
             <BoxPane styles="{verticalAlignment:'center', horizontalAlignment:'center'}">
                 <PushButton bxml:id="selectButton" buttonData="Select"/>

@@ -1,3 +1,4 @@
+
 # Dagbok för OSKAR AHLBERG
 
 OSPP (1DT096) 2015 - Grupp 04
@@ -107,6 +108,9 @@ Gjort populerings script till MySQL servern för att lägga upp större volymer 
 har fixat så att man kan installera in database utan att gå in i sqlservern samt skrivt Readme till alla db filer, samt att påbörjat att fixa en makefil till dessa. 
 ##### Fredag
 Suttit med bugg check med carl och med lucas medans vi har kopplat ihop våra moduler samt att jag har fixat med insall scripts och mappstruktur för DB, samt att skrivit readme för main page.
+#####Lördag
+har suttit med install instrukotn samt att fixat den sista delen av bugg fixar från sql db till booking_agenet filen. Dvs laggt till 3 frågor jag hade missat att skapa.
+
 ## Vecka 23
 
 ##### Måndag
