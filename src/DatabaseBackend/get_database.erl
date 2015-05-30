@@ -54,6 +54,8 @@ get_airport_from_db () ->
     {ok,Pid}=amnesia:open(consair_database),
     amnesia:fetch(Pid,airport).
 
+
+
 get_filter_seat_from_user_id(User_id)->
     {ok, Pid} = amnesia:open(consair_database),
     amnesia:fetch(Pid, seats, {"user_id = $1", [User_id]}).
@@ -69,37 +71,38 @@ get_filter_seat_from_user_id(User_id)->
 get_airport_from_db_filter (Airport_id) ->
     {ok,Pid}=amnesia:open(consair_database),    
     amnesia:fetch(Pid,airport, {"id = $1", [Airport_id]}).
+
+
+%% @doc - get_airport_id_from_iata
+%% Input: Aid (airport id)
+%% Example: 1 
+%% Output: ARN
+
+
+get_airport_id_from_iata(Aid)->
+    {ok, Pid} = amnesia:open(consair_database),
+    {_,[{_,_,IATA,_}]}=amnesia:fetch(Pid, airport, {"id=$1", [Aid]}),
+     IATA.
+
+
+%% @doc - get_airport_from_to_airport
+%% Input:From,To 
+%% Example: 4, 3
+%% Output: A flight from Airport to Airport
+
+
+
+get_flights_from_to_airport (From,To)->
+    {ok, Pid} = amnesia:open(consair_database),
+    Iata=get_airport_id_from_iata(To),
+    amnesia:fetch(Pid, flights,{"airport_id=$1 and arrival_point=$2",[From,Iata]}).
+
+get_flights_date_to_from_airport (From,To,Date)->
+    {ok, Pid} = amnesia:open(consair_database),
+    Iata=get_airport_id_from_iata(To),
+    amnesia:fetch(Pid, flights,{"airport_id=$1 and arrival_point=$2 and departure_date =$3",[From,Iata,Date]}).
     
-%% @doc - get_airport_filter_and_date
-%% Input:Airport, Arrivalpoint, Date
-%% Example:Arn, Lax, {{2015,01,01},{10,10,00}}
-%% Output: A flight from Airport to Arrivalpoint at Date
 
-
-get_airport_from_to(Airport,Arrivalpoint)->
-    {ok, Pid} = amnesia:open(consair_database),
-    amnesia:fetch(Pid, [airport,?JOIN,flights],{"iata= $1",[Airport],"arrival_point= $2",[Arrivalpoint]}).
-
-get_id_from_airport(A)->
-    {ok, Pid} = amnesia:open(consair_database),
-    amnesia:fetch(Pid, airport,{"iata=$1",[A]}).
-
-
-
-get_sec_airport(A,B) ->
-    {ok, Pid} = amnesia:open(consair_database),
-    amnesia:fetch(Pid, flights,{"arrival_point = $1","iata = $2",[A],[B]}).
-
-
-get_stuff(A)->
-    {ok, Pid} = amnesia:open(consair_database),
-    {_,[{_,A_id,_,_}]}=get_database:get_id_from_airport(A),
-    {ok, [Flight]} = amnesia:fetch(Pid, flights, {"airport_id = $1", [A_id]}),
-    amnesia:load_referenced(Pid,Flight).
-
-%% get_stuff_f(A,B)->
-%%       = get_database:get_stuff(A)
-    
 
 %% @doc - get_flight_from_db_f
 %% Input: Flight
@@ -365,3 +368,26 @@ remove_user(Name)->
 %% 	_ ->
 %% 	    ok
 %%     end.
+
+
+%% get_id_from_airport(A)->
+%%     {ok, Pid} = amnesia:open(consair_database),
+%%     amnesia:fetch(Pid, airport,{"iata=$1",[A]}).
+
+%% get_sec_airport(Airport_id_from,Airport_to) ->
+%%     {ok, Pid} = amnesia:open(consair_database),
+%%     amnesia:fetch(Pid, flights,{"arrival_point = $2","airport_id = $1",[Airport_id_from,Airport_to]}).
+
+%% a
+
+
+    
+%% get_stuff(A_id)->
+%%     {ok, Pid} = amnesia:open(consair_database),
+%%     %%{_,[{_,A_id,_,_}]}=get_database:get_id_from_airport(A),
+%%     {ok, [Flight]} = amnesia:fetch(Pid, flights, {"arrival_point = $1", [A_id]}),
+%%     %%{ok, Flight} = amnesia:fetch(Pid, flights, {"airport_id = $2", [B_id]}),
+%%     amnesia:load_referenced(Pid,Flight).
+
+%% get_stuff_f(A,B)->
+%%       = get_database:get_stuff(A)
