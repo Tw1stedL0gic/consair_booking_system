@@ -15,10 +15,7 @@ import org.apache.pivot.wtk.*;
 import ospp.bookinggui.Airport;
 import ospp.bookinggui.Flight;
 import ospp.bookinggui.networking.Message;
-import ospp.bookinggui.networking.messages.RequestAirportsMsg;
-import ospp.bookinggui.networking.messages.RequestAirportsRespMsg;
-import ospp.bookinggui.networking.messages.SearchAirportRouteMsg;
-import ospp.bookinggui.networking.messages.SearchAirportRouteRespMsg;
+import ospp.bookinggui.networking.messages.*;
 import ospp.pivotgui.Main;
 
 import java.io.IOException;
@@ -74,6 +71,9 @@ public class SelectionController extends Window implements Bindable {
 						if(msg instanceof RequestAirportsRespMsg) {
 							RequestAirportsRespMsg resp = (RequestAirportsRespMsg) msg;
 							return resp.getAirports();
+						}
+						else if(msg instanceof DisconnectMsg) {
+							throw new TaskExecutionException(new Exception("Received Disconnect message!"));
 						}
 						else {
 							logger.severe("Client received incorrect response type to RequestAirportsMsg! " +
@@ -147,6 +147,9 @@ public class SelectionController extends Window implements Bindable {
 						if(msg instanceof SearchAirportRouteRespMsg) {
 							SearchAirportRouteRespMsg resp = (SearchAirportRouteRespMsg) msg;
 							return resp.getFlightList();
+						}
+						else if(msg instanceof DisconnectMsg) {
+							throw new TaskExecutionException(new Exception("Received Disconnect message!"));
 						}
 						else {
 							logger.severe("Client received incorrect message type! Received type: " + msg.getType());
