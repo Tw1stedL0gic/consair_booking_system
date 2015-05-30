@@ -104,7 +104,7 @@ handle_package({?REQ_AIRPORTS, Airport_ID}, _) ->
 	    {error, Error}
     end;
 
-handle_package({?SEARCH_ROUTE, [Airport_A, Airport_B], _) ->
+handle_package({?SEARCH_ROUTE, [Airport_A, Airport_B]}, _) ->
     case booking_agent:route:search(Airport_A, Airport_B) of
 	{ok, Flight_list} ->
 	    {ok, translate_package({?SEARCH_ROUTE_RESP, 
