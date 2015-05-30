@@ -125,7 +125,6 @@ public class Message {
 					return new RequestAirportsMsg(timestamp, iata);
 
 				case REQ_AIRPORTS_RESP:
-					logger.info(data);
 					return new RequestAirportsRespMsg(timestamp, body);
 
 				case SEARCH_ROUTE:
