@@ -4,8 +4,8 @@ import org.apache.pivot.beans.BXML;
 import org.apache.pivot.beans.BXMLSerializer;
 import org.apache.pivot.beans.Bindable;
 import org.apache.pivot.collections.ArrayList;
-import org.apache.pivot.collections.List;
 import org.apache.pivot.collections.Map;
+import org.apache.pivot.collections.Sequence;
 import org.apache.pivot.serialization.SerializationException;
 import org.apache.pivot.util.Resources;
 import org.apache.pivot.util.concurrent.Task;
@@ -20,7 +20,7 @@ import ospp.pivotgui.Main;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,6 +28,11 @@ public class SelectionController extends Window implements Bindable {
 
 	private static final Logger logger = Logger.getLogger(SelectionController.class.getName());
 
+	// These fields are populated by the BXMLSerializer initializing this object.
+	@BXML
+	private TextInput  searchFrom   = null;
+	@BXML
+	private TextInput  searchTo     = null;
 	@BXML
 	private ListView   fromList     = null;
 	@BXML
@@ -37,80 +42,109 @@ public class SelectionController extends Window implements Bindable {
 	@BXML
 	private PushButton reloadButton = null;
 
-	private ActivityIndicator sheetIndicator = new ActivityIndicator(){{
-		this.setActive(true);
-	}};
-	private Sheet             sheet          = new Sheet(sheetIndicator);
-
-	private final HashMap<String, Airport> loaded_airports = new HashMap<>();
+	private       ArrayList<String>                  airport_list    = null;
+	private final ConcurrentHashMap<String, Airport> loaded_airports = new ConcurrentHashMap<>();
 
 	@Override
 	public void initialize(Map<String, Object> map, URL url, Resources resources) {
+		addReloadButtonPressListener();
+		addSelectButtonPressListener();
 
-		reloadButton.getButtonPressListeners().add(new ButtonPressListener() {
+		addSearchAdapter();
+
+		addFromListListener();
+		addToListListener();
+	}
+
+	private void addToListListener() {
+		toList.getListViewSelectionListeners().add(new ListViewSelectionListener() {
 			@Override
-			public void buttonPressed(Button button) {
+			public void selectedRangeAdded(ListView listView, int i, int i1) {
+			}
 
-				new Task<Airport[]>() {
-					@Override
-					public Airport[] execute() throws TaskExecutionException {
-						Main.mailbox.send(new RequestAirportsMsg(System.currentTimeMillis(), null));
+			@Override
+			public void selectedRangeRemoved(ListView listView, int i, int i1) {
+			}
 
-						Message msg;
-						while((msg = Main.mailbox.getOldestIncoming()) == null) {
-							try {
-								Thread.sleep(10);
-							}
-							catch(InterruptedException e) {
-								throw new TaskExecutionException(e);
-							}
-						}
+			@Override
+			public void selectedRangesChanged(ListView listView, Sequence<Span> sequence) {
+			}
 
-						if(msg instanceof RequestAirportsRespMsg) {
-							RequestAirportsRespMsg resp = (RequestAirportsRespMsg) msg;
-							return resp.getAirports();
-						}
-						else if(msg instanceof DisconnectMsg) {
-							throw new TaskExecutionException(new Exception("Received Disconnect message!"));
-						}
-						else {
-							logger.severe("Client received incorrect response type to RequestAirportsMsg! " +
-								"Received type: " + msg.getType());
-							throw new TaskExecutionException("Client received incorrect response type!");
-						}
-					}
-				}.execute(new TaskAdapter<>(new TaskListener<Airport[]>() {
-					@Override
-					public void taskExecuted(Task<Airport[]> task) {
-						fromList.getListData().clear();
-						toList.getListData().clear();
-
-						List<String> list = new ArrayList<>();
-
-						for(Airport a : task.getResult()) {
-							list.add(a.getName());
-							loaded_airports.put(a.getName(), a);
-						}
-
-						fromList.setListData(list);
-						toList.setListData(list);
-					}
-
-					@Override
-					public void executeFailed(Task<Airport[]> task) {
-						Throwable e = task.getFault();
-						logger.log(Level.SEVERE, e.getMessage(), e);
-						Alert.alert(MessageType.ERROR, e.getMessage(), SelectionController.this);
-					}
-				}));
+			@Override
+			public void selectedItemChanged(ListView listView, Object o) {
+				String to = (String) toList.getSelectedItem();
+				searchTo.setText(to);
 			}
 		});
+	}
 
+	private void addFromListListener() {
+		fromList.getListViewSelectionListeners().add(new ListViewSelectionListener() {
+			@Override
+			public void selectedRangeAdded(ListView listView, int i, int i1) {
+			}
+
+			@Override
+			public void selectedRangeRemoved(ListView listView, int i, int i1) {
+			}
+
+			@Override
+			public void selectedRangesChanged(ListView listView, Sequence<Span> sequence) {
+			}
+
+			@Override
+			public void selectedItemChanged(ListView listView, Object o) {
+				String from = (String) fromList.getSelectedItem();
+				searchFrom.setText(from);
+			}
+		});
+	}
+
+	private void addSearchAdapter() {
+		TextInputContentListener.Adapter adapter = new TextInputContentListener.Adapter() {
+			@Override
+			public void textInserted(final TextInput textInput, int index, int count) {
+				String text = textInput.getText();
+
+				int i = ArrayList.binarySearch(airport_list, text,
+					airport_list.getComparator());
+
+				if(i < 0) {
+					i = -(i + 1);
+					int n = airport_list.getLength();
+
+					if(i < n) {
+						text = text.toLowerCase();
+						final String state = airport_list.get(i);
+
+						if(state.toLowerCase().startsWith(text)) {
+							String nextState = (i == n - 1) ?
+								null : airport_list.get(i + 1);
+
+							if(nextState == null
+								|| !nextState.toLowerCase().startsWith(text)) {
+								textInput.setText(state);
+
+								int selectionStart = text.length();
+								int selectionLength = state.length() - selectionStart;
+								textInput.setSelection(selectionStart, selectionLength);
+							}
+						}
+					}
+				}
+			}
+		};
+
+		searchFrom.getTextInputContentListeners().add(adapter);
+		searchTo.getTextInputContentListeners().add(adapter);
+	}
+
+	private void addSelectButtonPressListener() {
 		selectButton.getButtonPressListeners().add(new ButtonPressListener() {
 			@Override
 			public void buttonPressed(Button button) {
-				final String fromAirport = (String) fromList.getSelectedItem();
-				final String toAirport = (String) toList.getSelectedItem();
+				final String fromAirport = searchFrom.getText();
+				final String toAirport = searchTo.getText();
 
 				if(fromAirport.equals("MissingAirports") || toAirport.equals("MissingAirports")) {
 					Alert.alert(MessageType.ERROR,
@@ -123,10 +157,17 @@ public class SelectionController extends Window implements Bindable {
 					@Override
 					public Flight[] execute() throws TaskExecutionException {
 
-						String fromId = loaded_airports.get(fromAirport).getAirportID();
-						String toId = loaded_airports.get(toAirport).getAirportID();
+						Airport from = loaded_airports.get(fromAirport);
+						Airport to = loaded_airports.get(toAirport);
 
-						Main.mailbox.send(new SearchAirportRouteMsg(System.currentTimeMillis(), fromId, toId));
+						if(from == null) {
+							throw new TaskExecutionException(new Exception("Could not find airport with the name \"" + fromAirport + "\"!"));
+						}
+						if(to == null) {
+							throw new TaskExecutionException(new Exception("Could not find airport with the name \"" + toAirport + "\"!"));
+						}
+
+						Main.mailbox.send(new SearchAirportRouteMsg(System.currentTimeMillis(), from.getAirportID(), to.getAirportID()));
 
 						Message msg;
 						while((msg = Main.mailbox.getOldestIncoming()) == null) {
@@ -165,6 +206,72 @@ public class SelectionController extends Window implements Bindable {
 				}));
 			}
 		});
+	}
+
+	private void addReloadButtonPressListener() {
+		reloadButton.getButtonPressListeners().add(new ButtonPressListener() {
+			@Override
+			public void buttonPressed(Button button) {
+
+				new Task<Airport[]>() {
+					@Override
+					public Airport[] execute() throws TaskExecutionException {
+						Main.mailbox.send(new RequestAirportsMsg(System.currentTimeMillis(), null));
+
+						Message msg;
+						while((msg = Main.mailbox.getOldestIncoming()) == null) {
+							try {
+								Thread.sleep(10);
+							}
+							catch(InterruptedException e) {
+								throw new TaskExecutionException(e);
+							}
+						}
+
+						if(msg instanceof RequestAirportsRespMsg) {
+							RequestAirportsRespMsg resp = (RequestAirportsRespMsg) msg;
+							return resp.getAirports();
+						}
+						else if(msg instanceof DisconnectMsg) {
+							throw new TaskExecutionException(new Exception("Received Disconnect message!"));
+						}
+						else {
+							logger.severe("Client received incorrect response type to RequestAirportsMsg! " +
+								"Received type: " + msg.getType());
+							throw new TaskExecutionException("Client received incorrect response type!");
+						}
+					}
+				}.execute(new TaskAdapter<>(new TaskListener<Airport[]>() {
+					@Override
+					public void taskExecuted(Task<Airport[]> task) {
+						storeAirports(task.getResult());
+					}
+
+					@Override
+					public void executeFailed(Task<Airport[]> task) {
+						Throwable e = task.getFault();
+						logger.log(Level.SEVERE, e.getMessage(), e);
+						Alert.alert(MessageType.ERROR, e.getMessage(), SelectionController.this);
+					}
+				}));
+			}
+		});
+	}
+
+	private void storeAirports(Airport[] airports) {
+		airport_list = new ArrayList<>();
+
+		for(Airport a : airports) {
+			airport_list.add(a.getName());
+			loaded_airports.put(a.getName(), a);
+		}
+
+		// Sort the list of airports
+		airport_list.setComparator(String.CASE_INSENSITIVE_ORDER);
+
+		// Display the list
+		fromList.setListData(airport_list);
+		toList.setListData(airport_list);
 	}
 
 	private void loadBookingWindow(Flight[] flights) {

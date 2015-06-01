@@ -1,0 +1,6 @@
+<controllers:ConfirmController title="Confirm" maximized="true"
+        xmlns="org.apache.pivot.wtk"
+        xmlns:bxml="http://pivot.apache.org/bxml"
+        xmlns:controllers="ospp.pivotgui.controllers">
+
+</controllers:ConfirmController>

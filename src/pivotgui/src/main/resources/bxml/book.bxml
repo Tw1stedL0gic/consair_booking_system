@@ -1,4 +1,4 @@
-<controllers:BookController title="Book Seats" maximized="true"
+<controllers:BookController title="Choose flight" maximized="true"
                             xmlns:bxml="http://pivot.apache.org/bxml"
                             xmlns:controllers="ospp.pivotgui.controllers"
                             xmlns:collections="org.apache.pivot.collections"
