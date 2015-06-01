@@ -31,7 +31,7 @@ clean:
 
 doc: 
 	erl -noshell -run edoc_run application "'$(APPNAME)'"  '"."' '[{def,{vsn,"$(VSN)"}}, {stylesheet, "my_style.css"}]'
-
+#TODO lägg till och fixa till Jdoc och edoc
 doc_url:
 	@echo 
 	@echo "EDoc index page available at file://$(PWD)/doc/index.html"
