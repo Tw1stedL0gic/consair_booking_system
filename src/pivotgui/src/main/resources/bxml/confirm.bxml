@@ -1,6 +1,35 @@
 <controllers:ConfirmController title="Confirm" maximized="true"
-        xmlns="org.apache.pivot.wtk"
-        xmlns:bxml="http://pivot.apache.org/bxml"
-        xmlns:controllers="ospp.pivotgui.controllers">
+                               xmlns="org.apache.pivot.wtk"
+                               xmlns:bxml="http://pivot.apache.org/bxml"
+                               xmlns:controllers="ospp.pivotgui.controllers">
 
+    <TablePane styles="{backgroundColor:'#4f4f4f', padding:10}">
+
+        <columns>
+            <TablePane.Column width="1*"/>
+        </columns>
+
+        <!-- HEADER -->
+        <TablePane.Row height="100">
+            <BoxPane styles="{horizontalAlignment:'center', verticalAlignment:'center'}">
+                <Label text="Please choose a seat" styles="{font:{bold:true, size:24}, color:'#eeeeee'}"/>
+            </BoxPane>
+        </TablePane.Row>
+
+        <!-- SEAT LIST -->
+        <TablePane.Row height="1*">
+            <ScrollPane styles="{backgroundColor:'gray'}">
+                <ListView bxml:id="seatList" selectMode="single"
+                          styles="{backgroundColor:'gray', color:'#c73a3a', alternateItemBackgroundColor:'#eeeeee'}"
+                          listData="['MissingSeats']"/>
+            </ScrollPane>
+        </TablePane.Row>
+
+        <!-- BUTTONS -->
+        <TablePane.Row height="100">
+            <BoxPane styles="{verticalAlignment:'center', horizontalAlignment:'center'}">
+                <PushButton bxml:id="selectButton" buttonData="Select seat"/>
+            </BoxPane>
+        </TablePane.Row>
+    </TablePane>
 </controllers:ConfirmController>
