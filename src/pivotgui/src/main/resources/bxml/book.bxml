@@ -3,15 +3,15 @@
                             xmlns:controllers="ospp.pivotgui.controllers"
                             xmlns:collections="org.apache.pivot.collections"
                             xmlns="org.apache.pivot.wtk">
-    <TablePane bxml:id="mainTablePane" styles="{padding:10, background:'gray'}">
+    <TablePane bxml:id="mainTablePane" styles="{padding:10, backgroundColor:'#3c3c3c'}">
         <columns>
             <TablePane.Column width="1*"/>
         </columns>
 
         <!-- HEADER -->
         <TablePane.Row height="100">
-            <BoxPane styles="{verticalAlignment:'center'}">
-                <Label text="Please choose a flight" styles="{font:{bold:true, size:24}}"/>
+            <BoxPane styles="{verticalAlignment:'center', horizontalAlignment:'center'}">
+                <Label text="Please choose a flight" styles="{font:{bold:true, size:24}, color:'#eeeeee'}"/>
             </BoxPane>
         </TablePane.Row>
 
@@ -21,7 +21,8 @@
                 <ScrollPane horizontalScrollBarPolicy="fill"
                             verticalScrollBarPolicy="fill_to_capacity">
 
-                    <TableView bxml:id="flightTable" selectMode="single">
+                    <TableView bxml:id="flightTable" selectMode="single"
+                               styles="{backgroundColor:'gray', alternateRowBackgroundColor:'#eeeeee', color:'#c73a3a'}">
 
                         <columns>
                             <TableView.Column name="flightID" width="1*" headerData="Flight ID"/>
@@ -52,7 +53,7 @@
         <!-- BUTTONS ETC -->
         <TablePane.Row height="100">
             <BoxPane styles="{verticalAlignment:'center', horizontalAlignment:'center'}">
-                <PushButton bxml:id="selectButton" buttonData="Select"/>
+                <PushButton bxml:id="selectButton" buttonData="Choose seat"/>
             </BoxPane>
         </TablePane.Row>
     </TablePane>

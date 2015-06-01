@@ -2,18 +2,29 @@
                              xmlns:bxml="http://pivot.apache.org/bxml"
                              xmlns:controllers="ospp.pivotgui.controllers"
                              xmlns="org.apache.pivot.wtk">
-    <BoxPane styles="{horizontalAlignment:'center', verticalAlignment:'center'}">
-        <Form>
+    <BoxPane styles="{horizontalAlignment:'center', verticalAlignment:'center', backgroundColor:'#4f4f4f'}" orientation="vertical">
+
+        <!-- HEADER -->
+        <Label text="ConsAir booking system" styles="{font:{size:24, bold:true}, color:'#eeeeee'}"/>
+
+        <!-- FORM -->
+        <Form styles="{separatorHeadingColor:'#097ac7'}">
+
             <Form.Section heading="Server information">
                 <TextInput bxml:id="hostURL" prompt="URL"/>
                 <TextInput bxml:id="port" prompt="Port"/>
             </Form.Section>
+
             <Form.Section heading="User information">
                 <TextInput bxml:id="username" prompt="Username"/>
                 <TextInput bxml:id="password" prompt="Password" password="true"/>
+
+                <!-- BUTTON -->
                 <PushButton bxml:id="connect" buttonData="Connect"/>
             </Form.Section>
         </Form>
-        <ActivityIndicator bxml:id="indicator"/>
+
+        <!-- INDICATOR -->
+        <ActivityIndicator bxml:id="indicator" styles="{backgroundColor:'#4f4f4f'}"/>
     </BoxPane>
 </controllers:ConnectAndLoginController>

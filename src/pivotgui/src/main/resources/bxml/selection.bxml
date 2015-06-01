@@ -2,16 +2,16 @@
                                  xmlns:controllers="ospp.pivotgui.controllers"
                                  xmlns:bxml="http://pivot.apache.org/bxml"
                                  xmlns="org.apache.pivot.wtk">
-    <TablePane styles="{padding:10}">
+    <TablePane styles="{padding:10, backgroundColor:'#4f4f4f'}">
         <columns>
             <TablePane.Column width="1*"/>
         </columns>
 
         <!-- HEADER -->
         <TablePane.Row height="100">
-            <BoxPane styles="{verticalAlignment:'center'}">
+            <BoxPane styles="{horizontalAlignment:'center', verticalAlignment:'center'}">
                 <Label bxml:id="headerLabel" text="Please select the two airports you want to travel between."
-                       styles="{font:{bold:true, size:24}}"/>
+                       styles="{font:{bold:true, size:24}, color:'#eeeeee'}"/>
             </BoxPane>
         </TablePane.Row>
 
@@ -31,18 +31,19 @@
                         </columns>
 
                         <TablePane.Row height="1*">
-                            <Form>
+                            <Form styles="{separatorHeadingColor:'#097ac7', fill:true}">
                                 <Form.Section heading="From:">
                                     <ListView bxml:id="fromList" selectMode="single"
+                                              styles="{backgroundColor:'gray', color:'#c73a3a', alternateItemBackgroundColor:'#eeeeee'}"
                                               listData="['MissingAirports']"/>
                                 </Form.Section>
                             </Form>
 
-                            <Form>
+                            <Form styles="{separatorHeadingColor:'#097ac7', fill:true}">
                                 <Form.Section heading="To:">
-                                    <BoxPane>
-                                        <ListView bxml:id="toList" selectMode="single" listData="['MissingAirports']"/>
-                                    </BoxPane>
+                                    <ListView bxml:id="toList" selectMode="single"
+                                              styles="{backgroundColor:'gray', color:'#c73a3a', alternateItemBackgroundColor:'#eeeeee'}"
+                                              listData="['MissingAirports']"/>
                                 </Form.Section>
                             </Form>
                         </TablePane.Row>

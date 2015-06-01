@@ -51,8 +51,6 @@ public class SelectionController extends Window implements Bindable {
 			@Override
 			public void buttonPressed(Button button) {
 
-				toggleIndicator();
-
 				new Task<Airport[]>() {
 					@Override
 					public Airport[] execute() throws TaskExecutionException {
@@ -96,8 +94,6 @@ public class SelectionController extends Window implements Bindable {
 
 						fromList.setListData(list);
 						toList.setListData(list);
-
-						toggleIndicator();
 					}
 
 					@Override
@@ -105,8 +101,6 @@ public class SelectionController extends Window implements Bindable {
 						Throwable e = task.getFault();
 						logger.log(Level.SEVERE, e.getMessage(), e);
 						Alert.alert(MessageType.ERROR, e.getMessage(), SelectionController.this);
-
-						toggleIndicator();
 					}
 				}));
 			}
@@ -171,18 +165,6 @@ public class SelectionController extends Window implements Bindable {
 				}));
 			}
 		});
-
-		// Press the reload button to fetch the airports from the server.
-//		reloadButton.press();
-	}
-
-	private void toggleIndicator() {
-		if(!sheet.isOpen()) {
-			sheet.open(Main.display, SelectionController.this);
-		}
-		else {
-			sheet.close();
-		}
 	}
 
 	private void loadBookingWindow(Flight[] flights) {

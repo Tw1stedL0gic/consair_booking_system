@@ -133,6 +133,12 @@ public class ConnectAndLoginController extends Window implements Bindable {
 
 		try {
 			Window selection = (Window) serializer.readObject(SelectionController.class, "/bxml/selection.bxml");
+
+			// Load flights
+			PushButton reloadButton = (PushButton) serializer.getNamespace().get("reloadButton");
+			reloadButton.press();
+
+			// Open window
 			selection.open(Main.display);
 		}
 		catch(IOException | SerializationException e) {

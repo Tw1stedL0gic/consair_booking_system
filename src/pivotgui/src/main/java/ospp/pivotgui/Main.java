@@ -20,7 +20,7 @@ public class Main implements Application {
 	public void startup(final Display display, Map<String, String> map) throws Exception {
 		this.display = display;
 		BXMLSerializer bxmlSerializer = new BXMLSerializer();
-		Window login_window = (Window) bxmlSerializer.readObject(ConnectAndLoginController.class, "/bxml/connectAndLogin.bxml");
+		Window login_window = (Window) bxmlSerializer.readObject(ConnectAndLoginController.class, "/bxml/book.bxml");
 		login_window.open(display);
 	}
 
