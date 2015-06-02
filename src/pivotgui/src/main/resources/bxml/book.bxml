@@ -1,7 +1,7 @@
-<controllers:BookController title="Choose flight" maximized="true"
-                            xmlns:bxml="http://pivot.apache.org/bxml"
-                            xmlns:controllers="ospp.pivotgui.controllers"
+<controllers:BookController xmlns:bxml="http://pivot.apache.org/bxml" xmlns:controllers="ospp.pivotgui.controllers"
                             xmlns:collections="org.apache.pivot.collections"
+                            title="Choose flight"
+                            maximized="true"
                             xmlns="org.apache.pivot.wtk">
     <TablePane bxml:id="mainTablePane" styles="{padding:10, backgroundColor:'#3c3c3c'}">
         <columns>

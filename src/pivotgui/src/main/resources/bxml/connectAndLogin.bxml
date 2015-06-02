@@ -1,8 +1,9 @@
-<controllers:ConnectAndLoginController title="Login" maximized="true"
-                             xmlns:bxml="http://pivot.apache.org/bxml"
-                             xmlns:controllers="ospp.pivotgui.controllers"
-                             xmlns="org.apache.pivot.wtk">
-    <BoxPane styles="{horizontalAlignment:'center', verticalAlignment:'center', backgroundColor:'#4f4f4f'}" orientation="vertical">
+<controllers:ConnectAndLoginController xmlns:bxml="http://pivot.apache.org/bxml" xmlns:controllers="ospp.pivotgui.controllers"
+                                       title="Login"
+                                       maximized="true"
+                                       xmlns="org.apache.pivot.wtk">
+    <BoxPane styles="{horizontalAlignment:'center', verticalAlignment:'center', backgroundColor:'#4f4f4f'}"
+             orientation="vertical">
 
         <!-- HEADER -->
         <Label text="ConsAir booking system" styles="{font:{size:24, bold:true}, color:'#eeeeee'}"/>

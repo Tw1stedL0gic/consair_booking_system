@@ -1,6 +1,6 @@
-<controllers:SelectionController title="Select Flight" maximized="true"
-                                 xmlns:controllers="ospp.pivotgui.controllers"
-                                 xmlns:bxml="http://pivot.apache.org/bxml"
+<controllers:SelectionController xmlns:controllers="ospp.pivotgui.controllers" xmlns:bxml="http://pivot.apache.org/bxml"
+                                 title="Select Flight"
+                                 maximized="true"
                                  xmlns="org.apache.pivot.wtk">
     <TablePane styles="{padding:10, backgroundColor:'#4f4f4f'}">
         <columns>

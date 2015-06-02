@@ -1,10 +1,8 @@
 package ospp.pivotgui.controllers;
 
 import org.apache.pivot.beans.BXML;
-import org.apache.pivot.beans.BXMLSerializer;
 import org.apache.pivot.beans.Bindable;
 import org.apache.pivot.collections.Map;
-import org.apache.pivot.serialization.SerializationException;
 import org.apache.pivot.util.Resources;
 import org.apache.pivot.util.concurrent.Task;
 import org.apache.pivot.util.concurrent.TaskExecutionException;
@@ -17,6 +15,7 @@ import ospp.bookinggui.networking.messages.ErrorMsg;
 import ospp.bookinggui.networking.messages.LoginMsg;
 import ospp.bookinggui.networking.messages.LoginRespMsg;
 import ospp.pivotgui.Main;
+import ospp.pivotgui.exceptions.DisconnectException;
 
 import java.io.IOException;
 import java.net.URL;
@@ -119,7 +118,13 @@ public class ConnectAndLoginController extends Window implements Bindable {
 
 						Throwable e = task.getFault();
 						Alert.alert(MessageType.ERROR, e.getMessage(), ConnectAndLoginController.this);
-						logger.log(Level.SEVERE, e.getMessage(), e);
+
+						if(e instanceof DisconnectException) {
+							Main.disconnectError(ConnectAndLoginController.this);
+						}
+						else {
+							logger.log(Level.SEVERE, e.getMessage(), e);
+						}
 					}
 				}));
 			}
@@ -128,21 +133,7 @@ public class ConnectAndLoginController extends Window implements Bindable {
 
 	private void loadSelectionWindow() {
 		this.close();
-
-		BXMLSerializer serializer = new BXMLSerializer();
-
-		try {
-			Window selection = (Window) serializer.readObject(SelectionController.class, "/bxml/selection.bxml");
-
-			// Load flights
-			PushButton reloadButton = (PushButton) serializer.getNamespace().get("reloadButton");
-			reloadButton.press();
-
-			// Open window
-			selection.open(Main.display);
-		}
-		catch(IOException | SerializationException e) {
-			e.printStackTrace();
-		}
+		SelectionController c = (SelectionController) Main.loadWindow(SelectionController.class, "selection.bxml");
+		c.pushReloadButton();
 	}
 }

@@ -17,6 +17,7 @@ import ospp.bookinggui.Flight;
 import ospp.bookinggui.networking.Message;
 import ospp.bookinggui.networking.messages.*;
 import ospp.pivotgui.Main;
+import ospp.pivotgui.exceptions.DisconnectException;
 
 import java.io.IOException;
 import java.net.URL;
@@ -27,7 +28,7 @@ import java.util.logging.Logger;
 public class SelectionController extends Window implements Bindable {
 
 	private static final Logger logger = Logger.getLogger(SelectionController.class.getName());
-
+	private final ConcurrentHashMap<String, Airport> loaded_airports = new ConcurrentHashMap<>();
 	// These fields are populated by the BXMLSerializer initializing this object.
 	@BXML
 	private TextInput  searchFrom   = null;
@@ -41,9 +42,7 @@ public class SelectionController extends Window implements Bindable {
 	private PushButton selectButton = null;
 	@BXML
 	private PushButton reloadButton = null;
-
 	private       ArrayList<String>                  airport_list    = null;
-	private final ConcurrentHashMap<String, Airport> loaded_airports = new ConcurrentHashMap<>();
 
 	@Override
 	public void initialize(Map<String, Object> map, URL url, Resources resources) {
@@ -201,7 +200,13 @@ public class SelectionController extends Window implements Bindable {
 					public void executeFailed(Task<Flight[]> task) {
 						Throwable e = task.getFault();
 						logger.log(Level.SEVERE, e.getMessage(), e);
-						Alert.alert(MessageType.ERROR, e.getMessage(), SelectionController.this);
+
+						if(e instanceof DisconnectException) {
+							Main.disconnectError(SelectionController.this);
+						}
+						else {
+							Alert.alert(MessageType.ERROR, e.getMessage(), SelectionController.this);
+						}
 					}
 				}));
 			}
@@ -274,17 +279,13 @@ public class SelectionController extends Window implements Bindable {
 		toList.setListData(airport_list);
 	}
 
+	public void pushReloadButton() {
+		reloadButton.press();
+	}
+
 	private void loadBookingWindow(Flight[] flights) {
 		this.close();
-		BXMLSerializer serializer = new BXMLSerializer();
-		BookController window;
-		try {
-			window = (BookController) serializer.readObject(BookController.class, "/bxml/book.bxml");
-			window.setFlights(flights);
-			window.open(Main.display);
-		}
-		catch(IOException | SerializationException e) {
-			e.printStackTrace();
-		}
+		BookController c = (BookController) Main.loadWindow(BookController.class, "book.bxml");
+		c.setFlights(flights);
 	}
 }

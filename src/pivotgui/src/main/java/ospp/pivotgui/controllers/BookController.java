@@ -1,10 +1,12 @@
 package ospp.pivotgui.controllers;
 
 import org.apache.pivot.beans.BXML;
+import org.apache.pivot.beans.BXMLSerializer;
 import org.apache.pivot.beans.Bindable;
 import org.apache.pivot.collections.ArrayList;
 import org.apache.pivot.collections.HashMap;
 import org.apache.pivot.collections.Map;
+import org.apache.pivot.serialization.SerializationException;
 import org.apache.pivot.util.Resources;
 import org.apache.pivot.util.concurrent.Task;
 import org.apache.pivot.util.concurrent.TaskExecutionException;
@@ -13,11 +15,11 @@ import org.apache.pivot.wtk.*;
 import ospp.bookinggui.Flight;
 import ospp.bookinggui.Seat;
 import ospp.bookinggui.networking.Message;
-import ospp.bookinggui.networking.messages.DisconnectMsg;
-import ospp.bookinggui.networking.messages.RequestSeatSuggestionMsg;
-import ospp.bookinggui.networking.messages.RequestSeatSuggestionRespMsg;
+import ospp.bookinggui.networking.messages.*;
 import ospp.pivotgui.Main;
+import ospp.pivotgui.exceptions.DisconnectException;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -80,7 +82,7 @@ public class BookController extends Window implements Bindable {
 							return resp.getSeatList();
 						}
 						else if(msg instanceof DisconnectMsg) {
-							throw new TaskExecutionException(new Exception("Received disconnect message!"));
+							throw new TaskExecutionException(new DisconnectException("Received disconnect message!"));
 						}
 						else {
 							logger.severe("Client received incorrect messagetype! Type: " + msg.getType());
@@ -99,7 +101,13 @@ public class BookController extends Window implements Bindable {
 					public void executeFailed(Task<Seat[]> task) {
 						Throwable e = task.getFault();
 						logger.log(Level.SEVERE, e.getMessage(), e);
-						Alert.alert(MessageType.ERROR, e.getMessage(), BookController.this);
+
+						if(e instanceof DisconnectException) {
+							Main.disconnectError(BookController.this);
+						}
+						else {
+							Alert.alert(MessageType.ERROR, e.getMessage(), BookController.this);
+						}
 					}
 				}));
 			}
@@ -111,6 +119,8 @@ public class BookController extends Window implements Bindable {
 	}
 
 	private void openBookConfirmWindow(Seat[] seat_list) {
-
+		this.close();
+		ConfirmController c = (ConfirmController) Main.loadWindow(ConfirmController.class, "confirm.bxml");
+		c.setSeats(seat_list);
 	}
 }
