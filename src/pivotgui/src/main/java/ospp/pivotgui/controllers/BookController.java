@@ -82,7 +82,7 @@ public class BookController extends Window implements Bindable {
 							return resp.getSeatList();
 						}
 						else if(msg instanceof DisconnectMsg) {
-							throw new TaskExecutionException(new DisconnectException("Received disconnect message!"));
+							throw new TaskExecutionException(new DisconnectException());
 						}
 						else {
 							logger.severe("Client received incorrect messagetype! Type: " + msg.getType());

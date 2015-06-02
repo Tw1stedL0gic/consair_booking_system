@@ -56,7 +56,7 @@ public class Main implements Application {
 
 	public void startup(final Display display, Map<String, String> map) throws Exception {
 		this.display = display;
-		loadWindow(ConnectAndLoginController.class, "confirm.bxml");
+		loadWindow(ConnectAndLoginController.class, "connectAndLogin.bxml");
 	}
 
 	public boolean shutdown(boolean b) throws Exception {
