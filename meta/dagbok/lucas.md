@@ -149,11 +149,16 @@ Arbetade på pivot gui:t.
 ##### Lördag
 Mer gui
 
+##### Söndag
+gui
+
 ## Vecka 23
 
 ##### Måndag
+pivot gui
 
 ##### Tisdag
+pivot gui
 
 ##### Onsdag
 
