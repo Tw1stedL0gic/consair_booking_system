@@ -11,8 +11,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.ResourceBundle;
 import javafx.scene.control.ListView;
+import ospp.bookinggui.Flight;
 
 /**
  * FXML Controller class
@@ -21,6 +24,8 @@ import javafx.scene.control.ListView;
  */
 public class ConfirmInterfaceController implements Initializable, ControlledScreen {
 
+    
+        private HashMap<String, Flight> listNameToFlight = new HashMap<>();
     
         @FXML
         private ListView<String> listview;
@@ -48,6 +53,8 @@ public class ConfirmInterfaceController implements Initializable, ControlledScre
 
 	@FXML
 	void confirmButtonClick(ActionEvent event) {
+                String s = listview.getSelectionModel().selectedItemProperty().getValue();
+                
 		//Skicka bekräftelseförfrågan om bokningen med alla val till databasen över nätverket
 		myScreenMaster.setScreen("confirmedinterface");
 	}
@@ -59,6 +66,16 @@ public class ConfirmInterfaceController implements Initializable, ControlledScre
 
 	@Override
 	public void onScreen() {
+                Iterator<Flight> iter = myScreenMaster.model.flyghts.iterator();
+                this.listNameToFlight = new HashMap<>(myScreenMaster.model.flyghts.size());
+                listview.getItems().removeAll(listview.getItems());
+                while(iter.hasNext()){
+                    Flight f = iter.next();
+                    String s = "from: " +f.getFrom().getName()  + "  " + f.getDeparture().toString() + "to: " + f.getTo().getName();
+                    listNameToFlight.put(s, f);
+                    listview.getItems().add(s);
+                }
+                
 		flightLabel.setText(myScreenMaster.chosenFlight);
 		totalPass.setText(Integer.toString(myScreenMaster.adultpass) + " adults and " + Integer.toString(myScreenMaster.childpass) + " children");
 	}
