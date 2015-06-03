@@ -170,7 +170,12 @@ route_search(Airport,Arrival_point)->
 flight_details(Flight) ->
     %% return all information about flight 
     %% In this function, booked and locked seats are both represented by 1, and available by 0. 
-    get_database:get_flight_from_db_f(Flight).
+    case get_database:get_flight_from_db_f(Flight) of
+	{flights, ID, {airport, A_ID, A_iata, A_name}, {airport, B_ID, B_iata, B_name}, Date_dep, Date_arriv, Seat_table, Name} ->
+	    {ID, {A_ID, A_iata, A_name}, {B_ID, B_iata, B_name}, Date_dep, Date_arriv, Seat_table, Name};
+	{error, Error} ->
+	    {error, Error}
+    end.
 
 %% @doc Returns all information about flight.
 %% Input:  Flight ID
@@ -257,22 +262,38 @@ seat_details([Head_seat_ID | Tail_seat_ID],admin) ->
 %% in plane (front, back, emergency exit)
 
 suggest_seat(Flight_ID, Group_size) ->
-    find_chain_of_seats(get_database:get_seats_from_flight(Flight_ID), [], -1, Group_size). 
+    case get_database:get_seats_from_flight(Flight_ID) of
+	{ok, []} ->
+	    {error, no_seats};
+	{ok, Seat_list} ->
+	    find_chain_of_seats(
+	      lists:flatten(lists:map(fun erlang:tl/1, Seat_list)), [], -1, Group_size);
+	{error, Error} ->
+	    {error, Error}
+    end.
+
+find_chain_of_seats([], Chain_list, _Chain_row, Chain_size) ->
+    case length(Chain_list) of
+	Chain_size ->
+	    {ok, Chain_list};
+	_ ->
+	    {error, no_seat_found}
+    end;
 
 find_chain_of_seats([Seat | Seat_list], Chain_list, Chain_row, Chain_size) ->
     %% extract necessary info
-    {_Seat_ID, _Flight_ID, _Class, _User, _Window, _Aisle, Seat_row, _Col, _Price, Lock_s} = Seat, 
+    {seats, Seat_ID, Flight_ID, Class, User, Window, Aisle, Seat_row, Col, Price, Lock_s} = Seat, 
     %% check if right size (or zero)
-    case lists:sizeof(Chain_list) of 
+    case length(Chain_list) of 
 	Chain_size ->
 	    %% finished, return chain
-	    Chain_list;
+	    {ok, Chain_list};
 	0 ->
 	    %% check seat lock
 	    case Lock_s of
 		0 ->
 		    %% reset including new seat
-		    find_chain_of_seats(Seat_list, [Seat], Seat_row, Chain_size);
+		    find_chain_of_seats(Seat_list, [{Seat_ID, Flight_ID, Class, User, Window, Aisle, Seat_row, Col, Price, Lock_s}], Seat_row, Chain_size);
 		_ ->
 		    %% reset
 		    find_chain_of_seats(Seat_list, [], Seat_row, Chain_size)
@@ -285,10 +306,10 @@ find_chain_of_seats([Seat | Seat_list], Chain_list, Chain_row, Chain_size) ->
 		    case Seat_row of
 			Chain_row ->
 			    %% append and continue
-			    find_chain_of_seats(Seat_list, lists:append(Chain_list, Seat), Chain_row, Chain_size);
+			    find_chain_of_seats(Seat_list, Chain_list ++ [{Seat_ID, Flight_ID, Class, User, Window, Aisle, Seat_row, Col, Price, Lock_s}], Chain_row, Chain_size);
 			_ -> 
 			    %% reset including new seat
-			    find_chain_of_seats(Seat_list, [Seat], Seat_row, Chain_size)
+			    find_chain_of_seats(Seat_list, [{Seat_ID, Flight_ID, Class, User, Window, Aisle, Seat_row, Col, Price, Lock_s}], Seat_row, Chain_size)
 		    end;
 		_ ->
 		    %% reset

@@ -85,8 +85,8 @@ connector_spawner(LSock, N) ->
     %% receive message from other processes for 100ms
     receive
 	exit ->        %% if received exit -> exit the loop (connection processes are still alive)
-	    ?DRAW_TITLE("Exiting Server~nThank you for choosing Cons-Air"),
 	    ?DRAW_LOGO,
+	    ?DRAW_TITLE("Exiting Server~nThank you for choosing Cons-Air"),
 	    gen_tcp:close(LSock);
 	disconnect ->  %% if received terminated -> reduce amount of connections
 	    connector_spawner(LSock, N-1);
@@ -97,6 +97,8 @@ connector_spawner(LSock, N) ->
 	    code:purge(package_handler),
 	    code:load_file(booking_agent),
 	    code:purge(booking_agent),
+	    code:load_file(get_database),
+	    code:purge(get_database),
 	    connector_spawner(LSock, N);
 	{error, Error} ->
 	    ?WRITE_SPAWNER("Error received! {error, ~p}~n", [Error], "E"),
@@ -178,6 +180,7 @@ connector_handler(Sock, ID, Timeouts, User, Parent_PID) ->
 		    Parent_PID ! exit;
 		{ok, disconnect} ->
 		    ?WRITE_CONNECTION("Disconnecting~n", [], "D"),
+		    gen_tcp:close(Sock),
 		    Parent_PID ! disconnect;
 		{ok, reload_code} ->
        		    ?WRITE_CONNECTION("Code reload request~n", [], "R"),    
@@ -193,12 +196,19 @@ connector_handler(Sock, ID, Timeouts, User, Parent_PID) ->
 		    ?WRITE_CONNECTION("Logged in as ~p~n", [New_user], " "),
 		    connector_handler(Sock, ID, 0, New_user, Parent_PID);
 		{ok, Response} ->
-		    ?WRITE_CONNECTION("Message send:     >>>>>  ~n", [], ">"),    
+		    ?WRITE_CONNECTION("Message sent:     >>>>>  ~n", [], ">"),    
 		    gen_tcp:send(Sock, Response),
+		    connector_handler(Sock, ID, 0, User, Parent_PID);
+		ok ->
 		    connector_handler(Sock, ID, 0, User, Parent_PID);
 		{error, Error} ->
        		    Parent_PID ! {error, Error},
-		    gen_tcp:send(Sock, translate_package({?ERROR, atom_to_list(Error)})),
+		    case is_list(Error) of
+			true ->
+			    gen_tcp:send(Sock, translate_package({?ERROR, [Error]}));
+			_ ->
+			    gen_tcp:send(Sock, translate_package({?ERROR, [atom_to_list(Error)]}))
+		    end,
 		    connector_handler(Sock, ID, 0, User, Parent_PID);
 		{client_error, Error} ->
 		    ?WRITE_CONNECTION("{client_error, ~p}~n", [Error], "E"),
@@ -264,7 +274,8 @@ one_of_each_message_test() ->
 							     {?INIT_BOOK, ["1"]}], ?PORT)),
 
     %% LOGIN, INIT BOOK AND ABORT
-    ?assertMatch({ok, _}, connect_send_and_receive_list([{?LOGIN, ["pelle", "asd"]},
+    ?assertMatch({ok, _},
+		 connect_send_and_receive_list([{?LOGIN, ["pelle", "asd"]},
 							 {?INIT_BOOK, ["1"]},
 							 {?ABORT_BOOK, []}], ?PORT)),
 
@@ -280,10 +291,13 @@ one_of_each_message_test() ->
     ?assertMatch({ok, _}, connect_send_and_receive({?REQ_AIRPORTS,             ["1"]},   ?PORT)),
 
     %% SEARCH ROUTE
-    ?assertMatch({ok, _}, connect_send_and_receive({?SEARCH_ROUTE,             []},   ?PORT)),
+    ?assertMatch({ok, _}, connect_send_and_receive({?SEARCH_ROUTE,             ["1", "1377"]},   ?PORT)),
+
+    %% SEARCH ROUTE WITH DATE
+    ?assertMatch({ok, _}, connect_send_and_receive({?SEARCH_ROUTE,             ["1", "1377", "2015", "02", "10"]},   ?PORT)),
 
     %% REQ FLIGHT DETAILS
-    ?assertMatch({ok, _}, connect_send_and_receive({?REQ_FLIGHT_DETAILS,       []},   ?PORT)),
+    ?assertMatch({ok, _}, connect_send_and_receive({?REQ_FLIGHT_DETAILS,       ["1"]},   ?PORT)),
 
     %% LOGIN AS ADMIN AND REQ FLIGHT DETAILS
     ?assertMatch({ok, _}, connect_send_and_receive({?REQ_SEAT_SUGGESTION,      []},   ?PORT)),

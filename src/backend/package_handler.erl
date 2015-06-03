@@ -86,7 +86,13 @@ handle_package({?FIN_BOOK}, User) ->
 	    {ok, translate_package({?FIN_BOOK_RESP, [?FIN_BOOK_FAIL]})}
     end;
     
-
+handle_package({?ABORT_BOOK}, User) -> 
+    case booking_agent:abort_booking(User) of
+	ok ->
+	    ok;
+	{error, Error} ->
+	    {error, Error}
+    end;
 
 handle_package({?REQ_AIRPORTS}, _) -> 
     case booking_agent:airport_list() of
@@ -108,16 +114,16 @@ handle_package({?SEARCH_ROUTE, [Airport_A, Airport_B]}, _) ->
     case booking_agent:route_search(Airport_A, Airport_B) of
 	{ok, Flight_list} ->
 	    {ok, translate_package({?SEARCH_ROUTE_RESP, 
-				    lists:map(flatten_tuples_to_list, Flight_list)})};
+				    lists:map(fun server_utils:flatten_tuples_to_list/1, Flight_list)})};
 	{error, Error} ->
 	    {error, Error}
     end;
 	
 handle_package({?SEARCH_ROUTE, [Airport_A, Airport_B, Year, Month, Day]}, _) ->
-    case booking_agent:flight_details(Airport_A, Airport_B, {Year, Month, Day}) of
+    case booking_agent:route_search(Airport_A, Airport_B, {Year, Month, Day}) of
 	{ok, Flight_list} ->
 	    {ok, translate_package({?SEARCH_ROUTE_RESP, 
-				    lists:map(flatten_tuples_to_list, Flight_list)})};
+				    lists:map(fun server_utils:flatten_tuples_to_list/1, Flight_list)})};
 	{error, Error} ->
 	    {error, Error}
     end;
@@ -164,9 +170,21 @@ handle_package({?REQSeatLock, Seat_ID}, User) ->
 	    {error, Error}
     end;
 
-handle_package({?REQ_SEAT_SUGGESTION, _Message}, _User) -> 
-    {error, not_yet_implemented};
-   
+handle_package({?REQ_SEAT_SUGGESTION, [Flight_ID, Group_size]}, _User) -> 
+    case booking_agent:suggest_seat(Flight_ID, list_to_integer(Group_size)) of
+	{ok, Chain_list} ->
+	    {ok, translate_package({?REQ_SEAT_SUGGESTION_RESP, lists:flatten(lists:map(fun server_utils:flatten_tuples_to_list/1, Chain_list))})};
+	{error, Error} ->
+	    {error, Error}
+    end;
+
+handle_package({?REQ_SEAT_SUGGESTION, Flight_ID}, _User) -> 
+    case booking_agent:suggest_seat(Flight_ID, 1) of
+	{ok, Chain_list} ->
+	    {ok, translate_package({?REQ_SEAT_SUGGESTION_RESP, flatten_tuples_to_list(Chain_list)})};
+	{error, Error} ->
+	    {error, Error}
+    end;
 
 handle_package({?REQReceipt, _Message}, _User) -> 
     % booking_agent:receipt(),
@@ -174,8 +192,6 @@ handle_package({?REQReceipt, _Message}, _User) ->
 
 %%--------------------------------------------------------------%%
 
-handle_package({?ABORT_BOOK, _Message}, _User) -> 
-    {error, not_yet_implemented};
 
 handle_package({?TERMINATE_SERVER}, admin) ->
     {ok, exit};

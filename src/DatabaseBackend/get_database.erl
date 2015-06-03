@@ -81,8 +81,14 @@ get_airport_from_db_filter (Airport_id) ->
 
 get_airport_id_from_iata(Aid)->
     {ok, Pid} = amnesia:open(consair_database),
-    {_,[{_,_,IATA,_}]}=amnesia:fetch(Pid, airport, {"id=$1", [Aid]}),
-     IATA.
+    case amnesia:fetch(Pid, airport, {"id=$1", [Aid]}) of
+	{ok,[{_,_,IATA,_}]} ->
+	    {ok, IATA};
+	{ok, []} ->
+	    {error, no_such_flight};
+	{error, Error} ->
+	    {error, Error}
+    end.
 
 
 %% @doc - get_airport_from_to_airport
@@ -94,13 +100,21 @@ get_airport_id_from_iata(Aid)->
 
 get_flights_from_to_airport (From,To)->
     {ok, Pid} = amnesia:open(consair_database),
-    Iata=get_airport_id_from_iata(To),
-    amnesia:fetch(Pid, flights,{"airport_id=$1 and arrival_point=$2",[From,Iata]}).
+    case get_airport_id_from_iata(To) of
+	{ok, IATA} -> 
+	    amnesia:fetch(Pid, flights,{"airport_id=$1 and arrival_point=$2",[From,IATA]});
+	{error, Error} ->
+	    {error, Error}
+    end.
 
 get_flights_date_to_from_airport (From,To,Date)->
     {ok, Pid} = amnesia:open(consair_database),
-    Iata=get_airport_id_from_iata(To),
-    amnesia:fetch(Pid, flights,{"airport_id=$1 and arrival_point=$2 and departure_date =$3",[From,Iata,Date]}).
+    case get_airport_id_from_iata(To) of
+	{ok, IATA} ->
+	    amnesia:fetch(Pid, flights,{"airport_id=$1 and arrival_point=$2 and departure_date =$3",[From,IATA,Date]});
+	{error, Error} ->
+	    {error, Error}
+    end.
     
 
 
@@ -121,7 +135,7 @@ get_flight_from_db_f (Flight) ->
 
 get_seats_from_flight (Flight) ->
     {ok, Pid} = amnesia:open(consair_database),
-    amnesia:fetch(Pid,[flights,?JOIN,seats],{"flight_nr = $1",[Flight]}).   
+    amnesia:fetch(Pid,[flights,?JOIN,seats],{"flights_id = $1",[Flight]}).   
 
 %% @doc - get_seats_id_from_db
 %% Input: Seat_id
@@ -214,10 +228,20 @@ update_seat_user(Seat_id, User_id) ->
 %% Output: Changes the User from User_ID to Pending Booking user and sets the lock of seat to Free
 
 rollback_booking(User_id)->
-    {ok, Pid} = amnesia:open(consair_database),
-    {ok, [Roll]} = amnesia:fetch(Pid, seats, {"user_id = $1",[User_id]}),   
-    NewRoll = Roll#seats{user = 1, lock_s = 0},
-    amnesia:update(Pid,NewRoll).
+    case amnesia:open(consair_database) of
+	{ok, Pid} ->
+	    case amnesia:fetch(Pid, seats, {"user_id = $1",[User_id]}) of 
+		{ok, [Roll]} ->
+		    NewRoll = Roll#seats{user = 1, lock_s = 0},
+		    amnesia:update(Pid,NewRoll);
+		{ok, []} ->
+		    ok;
+		{error, Error} ->
+		    {error, Error}
+	    end;
+	{error, Error} ->
+	    {error, Error}
+    end.
 
 
 %% @doc - add_new_user

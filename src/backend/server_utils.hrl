@@ -53,7 +53,7 @@
 -define(REQ_FLIGHT_DETAILS,           14).
 -define(REQ_FLIGHT_DETAILS_RESP,      15).
 -define(REQ_SEAT_SUGGESTION,          16).
--define(REQ_SEAT_SUGGESTION_RESP,    17).
+-define(REQ_SEAT_SUGGESTION_RESP,     17).
 -define(REQ_SEAT_MAP,                 -1).
 -define(REQ_SEAT_MAP_RESP,            -1).
 -define(TERMINATE_SERVER,             24).
