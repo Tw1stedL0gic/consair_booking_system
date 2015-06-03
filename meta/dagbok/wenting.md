@@ -122,7 +122,7 @@ Presentation preparation
 
 ##### Tisdag
 
-##### Onsdag 13:00-18:00
+##### Onsdag 13:00-22:00
 Peerview for reports from group 3 and group 7
 Presentation
 
