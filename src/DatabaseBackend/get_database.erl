@@ -90,6 +90,23 @@ get_airport_id_from_iata(Aid)->
 	    {error, Error}
     end.
 
+%% @doc - get_airport_id_from_iata
+%% Input: Aid (airport id)
+%% Example: 1 
+%% Output: ARN
+
+
+get_airport_iata_from_id(Aid)->
+    {ok, Pid} = amnesia:open(consair_database),
+    case amnesia:fetch(Pid, airport, {"iata=$1", [Aid]}) of
+	{ok,[{_,ID,_,_}]} ->
+	    {ok, ID};
+	{ok, []} ->
+	    {error, no_such_flight};
+	{error, Error} ->
+	    {error, Error}
+    end.
+
 
 %% @doc - get_airport_from_to_airport
 %% Input:From,To 
