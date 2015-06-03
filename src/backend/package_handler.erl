@@ -114,7 +114,7 @@ handle_package({?SEARCH_ROUTE, [Airport_A, Airport_B]}, _) ->
     case booking_agent:route_search(Airport_A, Airport_B) of
 	{ok, Flight_list} ->
 	    {ok, translate_package({?SEARCH_ROUTE_RESP, 
-				    lists:flatten(lists:map(fun server_utils:flatten_tuples_to_list/1, Flight_list))})};
+				    flatten_tuples_to_list(lists:flatten(Flight_list))})};
 	{error, Error} ->
 	    {error, Error}
     end;
@@ -123,7 +123,7 @@ handle_package({?SEARCH_ROUTE, [Airport_A, Airport_B, Year, Month, Day]}, _) ->
     case booking_agent:route_search(Airport_A, Airport_B, {Year, Month, Day}) of
 	{ok, Flight_list} ->
 	    {ok, translate_package({?SEARCH_ROUTE_RESP, 
-				    lists:map(fun server_utils:flatten_tuples_to_list/1, Flight_list)})};
+				    flatten_tuples_to_list(lists:flatten(Flight_list))})};
 	{error, Error} ->
 	    {error, Error}
     end;
@@ -139,9 +139,9 @@ handle_package({?REQ_FLIGHT_DETAILS, Flight_ID}, admin) ->
 
 handle_package({?REQ_FLIGHT_DETAILS, Flight_ID}, _) -> 
     case booking_agent:flight_details(Flight_ID) of
-	{ok, Flight} ->
+	{ok, Flight_details} ->
 	    {ok, translate_package({?REQ_FLIGHT_DETAILS_RESP,
-				    flatten_tuples_to_list(Flight)})};
+				    flatten_tuples_to_list(lists:flatten(Flight_details))})};
 	{error, Error} ->
 	    {error, Error}
     end;

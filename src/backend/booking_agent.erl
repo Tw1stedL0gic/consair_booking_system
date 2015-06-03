@@ -157,7 +157,13 @@ route_search(Airport, Arrival_point, DateTime) ->
 route_search(Airport,Arrival_point)->
     case get_database:get_flights_from_to_airport(Airport, Arrival_point) of
 	{ok, Flight_list} ->
-	    {ok, [{Flight_ID, A_ID, B_IATA, Date_dep, Date_arriv, Name} || {_, Flight_ID, A_ID, B_IATA, Date_dep, Date_arriv, Name} <- Flight_list]};
+	    {ok, [{Flight_ID, 
+		   case get_database:get_airport_from_db_filter(A_ID) of
+		       {ok, [{_, A_ID, A_IATA, A_NAME}]} -> {A_ID, A_IATA, A_NAME} end,
+		   case get_database:get_airport_from_db_filter(
+			  element(2, get_database:get_airport_iata_from_id(B_IATA))) of 
+		       {ok, [{_, B_ID, B_IATA, B_NAME}]} -> {B_ID, B_IATA, B_NAME} end,
+		   Date_dep, Date_arriv, Name} || {_, Flight_ID, A_ID, B_IATA, Date_dep, Date_arriv, Name} <- Flight_list]};
 	{error, Error} ->
 	    {error, Error}
     end.
