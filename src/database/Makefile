@@ -1,12 +1,22 @@
 ERLC_FLAGS=-Wall
+APPNAME=KUK
 
 .PHONY: doc doc_url skeleton start_server
+
 
 
 MAKE_DB:
 	erl make_db.erl
 clean:
 	rm -Rf *.beam
+
+doc:
+	erl -noshell -run edoc_run files '["get_database.erl"]'
+
+#erl -noshell -run edoc_run application "'$(APPNAME)'"  '"."' '[{def,{vsn,"$(VSN)"}}, {stylesheet, "my_style.css"}]'
+
+
+
 
 start_server: all server-messages/current-session
 

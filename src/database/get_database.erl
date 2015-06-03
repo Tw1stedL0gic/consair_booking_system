@@ -1,5 +1,5 @@
-%%------------------------
-%% @title sql server quary file
+% %------------------------
+% % @title sql server quary file
 %% @version 1.0.0
 %% {@date}
 %% @author Oskar Ahlberg
@@ -8,14 +8,46 @@
 %%------------------------
 
 -module(get_database).
+-export ([get_user_from_seat/1,
+	  get_user_from_db/1,
+	  get_all_users_from_db/0,
+	  get_airport_from_db/0,
+	  get_filter_seat_from_user_id/1,
+	  get_airport_from_db_filter/1,
+	  get_airport_id_from_iata/1,
+	  get_airport_iata_from_id/1,
+	  get_flights_from_to_airport/2,
+	  get_flights_date_to_from_airport/3,
+	  get_flight_from_db_f/1,
+	  get_seats_from_flight/1,
+	  get_seats_from_fid/1,
+	  get_airport_iata_to_id/1,
+	  get_flights_details_from_flight/1,
+	  get_seats_id_from_db/1,
+	  get_flight_from_db/0,
+	  get_all_flights_from_airport/1,
+	  get_user_from_seats/1,
+	  get_seat_ids/0,
+	  update_seat_lock/2,
+	  update_seat_lock_user/2,
+	  update_seat_user/2,
+	  rollback_booking/1,
+	  add_new_user/4,
+	  add_new_airport/2,
+	  remove_airport/1,
+	  remove_user/1]).
 
-%%-export ([get_user_from_db/1,get_airport_from_db/0, get_airport_from_db_filter/1,get_flight_from_db/0,get_flight_from_db_f/1,get_airport_from_db_filter_id/1,get_all_flights_from_airport/1,get_test/0,get_airport_filter_and_date/3,get_seats_from_flight/1,get_seat_ids/0,update_seat_lock/2, update_seat_user/2,get_all_users_from_db/0,add_new_user/4,remove_user/1,remove_airport/1,add_new_airport/2,get_user_from_seats/1,get_seats_id_from_db/1]).
--compile(export_all).
 -include ("consair_database.hrl").
 -include("amnesia.hrl").
 
 %%-include_lib("amnesia/include/amnesia_db_def.hrl").
 %%-compile(export_all).
+
+%% @doc get_user_from_seat
+%% Input: Seat_id
+%% Example: 1
+%% Output: a userID
+%% @end
 
 get_user_from_seat(Seat_id) ->
     {ok, Pid} = amnesia:open(consair_database),
@@ -27,7 +59,7 @@ get_user_from_seat(Seat_id) ->
 %% Input: Username
 %% Example: Kalle
 %% Ouput: A tuppel of the of the users line in the server.
-
+%% @end
 
 get_user_from_db(Usernamne)->
     {ok,Pid}=amnesia:open(consair_database),
@@ -38,6 +70,7 @@ get_user_from_db(Usernamne)->
 %% Example:-
 %% Output: {ok,[{user,1,"PENDING NEW BOOKING","n/a",1,"n@a.se"}}
 %% A list of all users in the User tabel in the database
+%% @end
 
 get_all_users_from_db()->
     {ok, Pid} = amnesia:open(consair_database),
@@ -48,9 +81,9 @@ get_all_users_from_db()->
 %% Example:-
 %% Output: {ok,[{airport,1,"ARN","ARLANDA"}}
 %% A list of all the airports in the airport table of the database
+%% @end
 
-
-get_airport_from_db () -> 
+get_airport_from_db() -> 
     {ok,Pid}=amnesia:open(consair_database),
     amnesia:fetch(Pid,airport).
 
@@ -66,7 +99,7 @@ get_filter_seat_from_user_id(User_id)->
 %% Example:1
 %% Output: {ok,[{airport,1,"ARN","ARLANDA"}}
 %% Returns the airport with the index of Airport_ID
-
+%% @end
 
 get_airport_from_db_filter (Airport_id) ->
     {ok,Pid}=amnesia:open(consair_database),    
@@ -77,7 +110,7 @@ get_airport_from_db_filter (Airport_id) ->
 %% Input: Aid (airport id)
 %% Example: 1 
 %% Output: ARN
-
+%% @end
 
 get_airport_id_from_iata(Aid)->
     {ok, Pid} = amnesia:open(consair_database),
@@ -94,7 +127,7 @@ get_airport_id_from_iata(Aid)->
 %% Input: Aid (airport id)
 %% Example: 1 
 %% Output: ARN
-
+%% @end
 
 get_airport_iata_from_id(Aid)->
     {ok, Pid} = amnesia:open(consair_database),
@@ -112,7 +145,7 @@ get_airport_iata_from_id(Aid)->
 %% Input:From,To 
 %% Example: 4, 3
 %% Output: A flight from Airport to Airport
-
+%% @end
 
 
 get_flights_from_to_airport (From,To)->
@@ -124,6 +157,12 @@ get_flights_from_to_airport (From,To)->
 	    {error, Error}
     end.
 
+%% @doc get_flights_date_to_from_airport
+%% Input: From To Date
+%% Example: 
+%% Output: 
+%% @end
+
 get_flights_date_to_from_airport (From,To,Date)->
     {ok, Pid} = amnesia:open(consair_database),
     case get_airport_id_from_iata(To) of
@@ -134,11 +173,11 @@ get_flights_date_to_from_airport (From,To,Date)->
     end.
     
 
-
 %% @doc - get_flight_from_db_f
 %% Input: Flight
 %% Example: 2
 %% Output: givs a flight of Flight_ID
+%% @end
 
 get_flight_from_db_f (Flight) ->
     {ok, Pid}=amnesia:open(consair_database),
@@ -148,7 +187,7 @@ get_flight_from_db_f (Flight) ->
 %% Input: Flight
 %% Example: 2
 %% Output: A list of all the seats on Flight of Flight_nr
-
+%% @end
 
 get_seats_from_flight (Flight) ->
     {ok, Pid} = amnesia:open(consair_database),
@@ -158,6 +197,9 @@ get_seats_from_flight (Flight) ->
 %% Input: Flight
 %% Example: 1
 %% Output: a list of all seats with flight_id = flight
+%% @end
+
+
 
 
 get_seats_from_fid(F_id) ->
@@ -169,7 +211,7 @@ get_seats_from_fid(F_id) ->
 %% Input: IATA
 %% Example: ARN
 %% Output: the id of the airport with the corresponding IATA
-
+%% @end
 get_airport_iata_to_id(IATA)->
     {ok, Pid} = amnesia:open(consair_database),
     {_,[{_,AIR_ID,_,_}]} = amnesia:fetch(Pid,airport,{"iata=$1",[IATA]}),
@@ -180,7 +222,7 @@ get_airport_iata_to_id(IATA)->
 %% Input: F_id(Flight)
 %% Example: 1
 %% Output: All info from flight F_id
-
+%% @end
 
 get_flights_details_from_flight(F_id)->
     {ok,[{DB,Fid,Air_a,Air_b,Date_a,Date_b,Flight_name}]} = get_flight_from_db_f(F_id),
@@ -195,7 +237,7 @@ get_flights_details_from_flight(F_id)->
 %% Input: Seat_id
 %% Example: 3
 %% Output: A tuppel of the row of seat_id in seats
-
+%% @end
 get_seats_id_from_db(Seat_id)->
     {ok, Pid} = amnesia:open(consair_database),
     amnesia:fetch(Pid,seats,{"id = $1",[Seat_id]}).
@@ -204,7 +246,7 @@ get_seats_id_from_db(Seat_id)->
 %% Input: -
 %% Example: -
 %% Output: A list of all flights in the database
-
+%% @end
 get_flight_from_db()->
     {ok,Pid}=amnesia:open(consair_database),
     amnesia:fetch(Pid,flights).
@@ -214,7 +256,7 @@ get_flight_from_db()->
 %% Input: Airport
 %% Example: ARN
 %% Output: A list of all flights that Departs from Airport
-
+%% @end
     
 get_all_flights_from_airport(Airport)->
     {ok, Pid} = amnesia:open(consair_database),
@@ -224,7 +266,7 @@ get_all_flights_from_airport(Airport)->
 %% Input: User
 %% Example: Kalle
 %% Output: a list of all the seat that user Kalle have booked
-
+%% @end
 get_user_from_seats(User) ->
     {ok, Pid} = amnesia:open(consair_database),
     amnesia:fetch(Pid, [seats, ?JOIN,user],{"user_name = $1",[User]}).
@@ -233,7 +275,7 @@ get_user_from_seats(User) ->
 %% Input: -
 %% Example:-
 %% Output: Dumps the seats table
-
+%% @end
 get_seat_ids()->
     {ok, Pid} = amnesia:open(consair_database),
     amnesia:fetch(Pid,seats).
@@ -245,6 +287,7 @@ get_seat_ids()->
 %% Input: Seat_id, Lock
 %% Example:-
 %% Output: Updates the bookinglock of seat_id
+%% @end
 
 update_seat_lock(Seat_id, Lock) ->
     {ok, Pid} = amnesia:open(consair_database),
@@ -256,7 +299,7 @@ update_seat_lock(Seat_id, Lock) ->
 %% Input: User, Lock
 %% Example: 1,2
 %% Output: Updates the lock for the seats books or reserved for User in the seats table
-
+%% @end
 update_seat_lock_user(User_id, Lock) ->
     {ok, Pid} = amnesia:open(consair_database),
     {ok, Users_seats} = amnesia:fetch(Pid, seats, {"user_id = $1",[User_id]}),
@@ -264,11 +307,12 @@ update_seat_lock_user(User_id, Lock) ->
     %% NewL = Users_seats#seats{lock_s = Lock },
     %% amnesia:update(Pid,NewL). %%Updates the lock
 
+
 %% @doc -update_seat_user
 %% Input: Seat_ID, User_ID
 %% Example:2,2
 %% Output: Update a seat of Seat_id with User of user_id
-
+%% @end
 update_seat_user(Seat_id, User_id) ->
     {ok, Pid} = amnesia:open(consair_database),
     {ok,[NewUser]} = amnesia:fetch(Pid, seats, {"id = $1",[Seat_id]}),
@@ -279,7 +323,7 @@ update_seat_user(Seat_id, User_id) ->
 %% Input: User_ID
 %% Example:2
 %% Output: Changes the User from User_ID to Pending Booking user and sets the lock of seat to Free
-
+%% @end
 rollback_booking(User_id)->
     case amnesia:open(consair_database) of
 	{ok, Pid} ->
@@ -301,8 +345,7 @@ rollback_booking(User_id)->
 %% Input: Name, Password, UserClass, Email
 %% Example:"Kalle", "Pass",1,"kalle@flyg.se"
 %% Output: Adds a new user to the user table
-
-
+%% @end
 add_new_user (Name,Password,UserClass,Email) ->
     {ok, Pid} = amnesia:open(consair_database),
     amnesia:add_new(Pid, #user { user_name = Name,
@@ -314,7 +357,7 @@ add_new_user (Name,Password,UserClass,Email) ->
 %% Input: Iata,PlainText
 %% Example:"ARN", "Arlanda international Airport"
 %% Output: Adds a new Airport to the airport table
-
+%% @end
 add_new_airport(Iata,PlainText) ->
     {ok, Pid} = amnesia:open(consair_database),
     amnesia:add_new(Pid, #airport {iata = Iata,
@@ -324,7 +367,7 @@ add_new_airport(Iata,PlainText) ->
 %% Input: Iata
 %% Example:"ARN"
 %% Output: Removes the airport of Iata from the Airport tabel
-
+%% @end
 remove_airport(Iata) ->
     {ok, Pid} = amnesia:open(consair_database),
     {ok, [Del]} = amnesia:fetch(Pid, airport,{"iata = $1",[Iata]}),
@@ -335,11 +378,14 @@ remove_airport(Iata) ->
 %% Input: Name
 %% Example:"Kalle"
 %% Output: removes user of Name from user table
-
+%% @end
 remove_user(Name)->
     {ok,Pid} = amnesia:open(consair_database),
     {ok, [Del]} = amnesia:fetch(Pid, user,{ "user_name = $1",[Name]}),
     amnesia:delete(Pid,Del).
+
+
+
 %%--------------------------____TEST-_________---------------------    
 
 
