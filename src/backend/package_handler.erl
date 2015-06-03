@@ -114,7 +114,7 @@ handle_package({?SEARCH_ROUTE, [Airport_A, Airport_B]}, _) ->
     case booking_agent:route_search(Airport_A, Airport_B) of
 	{ok, Flight_list} ->
 	    {ok, translate_package({?SEARCH_ROUTE_RESP, 
-				    lists:map(fun server_utils:flatten_tuples_to_list/1, Flight_list)})};
+				    lists:flatten(lists:map(fun server_utils:flatten_tuples_to_list/1, Flight_list))})};
 	{error, Error} ->
 	    {error, Error}
     end;
