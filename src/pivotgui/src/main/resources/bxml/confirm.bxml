@@ -70,6 +70,7 @@
         <TablePane.Row height="100">
             <BoxPane styles="$defaultStyle.headerBox">
                 <PushButton bxml:id="selectButton" buttonData="Select seat"/>
+                <PushButton bxml:id="cancelButton" buttonData="Cancel"/>
             </BoxPane>
         </TablePane.Row>
     </TablePane>

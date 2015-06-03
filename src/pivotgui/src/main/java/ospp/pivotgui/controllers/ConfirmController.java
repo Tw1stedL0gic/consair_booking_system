@@ -31,12 +31,15 @@ public class ConfirmController extends Window implements Bindable {
 	private TableView  seatTable    = null;
 	@BXML
 	private PushButton selectButton = null;
+	@BXML
+	private PushButton cancelButton = null;
 
 	private Seat[] seat_list = null;
 
 	@Override
 	public void initialize(Map<String, Object> map, URL url, Resources resources) {
 		addSelectButtonPressListener();
+		addCancelButtonPressListener();
 		addTableSelectionListener();
 
 		// Load seats into the table view
@@ -212,6 +215,31 @@ public class ConfirmController extends Window implements Bindable {
 						else {
 							Alert.alert(MessageType.ERROR, e.getMessage(), ConfirmController.this);
 						}
+					}
+				}));
+			}
+		});
+	}
+
+	private void addCancelButtonPressListener() {
+		cancelButton.getButtonPressListeners().add(new ButtonPressListener() {
+			@Override
+			public void buttonPressed(Button button) {
+				new Task<Void>() {
+					@Override
+					public Void execute() throws TaskExecutionException {
+						Main.mailbox.send(new AbortBookMsg(System.currentTimeMillis()));
+						return null;
+					}
+				}.execute(new TaskAdapter<Void>(new TaskListener<Void>() {
+					@Override
+					public void taskExecuted(Task<Void> task) {
+						Alert.alert(MessageType.INFO, "Successfully sent booking cancel.", ConfirmController.this);
+					}
+
+					@Override
+					public void executeFailed(Task<Void> task) {
+
 					}
 				}));
 			}
