@@ -63,7 +63,7 @@ handle_package({?ERROR, Error}, _) ->
 
 %%--------------------------------------------------------------%%
 
-handle_package({?INIT_BOOK, [_ | Seat_ID_list_as_string]}, User) ->
+handle_package({?INIT_BOOK, Seat_ID_list_as_string}, User) ->
     Seat_ID_list = [list_to_integer(X) || X <- Seat_ID_list_as_string],
     case booking_agent:start_booking(User, Seat_ID_list) of
 	ok ->

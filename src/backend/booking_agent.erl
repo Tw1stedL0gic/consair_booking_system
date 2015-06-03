@@ -363,8 +363,8 @@ start_booking(User, [Seat_id | Seat_id_list]) ->
 		    case get_database:get_user_from_seat(Seat_id) of
 			{ok, User_id} ->
 			    start_booking(User, Seat_id_list);
-			{ok, _}->
-			    {error,seat_booked};
+			{ok, _} ->
+			    {error, seat_booked};
 			{error, Error} ->
 			    {error, Error}
 		    end;
