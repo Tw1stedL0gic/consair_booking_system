@@ -35,9 +35,12 @@
                     <columns>
                         <TableView.Column name="seatID" width="1*" headerData="Seat ID"/>
                         <TableView.Column name="class" width="2*" headerData="Class"/>
+                        <TableView.Column name="user" width="2*" headerData="User"/>
                         <TableView.Column name="window" width="1*" headerData="Window"/>
+                        <TableView.Column name="aisle" width="1*" headerData="Aisle"/>
                         <TableView.Column name="row" width="1*" headerData="Row"/>
                         <TableView.Column name="column" width="1*" headerData="Column"/>
+                        <TableView.Column name="price" width="1*" headerData="Price"/>
                         <TableView.Column name="locked" width="1*" headerData="Locked"/>
                     </columns>
 

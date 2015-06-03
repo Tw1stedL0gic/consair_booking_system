@@ -48,10 +48,13 @@ public class ConfirmController extends Window implements Bindable {
 
 				row.put("seatID", s.getSeatID());
 				row.put("class", s.getKlass());
-				row.put("window", String.valueOf(s.getWindow()));
-				row.put("row", String.valueOf(s.getRow()));
-				row.put("column", String.valueOf(s.getCol()));
-				row.put("locked", String.valueOf(s.isLocked()));
+				row.put("user", s.getUser());
+				row.put("window", s.getWindow());
+				row.put("aisle", s.getAisle());
+				row.put("row", s.getRow());
+				row.put("column", s.getCol());
+				row.put("price", s.getPrice());
+				row.put("locked", s.getLocked());
 			}
 
 			seatTable.setTableData(table);
@@ -190,6 +193,7 @@ public class ConfirmController extends Window implements Bindable {
 							case SUCCESS:
 								Alert.alert(MessageType.INFO, "You successfully booked the seat! " +
 									"You can now close the application.", ConfirmController.this);
+								break;
 
 							case FAILED:
 								Alert.alert(MessageType.ERROR, "The booking failed!", ConfirmController.this);
@@ -216,5 +220,28 @@ public class ConfirmController extends Window implements Bindable {
 
 	public void setSeats(Seat[] seats) {
 		this.seat_list = seats;
+
+		// Load seats into the table view
+		if(seatTable != null) {
+			ArrayList<HashMap> table = new ArrayList<>();
+
+			for(Seat s : seat_list) {
+				HashMap<String, String> row = new HashMap<>();
+
+				row.put("seatID", s.getSeatID());
+				row.put("class", s.getKlass());
+				row.put("user", s.getUser());
+				row.put("window", s.getWindow());
+				row.put("aisle", s.getAisle());
+				row.put("row", s.getRow());
+				row.put("column", s.getCol());
+				row.put("price", s.getPrice());
+				row.put("locked", s.getLocked());
+
+				table.add(row);
+			}
+
+			seatTable.setTableData(table);
+		}
 	}
 }
