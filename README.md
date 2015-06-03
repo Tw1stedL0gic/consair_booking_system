@@ -41,9 +41,9 @@ This program is a bookingsystem for an airliner/airport.
 
 1. Run ´make´ to compile the system code
 2. Run ´make start_server´ to start the server
-3. Go to src/JavaNetLib, enter ´mvn install´ and then enter ´mvn package´ to compile the network module
+3. Go to src/JavaNetLib, enter ´mvn install´ to compile the network module. This will install the network module in the local maven repository on your computer. This is needed in order to compile the GUI.
 4. Go to src/pivotgui and enter ´mvn package´ to compile the GUI
-5. In src/pivotgui, enter ´java -jar PivotGUI-jar-with-dependencies.jar´ to start the GUI.
+5. In src/pivotgui/target, enter ´java -jar PivotGUI-jar-with-dependencies.jar´ to start the GUI.
 
 
 ##### To reload code (using Erlangs build in code swapping)
@@ -73,7 +73,7 @@ It will, using Make, check if a server is already running. This is done by check
 Run ´make stop_server´
 
 ## Documentation
-To generate documentation enter ´make doc´ for the Erlang files. For the network library, go to src/JavaNetLib and enter ´mvn javadoc:javadoc´ (Maven must be installed in order for this to work) and documentation will be generated in the subfolder target/site.
+To generate documentation enter ´make doc´ for the Erlang files. For the network library, go to src/JavaNetLib and enter ´mvn javadoc:javadoc´ (Maven must be installed in order for this to work) and documentation will be generated in the subfolders target/site.
 
 ## Struktur
 
