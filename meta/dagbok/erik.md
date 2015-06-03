@@ -108,7 +108,7 @@ gui 3h
 ##### Måndag
 
 ##### Tisdag
-
+1.5h Java
 ##### Onsdag
 6h peerview + presentation
 ##### Torsdag
