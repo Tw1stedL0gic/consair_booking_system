@@ -322,18 +322,27 @@ one_of_each_message_test() ->
 %%     Login_info_list = [[User, Pass] || User <- ["Carl", "Lucas", "Oskar", "Erik", "Andreas", "Wentin"], Pass <- ["hej", "hehe", "asd", "asdasd", "rp", "asd"]],
 %%     [?assertMatch({ok, _}, connect_send_and_receive({?LOGIN, Login_info},   ?PORT)) || Login_info <- Login_info_list].
 
-%% concurrent_stress_test() ->
-%%     timer:sleep(2000),
-%%     Login_info_list = [[User, Pass] || User <- ["Carl", "Lucas", "Oskar", "Erik", "Andreas", "Wentin"], Pass <- ["hej", "hehe", "asd", "asdasd", "rp", "asd"]],
-%%     ParentPID = self(),
-%%     [spawn(fun() -> 
-%% 		   timer:sleep(random:uniform(1000)), 
-%% 		   ParentPID ! server_utils:connect_send_and_receive({?LOGIN, Login_info}, ?PORT) end) 
-%%      ||	Login_info <- Login_info_list],
-%%     Answers = [receive X -> X end || _ <- Login_info_list],
-%%     io:fwrite("~p~n", Answers),
-%%     Answers_ok = [{Status, Body} || {Status, Body} <- Answers, Status =:= ok],
-%%     ?assertEqual(length(Login_info_list), length(Answers_ok)).
+concurrent_stress_test() ->
+    timer:sleep(2000),
+    Login_info_list = [[User, Pass] || User <- ["Carl", "Lucas", "Oskar", "Erik", "Andreas", "Wentin"], Pass <- ["hej", "hehe", "asd", "asdasd", "rp", "asd"]],
+    ParentPID = self(),
+    [spawn(fun() -> 
+		   timer:sleep(random:uniform(1000)), 
+		   ParentPID ! server_utils:connect_send_and_receive({?LOGIN, Login_info}, ?PORT) end) 
+     ||	Login_info <- Login_info_list],
+    Answers = [receive X -> X end || _ <- Login_info_list],
+    io:fwrite("~p~n", Answers),
+    Answers_ok = [{Status, Body} || {Status, Body} <- Answers, Status =:= ok],
+    ?assertEqual(length(Login_info_list), length(Answers_ok)).
+
+sim_book_test() ->
+    ok.
+
+book_slow_test() ->
+    ok.
+
+error_test() ->
+    ok. 
 
 %% stop_test() ->    
 %%     server_utils:start(?ALT_PORT),
