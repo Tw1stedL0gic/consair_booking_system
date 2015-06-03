@@ -32,14 +32,17 @@ import javafx.event.EventHandler;
 import javafx.util.Duration;
 import ospp.bookinggui.Airport;
 import ospp.bookinggui.Flight;
+import ospp.bookinggui.Seat;
 import ospp.bookinggui.networking.Mailbox;
 import ospp.bookinggui.networking.Message;
 import ospp.bookinggui.networking.NetworkAdapter;
 import ospp.bookinggui.networking.messages.ErrorMsg;
+import ospp.bookinggui.networking.messages.InitBookMsg;
 import ospp.bookinggui.networking.messages.LoginMsg;
 import ospp.bookinggui.networking.messages.LoginRespMsg;
 import ospp.bookinggui.networking.messages.RequestAirportsMsg;
 import ospp.bookinggui.networking.messages.RequestAirportsRespMsg;
+import ospp.bookinggui.networking.messages.RequestSeatSuggestionRespMsg;
 import ospp.bookinggui.networking.messages.SearchAirportRouteRespMsg;
 
 /**
@@ -115,8 +118,21 @@ public class Model {
             case SEARCH_ROUTE_RESP:
                 flyghts = new ArrayList<Flight>();
                 flyghts.addAll(Arrays.asList(((SearchAirportRouteRespMsg)(m)).getFlightList()));
-                
+            case REQ_SEAT_SUGGESTION_RESP:
+                Seat[] slist = ((RequestSeatSuggestionRespMsg)(m)).getSeatList();
+                boolean ok = true;
+                for(Seat seat : slist){
+                    if(seat.isLocked()){
+                        ok = false;
+                    }
+                }
+                if(ok){
+                    for(Seat seat : slist){
+                        mailbox.send(new InitBookMsg(System.currentTimeMillis(), seat.getSeatID()));
+                    }
+                }
                 break;
+            
             default:
                 System.err.println(m.toString());
         }

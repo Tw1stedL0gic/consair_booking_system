@@ -54,6 +54,9 @@ public class ConfirmInterfaceController implements Initializable, ControlledScre
 	@FXML
 	void confirmButtonClick(ActionEvent event) {
                 String s = listview.getSelectionModel().selectedItemProperty().getValue();
+                this.listNameToFlight.get(s);
+                //suggestionMsg
+                //initbok
                 
 		//Skicka bekräftelseförfrågan om bokningen med alla val till databasen över nätverket
 		myScreenMaster.setScreen("confirmedinterface");
