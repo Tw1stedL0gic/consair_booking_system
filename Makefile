@@ -42,6 +42,9 @@ start_server: all server-messages/current-session
 server-messages/current-session:
 	gnome-terminal -x sh -c "erl -pa ebin/ -s server -s init stop -noshell | tee server-messages/current-session; ./server-messages/save-session; bash;"
 
+start_server_noterm: all
+	erl -pa ebin/ -s server -s init stop -noshell | tee server-messages/current-session; ./server-messages/save-session; bash;
+
 stop_server: all
 	erl -pa ebin/ -s server_utils stop_server -s init stop -noshell
 
