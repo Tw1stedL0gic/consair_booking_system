@@ -11,9 +11,8 @@ import org.apache.pivot.util.concurrent.Task;
 import org.apache.pivot.util.concurrent.TaskExecutionException;
 import org.apache.pivot.util.concurrent.TaskListener;
 import org.apache.pivot.wtk.*;
-import org.apache.pivot.wtk.MessageType;
 import ospp.bookinggui.Seat;
-import ospp.bookinggui.networking.*;
+import ospp.bookinggui.networking.Message;
 import ospp.bookinggui.networking.messages.*;
 import ospp.pivotgui.Main;
 import ospp.pivotgui.exceptions.DisconnectException;
@@ -44,23 +43,7 @@ public class ConfirmController extends Window implements Bindable {
 
 		// Load seats into the table view
 		if(seat_list != null) {
-			ArrayList<String> table = new ArrayList<>();
-
-			for(Seat s : seat_list) {
-				HashMap<String, String> row = new HashMap<>();
-
-				row.put("seatID", s.getSeatID());
-				row.put("class", s.getKlass());
-				row.put("user", s.getUser());
-				row.put("window", s.getWindow());
-				row.put("aisle", s.getAisle());
-				row.put("row", s.getRow());
-				row.put("column", s.getCol());
-				row.put("price", s.getPrice());
-				row.put("locked", s.getLocked());
-			}
-
-			seatTable.setTableData(table);
+			displaySeats();
 		}
 	}
 
@@ -251,25 +234,29 @@ public class ConfirmController extends Window implements Bindable {
 
 		// Load seats into the table view
 		if(seatTable != null) {
-			ArrayList<HashMap> table = new ArrayList<>();
-
-			for(Seat s : seat_list) {
-				HashMap<String, String> row = new HashMap<>();
-
-				row.put("seatID", s.getSeatID());
-				row.put("class", s.getKlass());
-				row.put("user", s.getUser());
-				row.put("window", s.getWindow());
-				row.put("aisle", s.getAisle());
-				row.put("row", s.getRow());
-				row.put("column", s.getCol());
-				row.put("price", s.getPrice());
-				row.put("locked", s.getLocked());
-
-				table.add(row);
-			}
-
-			seatTable.setTableData(table);
+			displaySeats();
 		}
+	}
+
+	private void displaySeats() {
+		ArrayList<HashMap> table = new ArrayList<>();
+
+		for(Seat s : seat_list) {
+			HashMap<String, String> row = new HashMap<>();
+
+			row.put("seatID", s.getSeatID());
+			row.put("class", s.getKlass());
+			row.put("user", s.getUser());
+			row.put("window", s.getWindow());
+			row.put("aisle", s.getAisle());
+			row.put("row", s.getRow());
+			row.put("column", s.getCol());
+			row.put("price", s.getPrice());
+			row.put("locked", s.getLocked());
+
+			table.add(row);
+		}
+
+		seatTable.setTableData(table);
 	}
 }
