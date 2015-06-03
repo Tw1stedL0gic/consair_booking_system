@@ -188,8 +188,10 @@ flight_details(Flight) ->
     %% 	{error, Error} ->
     %% 	    {error, Error}
     %% end.
-    get_database:get_flights_details_from_flight(Flights).
-
+    {ok, [{_, ID, {_, A_ID, A_IATA, A_NAME}, {_, B_ID, B_IATA, B_NAME}, Date_dep, Date_arriv, Name, Seat_table}]} = get_database:get_flights_details_from_flight(Flight),
+    Cleaned_seat_table = [{Seat_ID, FLight_ID, User, Class, Window, Aisle, Row, Col, Price, Lock} || {_, Seat_ID, FLight_ID, User, Class, Window, Aisle, Row, Col, Price, Lock} <- Seat_table],
+    {ok, {ID, {A_ID, A_IATA, A_NAME}, {B_ID, B_IATA, B_NAME}, Date_dep, Date_arriv, Name, Cleaned_seat_table}}.
+    
 
 %% @doc Returns all information about flight.
 %% Input:  Flight ID
