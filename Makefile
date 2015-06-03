@@ -30,15 +30,19 @@ clean:
 	rm -Rf doc/*.html
 
 
-doc: 	#erl -noshell -run edoc_run application "''"  '"."' '[{def,{vsn,""}}, {stylesheet, "my_style.css"}]'
-
-
-	erl -noshell -run edoc_run application "'$(APPNAME)'"  '"."' '[{def,{vsn,"$(VSN)"}}, {stylesheet, "my_style.css"}]'
+doc: 	
+	./doc/Makefile
+	
+	#erl -noshell -run edoc_run application "''"  '"."' '[{def,{vsn,""}}, {stylesheet, "my_style.css"}]'
+	#erl -noshell -run edoc_run application "'$(APPNAME)'"  '"."' '[{def,{vsn,"$(VSN)"}}, {stylesheet, "my_style.css"}]'
 #TODO lägg till och fixa till Jdoc och edoc
 doc_url:
 	@echo 
 	@echo "EDoc index page available at file://$(PWD)/doc/index.html"
 	@echo
+
+edoc_firefox:
+	firfox /doc/index.html
 
 start_server: all server-messages/current-session
 
