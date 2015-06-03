@@ -45,22 +45,34 @@ start(Port) ->
 	    ?DRAW_LOGO,
 	    ?DRAW_TITLE("SERVER INITIATED, Version number" ++ ?VERSION),
 	    ?DRAW_TABLE_HEADER,
-	    case lists:keyfind(addr, 1, element(2, lists:keyfind("wlan0", 1, element(2, inet:getifaddrs())))) of
+
+	    {ok, Ifaddrs} = inet:getifaddrs(),
+	    case lists:keyfind("wlan0", 1, Ifaddrs) of
 		false ->
 		    ok;
-		W_IP ->
-		    io:fwrite("Wireless IP Address: ~p~n", [element(2, W_IP)])
- 	    end,
-	    case lists:keyfind(addr, 1, element(2, lists:keyfind("eth0", 1, element(2, inet:getifaddrs())))) of
+		{_, WLAN} ->
+		    case lists:keyfind(addr, 1, WLAN) of
+			false ->
+			    ok;
+			{_, W_IP} ->
+			    io:fwrite("Wireless IP Address: ~p~n", [W_IP])
+		    end
+	    end,
+	    case lists:keyfind("etho0", 1, Ifaddrs) of 
 		false ->
 		    ok;
-		E_IP ->
-		    io:fwrite("Ethernet IP Address: ~p~n", [element(2, E_IP)])
+		{_, ETH} ->
+		    case lists:keyfind(addr, 1, ETH) of
+			false ->
+			    ok;
+			{_, E_IP} ->
+			    io:fwrite("Ethernet IP Address: ~p~n", [E_IP])
+		    end
 	    end,
 	    connector_spawner(LSock, 0);
 	{error, eaddrinuse} ->
-	    ?DRAW_TITLE("Port " ++ integer_to_list(Port) ++ " busy "),
 	    ?DRAW_LOGO,
+	    ?DRAW_TITLE("Port " ++ integer_to_list(Port) ++ " busy "),
 	    {error, eaddrinuse};
 	_ ->
 	    {error, could_not_listen}		
