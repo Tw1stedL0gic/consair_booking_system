@@ -26,7 +26,7 @@ This program is a bookingsystem for an airliner/airport.
 2. Amnesia ver: amnesia-1.6.2
 3. Erlang/OTP ver: 17
 4. Maven any version
-5. jdk ver: 1.7
+5. Java Development Kit (JDK) ver: 1.7 or above
 
 ####When you are installing the MySql-server you need to setup an root password make sure you have this in hand during this installation.
 
