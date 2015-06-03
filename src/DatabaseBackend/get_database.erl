@@ -90,6 +90,23 @@ get_airport_id_from_iata(Aid)->
 	    {error, Error}
     end.
 
+%% @doc - get_airport_id_from_iata
+%% Input: Aid (airport id)
+%% Example: 1 
+%% Output: ARN
+
+
+get_airport_iata_from_id(Aid)->
+    {ok, Pid} = amnesia:open(consair_database),
+    case amnesia:fetch(Pid, airport, {"iata=$1", [Aid]}) of
+	{ok,[{_,ID,_,_}]} ->
+	    {ok, ID};
+	{ok, []} ->
+	    {error, no_such_flight};
+	{error, Error} ->
+	    {error, Error}
+    end.
+
 
 %% @doc - get_airport_from_to_airport
 %% Input:From,To 
@@ -136,6 +153,43 @@ get_flight_from_db_f (Flight) ->
 get_seats_from_flight (Flight) ->
     {ok, Pid} = amnesia:open(consair_database),
     amnesia:fetch(Pid,[flights,?JOIN,seats],{"flights_id = $1",[Flight]}).   
+
+%% @doc - get_seats_from_fid
+%% Input: Flight
+%% Example: 1
+%% Output: a list of all seats with flight_id = flight
+
+
+get_seats_from_fid(F_id) ->
+    {ok,Pid} = amnesia:open(consair_database),
+    amnesia:fetch(Pid,seats,{"flights_id = $1",[F_id]}).
+
+
+%% @doc - get_airport_iata_to_id
+%% Input: IATA
+%% Example: ARN
+%% Output: the id of the airport with the corresponding IATA
+
+get_airport_iata_to_id(IATA)->
+    {ok, Pid} = amnesia:open(consair_database),
+    {_,[{_,AIR_ID,_,_}]} = amnesia:fetch(Pid,airport,{"iata=$1",[IATA]}),
+    AIR_ID.
+
+
+%% @doc - get_flights_details_from_flight
+%% Input: F_id(Flight)
+%% Example: 1
+%% Output: All info from flight F_id
+
+
+get_flights_details_from_flight(F_id)->
+    {ok,[{DB,Fid,Air_a,Air_b,Date_a,Date_b,Flight_name}]} = get_flight_from_db_f(F_id),
+    Air_id_b=get_airport_iata_to_id(Air_b),
+    {ok,[Airport_a]} = get_airport_from_db_filter(Air_a),
+    {ok,[Airport_b]} = get_airport_from_db_filter(Air_id_b),
+    {ok,SEATS} = get_seats_from_fid(F_id),
+    {ok,[{DB,Fid,Airport_a,Airport_b,Date_a,Date_b,Flight_name,SEATS}]}.
+
 
 %% @doc - get_seats_id_from_db
 %% Input: Seat_id
@@ -206,7 +260,6 @@ update_seat_lock(Seat_id, Lock) ->
 update_seat_lock_user(User_id, Lock) ->
     {ok, Pid} = amnesia:open(consair_database),
     {ok, Users_seats} = amnesia:fetch(Pid, seats, {"user_id = $1",[User_id]}),
-
     lists:map(fun(Seat) -> amnesia:update(Pid, Seat#seats{lock_s = Lock}) end, Users_seats).
     %% NewL = Users_seats#seats{lock_s = Lock },
     %% amnesia:update(Pid,NewL). %%Updates the lock

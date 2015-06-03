@@ -130,8 +130,13 @@ route_search(Airport, Arrival_point, DateTime) ->
     %% search through database for route
     %% check if route exists
     %% check if date fits
-    get_database:get_flights_date_to_from_airport (Airport,Arrival_point,DateTime).
-
+    case get_database:get_flights_date_from_to_airport(Airport, Arrival_point, DateTime) of
+	{ok, Flight_list} ->
+	    {ok, [{Flight_ID, A_ID, B_IATA, Date_dep, Date_arriv, Name} || {_, Flight_ID, A_ID, B_IATA, Date_dep, Date_arriv, Name} <- Flight_list]};
+	{error, Error} ->
+	    {error, Error}
+    end.
+ 
 %%---------------------------------------------------------------------%%
 
 %% @doc - Returns a list of flights between the two airports.. 
@@ -150,7 +155,19 @@ route_search(Airport, Arrival_point, DateTime) ->
 
 
 route_search(Airport,Arrival_point)->
-    get_database:get_flights_from_to_airport (Airport,Arrival_point).
+    case get_database:get_flights_from_to_airport(Airport, Arrival_point) of
+	{ok, Flight_list} ->
+	    {ok, [{Flight_ID, 
+		   case get_database:get_airport_from_db_filter(A_ID) of
+		       {ok, [{_, A_ID, A_IATA, A_NAME}]} -> {A_ID, A_IATA, A_NAME} end,
+		   case get_database:get_airport_from_db_filter(
+			  element(2, get_database:get_airport_iata_from_id(B_IATA))) of 
+		       {ok, [{_, B_ID, B_IATA, B_NAME}]} -> {B_ID, B_IATA, B_NAME} end,
+		   Date_dep, Date_arriv, Name} || {_, Flight_ID, A_ID, B_IATA, Date_dep, Date_arriv, Name} <- Flight_list]};
+	{error, Error} ->
+	    {error, Error}
+    end.
+    
 
 
 %%---------------------------------------------------------------------%%
@@ -170,12 +187,17 @@ route_search(Airport,Arrival_point)->
 flight_details(Flight) ->
     %% return all information about flight 
     %% In this function, booked and locked seats are both represented by 1, and available by 0. 
-    case get_database:get_flight_from_db_f(Flight) of
-	{flights, ID, {airport, A_ID, A_iata, A_name}, {airport, B_ID, B_iata, B_name}, Date_dep, Date_arriv, Seat_table, Name} ->
-	    {ID, {A_ID, A_iata, A_name}, {B_ID, B_iata, B_name}, Date_dep, Date_arriv, Seat_table, Name};
-	{error, Error} ->
-	    {error, Error}
-    end.
+
+    %% case get_database:get_flight_from_db_f(Flight) of
+    %% 	{flights, ID, {airport, A_ID, A_iata, A_name}, {airport, B_ID, B_iata, B_name}, Date_dep, Date_arriv, Seat_table, Name} ->
+    %% 	    {ID, {A_ID, A_iata, A_name}, {B_ID, B_iata, B_name}, Date_dep, Date_arriv, Seat_table, Name};
+    %% 	{error, Error} ->
+    %% 	    {error, Error}
+    %% end.
+    {ok, [{_, ID, {_, A_ID, A_IATA, A_NAME}, {_, B_ID, B_IATA, B_NAME}, Date_dep, Date_arriv, Name, Seat_table}]} = get_database:get_flights_details_from_flight(Flight),
+    Cleaned_seat_table = [{Seat_ID, FLight_ID, User, Class, Window, Aisle, Row, Col, Price, Lock} || {_, Seat_ID, FLight_ID, User, Class, Window, Aisle, Row, Col, Price, Lock} <- Seat_table],
+    {ok, {ID, {A_ID, A_IATA, A_NAME}, {B_ID, B_IATA, B_NAME}, Date_dep, Date_arriv, Name, Cleaned_seat_table}}.
+    
 
 %% @doc Returns all information about flight.
 %% Input:  Flight ID
@@ -193,7 +215,7 @@ flight_details(Flight) ->
 flight_details(Flight, admin) ->
     %% returns all information, including admin info, about flight.
     %% In this function, seats are shown as available, locked or booked. 
-    get_database:get_flight_from_db_f(Flight).
+   get_database:get_flight_from_db_f(Flight).
  
 
 %%---------------------------------------------------------------------%%
@@ -341,8 +363,8 @@ start_booking(User, [Seat_id | Seat_id_list]) ->
 		    case get_database:get_user_from_seat(Seat_id) of
 			{ok, User_id} ->
 			    start_booking(User, Seat_id_list);
-			{ok, _}->
-			    {error,seat_booked};
+			{ok, _} ->
+			    {error, seat_booked};
 			{error, Error} ->
 			    {error, Error}
 		    end;

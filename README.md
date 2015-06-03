@@ -45,13 +45,14 @@ Run ´make´
 
 Run ´make reload_code´
 
-##### To test
+
+## Testa
 
 Run ´make test_$$$$´, where $$$$ is the name of the .erl file that has tests written in eunit.
 
 Running ´make test_server´ will override the previous statment and start a special test where a server is initiated in case there is not already one. 
 
-### Running
+## Starta systemet
 
 #### Make
 
@@ -64,14 +65,6 @@ It will, using Make, check if a server is already running. This is done by check
 ##### To shut down server:
 
 Run ´make stop_server´
-
-## Testa
-
-> Kortfattade instruktioner för hur automatiska testfall körs.
-
-## Starta systemet
-
-> Kortfattade instruktioner för hur systemet startas.
 
 ## Struktur
 
