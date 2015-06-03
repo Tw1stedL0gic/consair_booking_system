@@ -55,7 +55,11 @@ public class PacketSender implements Runnable {
 			}
 
 			try {
-				output.println(m.createMessage());
+				String msg = m.createMessage();
+
+				logger.info("Sending message: " + msg);
+
+				output.println(msg);
 				output.flush();
 			}
 			catch(UnsupportedEncodingException e) {

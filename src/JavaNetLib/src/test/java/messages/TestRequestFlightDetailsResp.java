@@ -73,18 +73,18 @@ public class TestRequestFlightDetailsResp {
 		assertEquals("1", s1.getSeatID());
 		assertEquals("3", s1.getFlightID());
 		assertEquals("FIRST", s1.getKlass());
-		assertEquals(true, s1.getWindow());
-		assertEquals(12, s1.getRow());
-		assertEquals(12, s1.getCol());
-		assertEquals(false, s1.isLocked());
+		assertEquals("true", s1.getWindow());
+		assertEquals("12", s1.getRow());
+		assertEquals("12", s1.getCol());
+		assertEquals("true", s1.getLocked());
 
 		assertEquals("2", s2.getSeatID());
 		assertEquals("3", s2.getFlightID());
 		assertEquals("ECO", s2.getKlass());
-		assertEquals(true, s2.getWindow());
-		assertEquals(12, s2.getRow());
-		assertEquals(13, s2.getCol());
-		assertEquals(false, s2.isLocked());
+		assertEquals("true", s2.getWindow());
+		assertEquals("12", s2.getRow());
+		assertEquals("13", s2.getCol());
+		assertEquals("false", s2.getLocked());
 	}
 
 	@Test
