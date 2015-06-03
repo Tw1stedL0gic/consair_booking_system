@@ -161,6 +161,7 @@ pivot gui
 pivot gui
 
 ##### Onsdag
+Fixade det sista pÃ¥guit, testade servern, ALLT FUNGERAR AHAHHAHAHAHAHAHHAHHAHAHAHAHHAHAH!
 
 ##### Torsdag
 
