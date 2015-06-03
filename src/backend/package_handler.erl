@@ -216,7 +216,7 @@ logout(User) ->
 	_ ->
 	    case booking_agent:disconnect(User) of
 		ok ->
-		    {ok};
+		    ok;
 		{error, Error} ->
 		    {error, Error}
 	    end
