@@ -132,7 +132,9 @@ public class Model {
                     }
                 }
                 break;
-            
+            case INIT_BOOK_RESP:
+                    
+                    break;
             default:
                 System.err.println(m.toString());
         }
