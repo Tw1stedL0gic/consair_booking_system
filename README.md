@@ -18,29 +18,33 @@ This program is a bookingsystem for an airliner/airport.
 > Det går att redigera, förhandsvisa och spara (commit) sidan direkt i
 > en webläsare via [projektsidan på github.com](./README.md).
 
-## Kompilera
+## Installera, Kompilera och Starta
 
-####Compiling and loading the DB.
-###First make sure that you have the following software installed.
+###Compiling and loading the DB.
+####First make sure that you have the following software installed.
 1. MySQL server ver: 5.5.43-0ubuntu0.14.04.1
 2. Amnesia ver: amnesia-1.6.2
 3. Erlang/OTP ver: 17
 4. Maven any version
 5. jdk ver: 1.7
 
-###When you are installing the MySql-server you need to setup an root password make sure you have this in hand during this installation.
+####When you are installing the MySql-server you need to setup an root password make sure you have this in hand during this installation.
 
-###When you have completede the prior-steps
+####When you have completede the prior-steps
 4. run make init_db password=<your SQL rootPassword>
    This will create the Database structure and run a load script for the Database you will need to enter your password one time per Database table.
 5. If you dont get any errors you are done.
  
-#### Compiling and testing Server
-#### Make.
+#### Make and maven.
 
-##### To compile everything
+##### Follow these steps after setting up the database
 
-Run ´make´
+1. Run ´make´ to compile the system code
+2. Run ´make start_server´ to start the server
+3. Go to src/JavaNetLib, enter ´mvn install´ and then enter ´mvn package´ to compile the network module
+4. Go to src/pivotgui and enter ´mvn package´ to compile the GUI
+5. In src/pivotgui, enter ´java -jar PivotGUI-jar-with-dependencies.jar´ to start the GUI.
+
 
 ##### To reload code (using Erlangs build in code swapping)
 
