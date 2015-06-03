@@ -100,9 +100,9 @@ gui 3h
 ##### Onsdag
 
 ##### Torsdag
-
+6h bråka med Java
 ##### Fredag
-
+4h nätverks problem
 ## Vecka 23
 
 ##### Måndag
@@ -110,7 +110,7 @@ gui 3h
 ##### Tisdag
 
 ##### Onsdag
-
+6h peerview + presentation
 ##### Torsdag
 
 ##### Fredag
