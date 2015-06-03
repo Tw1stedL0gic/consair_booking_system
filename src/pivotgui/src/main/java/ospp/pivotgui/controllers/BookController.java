@@ -117,6 +117,26 @@ public class BookController extends Window implements Bindable {
 
 	public void setFlights(Flight[] flights) {
 		this.flights = flights;
+
+		// Load flights into flightTable
+		if(flightTable != null) {
+			ArrayList<HashMap> tableRows = new ArrayList<>();
+
+			for(Flight f : flights) {
+				HashMap<String, String> row = new HashMap<>();
+
+				row.put("flightID", f.getFlightID());
+				row.put("flightNumber", f.getFlightNumber());
+				row.put("fromAirport", f.getFrom().getName());
+				row.put("toAirport", f.getTo().getName());
+				row.put("departure", f.getDeparture().toString());
+				row.put("arrival", f.getArrival().toString());
+
+				tableRows.add(row);
+			}
+
+			flightTable.setTableData(tableRows);
+		}
 	}
 
 	private void openBookConfirmWindow(Seat[] seat_list) {
