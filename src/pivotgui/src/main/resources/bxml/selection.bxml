@@ -64,7 +64,7 @@
 
                             <ScrollPane styles="$defaultStyle.scrollPane">
                                 <ListView bxml:id="fromList" selectMode="single"
-                                          styles="{backgroundColor:'gray', color:'#c73a3a', alternateItemBackgroundColor:'#eeeeee'}"
+                                          styles="$defaultStyle.view"
                                           listData="['MissingAirports']"/>
                             </ScrollPane>
 

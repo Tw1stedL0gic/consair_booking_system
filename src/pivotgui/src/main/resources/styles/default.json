@@ -21,10 +21,11 @@
     color:"#097ac7"
   },
 
+  // Used both for TableView's and ListView's
   view: {
     backgroundColor:"gray",
-    alternateRowBackgroundColor:"#eeeeee",
-    alternateItemBackgroundColor:"#eeeeee",
+    alternateRowBackgroundColor:"#eeeeee",  // TableView specific
+    alternateItemBackgroundColor:"#eeeeee", // ListView specific
     color:"#c73a3a"
   },
 
