@@ -2,29 +2,35 @@
                                  title="Select Flight"
                                  maximized="true"
                                  xmlns="org.apache.pivot.wtk">
-    <TablePane styles="{padding:10, backgroundColor:'#4f4f4f'}">
+    <!-- Default style definition -->
+    <bxml:define>
+        <bxml:include bxml:id="defaultStyle" src="/styles/default.json"/>
+    </bxml:define>
+
+    <!-- Structure -->
+    <TablePane styles="$defaultStyle.tablePane">
         <columns>
             <TablePane.Column width="1*"/>
         </columns>
 
         <!-- HEADER -->
         <TablePane.Row height="100">
-            <BoxPane styles="{horizontalAlignment:'center', verticalAlignment:'center'}">
+            <BoxPane styles="$defaultStyle.headerBox">
                 <Label bxml:id="headerLabel" text="Please select the two airports you want to travel between"
-                       styles="{font:{bold:true, size:24}, color:'#eeeeee'}"/>
+                       styles="$defaultStyle.headerLabel"/>
             </BoxPane>
         </TablePane.Row>
 
         <!-- SELECTION LISTS -->
         <TablePane.Row height="1*">
-            <TablePane styles="{ showVerticalGridLines:true, horizontalSpacing:10 }">
+            <TablePane styles="$defaultStyle.tablePane">
                 <columns>
                     <TablePane.Column width="1*"/>
                     <TablePane.Column width="1*"/>
                 </columns>
 
                 <TablePane.Row height="1*">
-                    <TablePane styles="{horizontalSpacing:10, showVerticalGridLines:true}">
+                    <TablePane styles="$defaultStyle.tablePane">
                         <columns>
                             <TablePane.Column width="1*"/>
                             <TablePane.Column width="1*"/>
@@ -32,8 +38,14 @@
 
                         <!-- HEADERS -->
                         <TablePane.Row height="25">
-                            <Label text="From" styles="{font:{bold:true, size:18}, color:'#097ac7'}"/>
-                            <Label text="To" styles="{font:{bold:true, size:18}, color:'#097ac7'}"/>
+                            <Label text="From" styles="$defaultStyle.subHeaderLabel"/>
+                            <Label text="To" styles="$defaultStyle.subHeaderLabel"/>
+                        </TablePane.Row>
+
+                        <!-- SEPARATORS -->
+                        <TablePane.Row height="20">
+                            <Separator/>
+                            <Separator/>
                         </TablePane.Row>
 
                         <!-- SEARCH -->
@@ -50,15 +62,15 @@
                         <!-- LISTS -->
                         <TablePane.Row height="1*">
 
-                            <ScrollPane styles="{backgroundColor:'gray'}">
+                            <ScrollPane styles="$defaultStyle.scrollPane">
                                 <ListView bxml:id="fromList" selectMode="single"
                                           styles="{backgroundColor:'gray', color:'#c73a3a', alternateItemBackgroundColor:'#eeeeee'}"
                                           listData="['MissingAirports']"/>
                             </ScrollPane>
 
-                            <ScrollPane styles="{backgroundColor:'gray'}">
+                            <ScrollPane styles="$defaultStyle.scrollPane">
                                 <ListView bxml:id="toList" selectMode="single"
-                                          styles="{backgroundColor:'gray', color:'#c73a3a', alternateItemBackgroundColor:'#eeeeee'}"
+                                          styles="$defaultStyle.view"
                                           listData="['MissingAirports']"/>
                             </ScrollPane>
                         </TablePane.Row>
@@ -69,7 +81,7 @@
 
         <!-- BUTTONS -->
         <TablePane.Row height="100">
-            <BoxPane styles="{verticalAlignment:'center', horizontalAlignment:'center'}">
+            <BoxPane styles="$defaultStyle.headerBox">
                 <PushButton bxml:id="selectButton" buttonData="Select"/>
                 <PushButton bxml:id="reloadButton" buttonData="Reload Airports"/>
             </BoxPane>

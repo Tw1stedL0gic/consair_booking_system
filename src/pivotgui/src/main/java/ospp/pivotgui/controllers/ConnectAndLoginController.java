@@ -16,6 +16,7 @@ import ospp.bookinggui.networking.messages.LoginMsg;
 import ospp.bookinggui.networking.messages.LoginRespMsg;
 import ospp.pivotgui.Main;
 import ospp.pivotgui.exceptions.DisconnectException;
+import ospp.pivotgui.exceptions.IncorrectMessageTypeException;
 
 import java.io.IOException;
 import java.net.URL;
@@ -99,7 +100,7 @@ public class ConnectAndLoginController extends Window implements Bindable {
 							throw new TaskExecutionException(new Exception(((ErrorMsg) msg).getErrorMessage()));
 						}
 						else {
-							throw new TaskExecutionException(new Exception("Received message was not of correct type!"));
+							throw new TaskExecutionException(new IncorrectMessageTypeException());
 						}
 					}
 				}.execute(new TaskAdapter<>(new TaskListener<LoginRespMsg.PrivilegeLevel>() {

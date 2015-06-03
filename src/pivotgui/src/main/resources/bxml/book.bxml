@@ -3,15 +3,22 @@
                             title="Choose flight"
                             maximized="true"
                             xmlns="org.apache.pivot.wtk">
-    <TablePane bxml:id="mainTablePane" styles="{padding:10, backgroundColor:'#3c3c3c'}">
+
+    <!-- Default style definition -->
+    <bxml:define>
+        <bxml:include bxml:id="defaultStyle" src="/styles/default.json"/>
+    </bxml:define>
+
+    <!-- Structure -->
+    <TablePane bxml:id="mainTablePane" styles="$defaultStyle.tablePane">
         <columns>
             <TablePane.Column width="1*"/>
         </columns>
 
         <!-- HEADER -->
         <TablePane.Row height="100">
-            <BoxPane styles="{verticalAlignment:'center', horizontalAlignment:'center'}">
-                <Label text="Please choose a flight" styles="{font:{bold:true, size:24}, color:'#eeeeee'}"/>
+            <BoxPane styles="$defaultStyle.headerBox">
+                <Label text="Please choose a flight" styles="$defaultStyle.headerLabel"/>
             </BoxPane>
         </TablePane.Row>
 
@@ -22,7 +29,7 @@
                             verticalScrollBarPolicy="fill_to_capacity">
 
                     <TableView bxml:id="flightTable" selectMode="single"
-                               styles="{backgroundColor:'gray', alternateRowBackgroundColor:'#eeeeee', color:'#c73a3a'}">
+                               styles="$defaultStyle.view">
 
                         <columns>
                             <TableView.Column name="flightID" width="1*" headerData="Flight ID"/>
@@ -52,7 +59,7 @@
 
         <!-- BUTTONS ETC -->
         <TablePane.Row height="100">
-            <BoxPane styles="{verticalAlignment:'center', horizontalAlignment:'center'}">
+            <BoxPane styles="$defaultStyle.headerBox">
                 <PushButton bxml:id="selectButton" buttonData="Choose seat"/>
             </BoxPane>
         </TablePane.Row>

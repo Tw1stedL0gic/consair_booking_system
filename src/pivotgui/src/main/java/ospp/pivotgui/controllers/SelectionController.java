@@ -18,6 +18,7 @@ import ospp.bookinggui.networking.Message;
 import ospp.bookinggui.networking.messages.*;
 import ospp.pivotgui.Main;
 import ospp.pivotgui.exceptions.DisconnectException;
+import ospp.pivotgui.exceptions.IncorrectMessageTypeException;
 
 import java.io.IOException;
 import java.net.URL;
@@ -187,7 +188,7 @@ public class SelectionController extends Window implements Bindable {
 						}
 						else {
 							logger.severe("Client received incorrect message type! Received type: " + msg.getType());
-							throw new TaskExecutionException("Client received incorrect message type!");
+							throw new TaskExecutionException(new IncorrectMessageTypeException());
 						}
 					}
 				}.execute(new TaskAdapter<>(new TaskListener<Flight[]>() {

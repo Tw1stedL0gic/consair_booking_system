@@ -11,13 +11,13 @@ import org.apache.pivot.util.concurrent.Task;
 import org.apache.pivot.util.concurrent.TaskExecutionException;
 import org.apache.pivot.util.concurrent.TaskListener;
 import org.apache.pivot.wtk.*;
+import org.apache.pivot.wtk.MessageType;
 import ospp.bookinggui.Seat;
-import ospp.bookinggui.networking.Message;
-import ospp.bookinggui.networking.messages.DisconnectMsg;
-import ospp.bookinggui.networking.messages.InitBookMsg;
-import ospp.bookinggui.networking.messages.InitBookRespMsg;
+import ospp.bookinggui.networking.*;
+import ospp.bookinggui.networking.messages.*;
 import ospp.pivotgui.Main;
 import ospp.pivotgui.exceptions.DisconnectException;
+import ospp.pivotgui.exceptions.IncorrectMessageTypeException;
 
 import java.net.URL;
 import java.util.logging.Level;
@@ -65,9 +65,12 @@ public class ConfirmController extends Window implements Bindable {
 			}
 
 			@Override
-			public void selectedRangeRemoved(TableView tableView, int i, int i1) {}
+			public void selectedRangeRemoved(TableView tableView, int i, int i1) {
+			}
+
 			@Override
-			public void selectedRangesChanged(TableView tableView, Sequence<Span> sequence) {}
+			public void selectedRangesChanged(TableView tableView, Sequence<Span> sequence) {
+			}
 
 			@Override
 			public void selectedRowChanged(TableView tableView, Object o) {
@@ -111,7 +114,7 @@ public class ConfirmController extends Window implements Bindable {
 
 						switch(resp) {
 							case SUCCESS:
-								Alert.alert(MessageType.INFO, "Your seat has been locked for you for a timeperiod!", ConfirmController.this);
+								Alert.alert(MessageType.INFO, "Your seat has been locked for you for a time period!", ConfirmController.this);
 								break;
 
 							case FAILED_LOCKED:
@@ -149,7 +152,64 @@ public class ConfirmController extends Window implements Bindable {
 		selectButton.getButtonPressListeners().add(new ButtonPressListener() {
 			@Override
 			public void buttonPressed(Button button) {
+				new Task<FinBookRespMsg.ResponseCode>() {
 
+					@Override
+					public FinBookRespMsg.ResponseCode execute() throws TaskExecutionException {
+
+						Main.mailbox.send(new FinBookMsg(System.currentTimeMillis()));
+
+						Message msg;
+						while((msg = Main.mailbox.getOldestIncoming()) == null) {
+							try {
+								Thread.sleep(10);
+							}
+							catch(InterruptedException e) {
+								throw new TaskExecutionException(e);
+							}
+						}
+
+						if(msg instanceof FinBookRespMsg) {
+							FinBookRespMsg resp = (FinBookRespMsg) msg;
+							return resp.getResponseCode();
+						}
+						else if(msg instanceof DisconnectMsg) {
+							throw new TaskExecutionException(new DisconnectException());
+						}
+						else {
+							throw new TaskExecutionException(new IncorrectMessageTypeException());
+						}
+					}
+
+				}.execute(new TaskAdapter<>(new TaskListener<FinBookRespMsg.ResponseCode>() {
+					@Override
+					public void taskExecuted(Task<FinBookRespMsg.ResponseCode> task) {
+						FinBookRespMsg.ResponseCode code = task.getResult();
+
+						switch(code) {
+							case SUCCESS:
+								Alert.alert(MessageType.INFO, "You successfully booked the seat! " +
+									"You can now close the application.", ConfirmController.this);
+
+							case FAILED:
+								Alert.alert(MessageType.ERROR, "The booking failed!", ConfirmController.this);
+								break;
+						}
+					}
+
+					@Override
+					public void executeFailed(Task<FinBookRespMsg.ResponseCode> task) {
+						Throwable e = task.getFault();
+						logger.log(Level.SEVERE, e.getMessage(), e);
+
+						if(e instanceof DisconnectException) {
+							Main.disconnectError(ConfirmController.this);
+						}
+						else {
+							Alert.alert(MessageType.ERROR, e.getMessage(), ConfirmController.this);
+						}
+					}
+				}));
 			}
 		});
 	}

@@ -1,15 +1,22 @@
-<controllers:ConnectAndLoginController xmlns:bxml="http://pivot.apache.org/bxml" xmlns:controllers="ospp.pivotgui.controllers"
+<controllers:ConnectAndLoginController xmlns:bxml="http://pivot.apache.org/bxml"
+                                       xmlns:controllers="ospp.pivotgui.controllers"
                                        title="Login"
                                        maximized="true"
                                        xmlns="org.apache.pivot.wtk">
-    <BoxPane styles="{horizontalAlignment:'center', verticalAlignment:'center', backgroundColor:'#4f4f4f'}"
-             orientation="vertical">
+
+    <!-- Default style definition -->
+    <bxml:define>
+        <bxml:include bxml:id="defaultStyle" src="/styles/default.json"/>
+    </bxml:define>
+
+    <!-- Structure -->
+    <BoxPane styles="$defaultStyle.boxPane" orientation="vertical">
 
         <!-- HEADER -->
-        <Label text="ConsAir booking system" styles="{font:{size:24, bold:true}, color:'#eeeeee'}"/>
+        <Label text="ConsAir booking system" styles="$defaultStyle.headerLabel"/>
 
         <!-- FORM -->
-        <Form styles="{separatorHeadingColor:'#097ac7'}">
+        <Form styles="$defaultStyle.form">
 
             <Form.Section heading="Server information">
                 <TextInput bxml:id="hostURL" prompt="URL"/>
@@ -26,6 +33,6 @@
         </Form>
 
         <!-- INDICATOR -->
-        <ActivityIndicator bxml:id="indicator" styles="{backgroundColor:'#4f4f4f'}"/>
+        <ActivityIndicator bxml:id="indicator" styles="$defaultStyle.activityIndicator"/>
     </BoxPane>
 </controllers:ConnectAndLoginController>
