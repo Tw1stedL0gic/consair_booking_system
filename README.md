@@ -25,6 +25,8 @@ This program is a bookingsystem for an airliner/airport.
 1. MySQL server ver: 5.5.43-0ubuntu0.14.04.1
 2. Amnesia ver: amnesia-1.6.2
 3. Erlang/OTP ver: 17
+4. Maven any version
+5. jdk ver: 1.7
 
 ###When you are installing the MySql-server you need to setup an root password make sure you have this in hand during this installation.
 
@@ -34,7 +36,6 @@ This program is a bookingsystem for an airliner/airport.
 5. If you dont get any errors you are done.
  
 #### Compiling and testing Server
-
 #### Make.
 
 ##### To compile everything
@@ -52,6 +53,7 @@ Run ´make test_$$$$´, where $$$$ is the name of the .erl file that has tests w
 
 Running ´make test_server´ will override the previous statment and start a special test where a server is initiated in case there is not already one. 
 
+To run the tests for the network library, go to src/JavaNetLib and enter ´mvn test´. (Maven must be installed in order for this to work)
 ## Starta systemet
 
 #### Make
@@ -65,6 +67,9 @@ It will, using Make, check if a server is already running. This is done by check
 ##### To shut down server:
 
 Run ´make stop_server´
+
+## Documentation
+To generate documentation enter ´make doc´ for the Erlang files. For the network library, go to src/JavaNetLib and enter ´mvn javadoc:javadoc´ (Maven must be installed in order for this to work) and documentation will be generated in the subfolder target/site.
 
 ## Struktur
 
