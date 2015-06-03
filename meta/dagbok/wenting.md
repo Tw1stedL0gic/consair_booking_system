@@ -104,9 +104,11 @@ Presentation slides composition with other 3 group members
 
 ## Vecka 22
 
-##### Måndag
+##### Måndag 11:00-17:30
+Presentation preparation
 
-##### Tisdag
+##### Tisdag 13:00-17:00
+Presentation preparation
 
 ##### Onsdag
 
@@ -120,7 +122,9 @@ Presentation slides composition with other 3 group members
 
 ##### Tisdag
 
-##### Onsdag
+##### Onsdag 13:00-18:00
+Peerview for reports from group 3 and group 7
+Presentation
 
 ##### Torsdag
 
