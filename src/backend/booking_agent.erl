@@ -181,17 +181,15 @@ route_search(Airport,Arrival_point)->
 flight_details(Flight) ->
     %% return all information about flight 
     %% In this function, booked and locked seats are both represented by 1, and available by 0. 
-    case get_database:get_flight_from_db_f(Flight) of
-	{ok, [{flights, ID, A_ID, B_IATA, Date_dep, Date_arriv, Name}]} ->
-	    {ID, 
-	     get_database:get_airport_from_db_filter(A_ID),
-	     get_database:get_airport_from_db_filter(get_database:get_airport_iata_from_id(B_IATA)), 
-	     Date_dep, Date_arriv, 
-	     get_database:get_seats_from_flight(Flight),
-	     Name};
-	{error, Error} ->
-	    {error, Error}
-    end.
+
+    %% case get_database:get_flight_from_db_f(Flight) of
+    %% 	{flights, ID, {airport, A_ID, A_iata, A_name}, {airport, B_ID, B_iata, B_name}, Date_dep, Date_arriv, Seat_table, Name} ->
+    %% 	    {ID, {A_ID, A_iata, A_name}, {B_ID, B_iata, B_name}, Date_dep, Date_arriv, Seat_table, Name};
+    %% 	{error, Error} ->
+    %% 	    {error, Error}
+    %% end.
+    get_database:get_flights_details_from_flight(Flights).
+
 
 %% @doc Returns all information about flight.
 %% Input:  Flight ID
