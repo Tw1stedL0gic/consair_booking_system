@@ -259,7 +259,7 @@ connector_handler(Sock, ID, Timeouts, User, Parent_PID) ->
 
 
 concurrent_stress_test() ->
-    ?assertMatch({ok, _}, 
+    {timeout, 200, ?assertMatch({ok, _}, 
 		 case concurrent_stress_test_aux(3000) 
 		 of true -> case concurrent_stress_test_aux(2000) 
 			    of true -> case concurrent_stress_test_aux(1500) 
@@ -270,7 +270,7 @@ concurrent_stress_test() ->
 						      _ -> {ok, 1500} end; 
 					   _ -> {ok, 2000} end;
 				_ -> {ok, 3000} end;
-		     _ -> {error, failed} end).
+		     _ -> {error, failed} end)}.
 
 
 
