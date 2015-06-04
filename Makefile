@@ -31,11 +31,11 @@ clean:
 
 
 doc: 	
-	./doc/Makefile
-	
-	#erl -noshell -run edoc_run application "''"  '"."' '[{def,{vsn,""}}, {stylesheet, "my_style.css"}]'
-	#erl -noshell -run edoc_run application "'$(APPNAME)'"  '"."' '[{def,{vsn,"$(VSN)"}}, {stylesheet, "my_style.css"}]'
-#TODO lägg till och fixa till Jdoc och edoc
+	@echo
+	@echo "To make the documents for erlang please go to" 
+	@echo "./doc and run the makefile"
+	@echo	
+
 doc_url:
 	@echo 
 	@echo "EDoc index page available at file://$(PWD)/doc/index.html"
