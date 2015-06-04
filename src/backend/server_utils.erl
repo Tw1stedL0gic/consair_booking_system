@@ -14,14 +14,15 @@
 %%---------------------------------------------------------------------%%
 
 translate_package({ID}) ->
-    list_to_binary(list_to_regexp([integer_to_list(ID) | [now_as_string_millis()]], ?ELEMENT_SEPERATOR));
+    list_to_binary(list_to_regexp([integer_to_list(ID) | [now_as_string_millis()]]));
+
 translate_package({ID, Message}) ->
-    list_to_binary(list_to_regexp([integer_to_list(ID) | [now_as_string_millis() | Message]], ?ELEMENT_SEPERATOR));
+    list_to_binary(list_to_regexp([integer_to_list(ID) | [now_as_string_millis() | Message]]));
 
 %% Translates from a regexp to a tuple with ID and message
 
 translate_package(Message) ->
-    [Message_ID | [Timestamp | Message_list]] = lists:map(fun binary_to_list/1, lists:droplast(re:split(Message, ?ELEMENT_SEPERATOR))),
+    [Message_ID | [Timestamp | Message_list]] = lists:map(fun binary_to_list/1, lists:droplast(re:split(Message, ?MESSAGE_SEPERATOR))),
     case Message_list of
 	[] -> {list_to_integer(Timestamp), {list_to_integer(Message_ID)}};
 	_  -> {list_to_integer(Timestamp), {list_to_integer(Message_ID), Message_list}}
@@ -35,7 +36,7 @@ now_as_string_millis() ->
 
 %%---------------------------------------------------------------------%%
 
-list_to_regexp([Tail | []], _) ->
+list_to_regexp([Tail | []]) ->
     string:concat(
       case is_integer(Tail) of
 	  true -> integer_to_list(Tail);
