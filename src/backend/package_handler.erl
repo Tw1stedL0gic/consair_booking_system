@@ -51,7 +51,7 @@ handle_package({?DISCONNECT}, User) ->
 	    {ok, disconnect};
 	_ ->
 	    case logout(User) of
-		{ok} ->
+		ok ->
 		    {ok, disconnect};
 		{error, Error} ->
 		    {error, Error}

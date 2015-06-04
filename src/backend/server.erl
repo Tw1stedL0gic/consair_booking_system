@@ -115,9 +115,9 @@ connector_spawner(LSock, N) ->
 	{error, Error} ->
 	    ?WRITE_SPAWNER("Error received! {error, ~p}~n", [Error], "E"),
 	    connector_spawner(LSock, N)
-    after 100 ->
+    after 50 ->
 	    %% try connecting to other device for 100ms
-	    case gen_tcp:accept(LSock, 100) of
+	    case gen_tcp:accept(LSock, 50) of
 		{ok, Sock} ->
 		    %% spawn process to handle this connection
 		    New_connector_handler = spawn(?MODULE, connector_handler, [Sock, N+1, 0, null, self()]),
@@ -242,7 +242,7 @@ connector_handler(Sock, ID, Timeouts, User, Parent_PID) ->
 		    ok;
 		{error, Error} ->
 		    Parent_PID ! {error, Error};
-		{ok} ->
+		ok ->
 		    Parent_PID ! disconnect
 	    end
 
@@ -271,69 +271,85 @@ connector_handler(Sock, ID, Timeouts, User, Parent_PID) ->
 
 login_test() ->
     %% login
-    ?assertMatch({ok, _}, connect_send_and_receive({?LOGIN, ["fake", "user"]},   ?PORT)),
-    ?assertMatch({ok, _}, connect_send_and_receive({?LOGIN, ["carl", "asdasd"]}, ?PORT)),
-    ?assertMatch({ok, _}, connect_send_and_receive({?LOGIN, ["pelle", "asd"]},   ?PORT)).
+    ?assertMatch({ok, _}, connect_send_and_receive({?LOGIN, ["Fake", "user"]},   ?PORT, ?Default_timeout)),
+    ?assertMatch({ok, _}, connect_send_and_receive({?LOGIN, ["Carl", "asd"]}, ?PORT, ?Default_timeout)),
+    ?assertMatch({ok, _}, connect_send_and_receive({?LOGIN, ["Pelle", "asd"]},   ?PORT, ?Default_timeout)).
     
 
 one_of_each_message_test() ->
     %% LOGIN 
-    ?assertMatch({ok, _}, connect_send_and_receive({?LOGIN, ["pelle", "asd"]}, ?PORT)),
+    ?assertMatch({ok, _}, connect_send_and_receive({?LOGIN, ["Pelle", "asd"]}, ?PORT, ?Default_timeout)),
     %% ERROR
-    ?assertMatch({error, timeout}, connect_send_and_receive({?ERROR, ["Fake_error"]}, ?PORT)),
+    ?assertMatch({error, timeout}, connect_send_and_receive({?ERROR, ["Fake_error"]}, ?PORT, ?Default_timeout)),
     %% LOGIN AND INIT BOOK
-    ?assertMatch({ok, _}, connect_send_and_receive_list([{?LOGIN, ["pelle", "asd"]}, 
-							     {?INIT_BOOK, ["1"]}], ?PORT)),
+    ?assertMatch({ok, _}, connect_send_and_receive_list([{?LOGIN, ["Pelle", "asd"]}, 
+							     {?INIT_BOOK, ["1"]}], ?PORT, ?Default_timeout)),
 
     %% LOGIN, INIT BOOK AND ABORT
     ?assertMatch({ok, _},
-		 connect_send_and_receive_list([{?LOGIN, ["pelle", "asd"]},
+		 connect_send_and_receive_list([{?LOGIN, ["Pelle", "asd"]},
 							 {?INIT_BOOK, ["1"]},
-							 {?ABORT_BOOK, []}], ?PORT)),
+							 {?ABORT_BOOK, []}], ?PORT, ?Default_timeout)),
 
     %% LOGIN, INIT BOOK AND FIN
-    ?assertMatch({ok, _}, connect_send_and_receive_list([{?LOGIN, ["pelle", "asd"]},
+    ?assertMatch({ok, _}, connect_send_and_receive_list([{?LOGIN, ["Pelle", "asd"]},
 							 {?INIT_BOOK, ["1"]},
-							 {?FIN_BOOK, []}], ?PORT)),
+							 {?FIN_BOOK, []}], ?PORT, ?Default_timeout)),
 
     %% REQ AIRPORTS
-    ?assertMatch({ok, _}, connect_send_and_receive({?REQ_AIRPORTS,             []},   ?PORT)),
+    ?assertMatch({ok, _}, connect_send_and_receive({?REQ_AIRPORTS,             []},   ?PORT, ?Default_timeout)),
 
     %% REQ CONNECTING AIRPORTS
-    ?assertMatch({ok, _}, connect_send_and_receive({?REQ_AIRPORTS,             ["1"]},   ?PORT)),
+    ?assertMatch({ok, _}, connect_send_and_receive({?REQ_AIRPORTS,             ["1"]},   ?PORT, ?Default_timeout)),
 
     %% SEARCH ROUTE
-    ?assertMatch({ok, _}, connect_send_and_receive({?SEARCH_ROUTE,             ["1", "1377"]},   ?PORT)),
-
-    %% SEARCH ROUTE WITH DATE
-    ?assertMatch({ok, _}, connect_send_and_receive({?SEARCH_ROUTE,             ["1", "1377", "2015", "02", "10"]},   ?PORT)),
+    ?assertMatch({ok, _}, connect_send_and_receive({?SEARCH_ROUTE,             ["1", "1377"]},   ?PORT, ?Default_timeout)),
 
     %% REQ FLIGHT DETAILS
-    ?assertMatch({ok, _}, connect_send_and_receive({?REQ_FLIGHT_DETAILS,       ["1"]},   ?PORT)),
+    ?assertMatch({ok, _}, connect_send_and_receive({?REQ_FLIGHT_DETAILS,       ["1"]},   ?PORT, ?Default_timeout)),
 
     %% LOGIN AS ADMIN AND REQ FLIGHT DETAILS
-    ?assertMatch({ok, _}, connect_send_and_receive({?REQ_SEAT_SUGGESTION,      []},   ?PORT)),
+    ?assertMatch({ok, _}, connect_send_and_receive({?REQ_SEAT_SUGGESTION,      []},   ?PORT, ?Default_timeout)),
 
     %% REQ SEAT MAP
-    ?assertMatch({ok, _}, connect_send_and_receive({?REQ_SEAT_MAP,             []},   ?PORT)).
+    ?assertMatch({ok, _}, connect_send_and_receive({?REQ_SEAT_MAP,             []},   ?PORT, ?Default_timeout)).
     
 %% sequential_stress_test() ->
 %%     timer:sleep(2000),
 %%     Login_info_list = [[User, Pass] || User <- ["Carl", "Lucas", "Oskar", "Erik", "Andreas", "Wentin"], Pass <- ["hej", "hehe", "asd", "asdasd", "rp", "asd"]],
-%%     [?assertMatch({ok, _}, connect_send_and_receive({?LOGIN, Login_info},   ?PORT)) || Login_info <- Login_info_list].
+%%     [?assertMatch({ok, _}, connect_send_and_receive({?LOGIN, Login_info},   ?PORT, ?Default_timeout)) || Login_info <- Login_info_list].
 
 concurrent_stress_test() ->
-    timer:sleep(2000),
-    Login_info_list = [[User, Pass] || User <- ["Carl", "Lucas", "Oskar", "Erik", "Andreas", "Wentin"], Pass <- ["hej", "hehe", "asd", "asdasd", "rp", "asd"]],
+    ?assertMatch({ok, _}, 
+		 case concurrent_stress_test_aux(2000) 
+		 of true -> case concurrent_stress_test_aux(1500) 
+			    of true -> case concurrent_stress_test_aux(1000) 
+				       of true -> case concurrent_stress_test_aux(500) 
+						  of true -> case concurrent_stress_test_aux(100) 
+							     of true -> {ok, 100};
+								 _ -> {ok, 500} end;
+						      _ -> {ok, 1000} end; 
+					   _ -> {ok, 1500} end;
+				_ -> {ok, 2000} end;
+		     _ -> {error, failed} end).
+
+
+
+
+    
+
+concurrent_stress_test_aux(Timeout) ->
+    {ok, User_list} = get_database:get_all_users_from_db(),
+    Login_info_list = [[User, Pass] || {_, _, User, Pass, _, _ } <- User_list],
     ParentPID = self(),
     [spawn(fun() -> 
 		   timer:sleep(random:uniform(1000)), 
-		   ParentPID ! server_utils:connect_send_and_receive({?LOGIN, Login_info}, ?PORT) end) 
+		   ParentPID ! server_utils:connect_send_and_receive({?LOGIN, Login_info}, ?PORT, Timeout) end) 
      ||	Login_info <- Login_info_list],
     Answers = [receive X -> X end || _ <- Login_info_list],
-    io:fwrite("~p~n", Answers),
+    %% Count how many ok's we got
     Answers_ok = [{Status, Body} || {Status, Body} <- Answers, Status =:= ok],
-    ?assertEqual(length(Login_info_list), length(Answers_ok)).
+    length(Login_info_list) =:= length(Answers_ok).
 
 sim_book_test() ->
     ok.
@@ -355,5 +371,5 @@ error_test() ->
 
 %% no_server_test() ->
 %%     %% send before opening
-%%     ?assertMatch({error, econnrefused}, connect_send_and_receive({?HEARTBEAT}, ?PORT)),
-%%     ?assertMatch({error, econnrefused}, connect_send_and_receive({?HEARTBEAT}, ?ALT_PORT)).
+%%     ?assertMatch({error, econnrefused}, connect_send_and_receive({?HEARTBEAT}, ?PORT, ?Default_timeout)),
+%%     ?assertMatch({error, econnrefused}, connect_send_and_receive({?HEARTBEAT}, ?ALT_PORT, ?Default_timeout)).
