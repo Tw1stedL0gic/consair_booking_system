@@ -1,5 +1,5 @@
 -module(server_utils).
--export([translate_package/1, now_as_string_millis/0, list_to_regexp/2, flatten_tuples_to_list/1, connect_send_and_receive_manual/2, connect_send_and_receive_manual/3, connect_send_and_receive/2, connect_send_and_receive/3, connect_send_and_receive_list/2, connect_send_and_receive_list/3, reload_code/0,reload_code/1, stop_server/0, stop_server/1,format_position_as_mod/2, format_position_as_mod/4, fill_with_white_space/2, pass_message_list/2, remove_first_element_in_tuples_list/1]).
+-export([translate_package/1, now_as_string_millis/0, list_to_regexp/2, flatten_tuples_to_list/1, connect_send_and_receive_manual/3, connect_send_and_receive_manual/4, connect_send_and_receive/3, connect_send_and_receive/4, connect_send_and_receive_list/3, connect_send_and_receive_list/4, reload_code/0,reload_code/1, stop_server/0, stop_server/1,format_position_as_mod/2, format_position_as_mod/4, fill_with_white_space/2, pass_message_list/2, remove_first_element_in_tuples_list/1]).
 
 -define(ELEMENT_SEPERATOR, "&"). 
 -define(MESSAGE_SEPERATOR, "\n").
@@ -98,19 +98,24 @@ format_position_as_mod(N, Mod, CharA, CharB, Acc) ->
 	
 %%---------------------------------------------------------------------%%
 
-fill_with_white_space(String, N) ->	
-    lists:append(String, [$  || _ <- lists:seq(1,N-length(String))]).  
+fill_with_white_space(String, N) ->
+    case length(String) > N of
+	true ->
+	    lists:sublist(String, N);
+	_ ->
+	    lists:append(String, [$  || _ <- lists:seq(1,N-length(String))])
+    end.
 
 %%---------------------------------------------------------------------%%
 
-connect_send_and_receive_manual(Message, Port) ->
-    connect_send_and_receive_manual(Message, "localhost", Port).
+connect_send_and_receive_manual(Message, Port, Timeout) ->
+    connect_send_and_receive_manual(Message, "localhost", Port, Timeout).
 
-connect_send_and_receive_manual(Message, IP, Port) ->
+connect_send_and_receive_manual(Message, IP, Port, Timeout) ->
     case gen_tcp:connect(IP, Port, ?CONNECTIONOPTIONS) of
 	{ok, Sock} ->
 	    gen_tcp:send(Sock, Message),	    
-	    case gen_tcp:recv(Sock, 0, 500) of
+	    case gen_tcp:recv(Sock, 0, Timeout) of
 		{ok, Response} -> 
 		    gen_tcp:send(Sock, translate_package({?DISCONNECT})),
 		    {ok, Response};
@@ -124,14 +129,14 @@ connect_send_and_receive_manual(Message, IP, Port) ->
 	{error, Error} -> {error, Error}
     end.
 
-connect_send_and_receive(Message, Port) ->
-    connect_send_and_receive(Message, "localhost", Port).
+connect_send_and_receive(Message, Port, Timeout) ->
+    connect_send_and_receive(Message, "localhost", Port, Timeout).
 
-connect_send_and_receive(Message, IP, Port) ->
+connect_send_and_receive(Message, IP, Port, Timeout) ->
     case gen_tcp:connect(IP, Port, ?CONNECTIONOPTIONS) of
 	{ok, Sock} ->
 	    gen_tcp:send(Sock, translate_package(Message)),	    
-	    case gen_tcp:recv(Sock, 0, 500) of
+	    case gen_tcp:recv(Sock, 0, Timeout) of
 		{ok, Response} -> 
 		    gen_tcp:send(Sock, translate_package({?DISCONNECT})),
 		    {ok, Response};
@@ -145,13 +150,13 @@ connect_send_and_receive(Message, IP, Port) ->
 	{error, Error} -> {error, Error}
     end.
 
-connect_send_and_receive_list(Message_list, Port) when is_integer(Port) ->
-    connect_send_and_receive_list(Message_list, "localhost", Port).
+connect_send_and_receive_list(Message_list, Port, Timeout) when is_integer(Port) ->
+    connect_send_and_receive_list(Message_list, "localhost", Port, Timeout).
 
-connect_send_and_receive_list(Message_list, IP, Port) when is_integer(Port) ->
+connect_send_and_receive_list(Message_list, IP, Port, Timeout) when is_integer(Port) ->
     case gen_tcp:connect(IP, Port, ?CONNECTIONOPTIONS) of
 	{ok, Sock} ->
-	    case connect_send_and_receive_list(Message_list, Sock, []) of
+	    case connect_send_and_receive_list(Message_list, Sock, [], Timeout) of
 		{ok, Response} ->
 		    gen_tcp:send(Sock, translate_package({?DISCONNECT})),
 		    {ok, Response};
@@ -163,20 +168,22 @@ connect_send_and_receive_list(Message_list, IP, Port) when is_integer(Port) ->
 	    {error, Error}
     end;
 
-connect_send_and_receive_list([], _, Acc) when is_list(Acc) ->
+connect_send_and_receive_list([], _, Acc, _) when is_list(Acc) ->
     {ok, Acc};
 
-connect_send_and_receive_list([Message | Message_list], Sock, Acc) when is_list(Acc) ->
+connect_send_and_receive_list([Message | Message_list], Sock, Acc, Timeout) when is_list(Acc) ->
     gen_tcp:send(Sock, translate_package(Message)),
-    case gen_tcp:recv(Sock, 0, 500) of
+    case gen_tcp:recv(Sock, 0, Timeout) of
 	{error, timeout} ->
-	    connect_send_and_receive_list(Message_list, Sock, Acc);
+	    connect_send_and_receive_list(Message_list, Sock, Acc, Timeout);
 	{error, Error} -> 
 	    {error, Error};
 	{ok, Response} -> 
-	    connect_send_and_receive_list(Message_list, Sock, lists:append(Acc, [Response]));
+	    timer:sleep(random:uniform(2000)),
+	    connect_send_and_receive_list(Message_list, Sock, lists:append(Acc, [Response]), Timeout);
 	Response -> 
-	    connect_send_and_receive_list(Message_list, Sock, lists:append(Acc, [Response]))
+	    timer:sleep(random:uniform(2000)),
+	    connect_send_and_receive_list(Message_list, Sock, lists:append(Acc, [Response]), Timeout)
     end.
 
 %%---------------------------------------------------------------------%%
@@ -188,7 +195,7 @@ reload_code(IP) ->
     reload_code(IP, ?PORT).
 
 reload_code(IP, Port) ->
-    connect_send_and_receive_list([{?LOGIN, ["Carl", "asd"]}, {?RELOAD_CODE}], IP, Port).
+    connect_send_and_receive_list([{?LOGIN, ["Carl", "asd"]}, {?RELOAD_CODE}], IP, Port, 2000).
 
 %%---------------------------------------------------------------------%%
 
@@ -199,7 +206,7 @@ stop_server(IP) ->
     stop_server(IP, ?PORT).
 
 stop_server(IP, Port) ->
-    connect_send_and_receive_list([{?LOGIN, ["Carl", "asd"]}, {?TERMINATE_SERVER}], IP, Port).
+    connect_send_and_receive_list([{?LOGIN, ["Carl", "asd"]}, {?TERMINATE_SERVER}], IP, Port, 2000).
 
 %%---------------------------------------------------------------------%%
 
