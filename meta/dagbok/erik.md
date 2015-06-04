@@ -2,10 +2,10 @@
 
 OSPP (1DT096) 2015 - Grupp 04
 
-> Ändra XX till numret på din grupp.
+
 
 <img src="../images/erik.png" width="200">
-> Ändra så att bilden länkar till bilden på dig.
+
 
 Gör en kort anteckning i dagboken under aktuell vecka och dag nedan
 varje gång du arbetat på projektet.
