@@ -18,28 +18,33 @@ This program is a bookingsystem for an airliner/airport.
 > Det går att redigera, förhandsvisa och spara (commit) sidan direkt i
 > en webläsare via [projektsidan på github.com](./README.md).
 
-## Kompilera
+## Installera, Kompilera och Starta
 
-####Compiling and loading the DB.
-###First make sure that you have the following software installed.
+###Compiling and loading the DB.
+####First make sure that you have the following software installed.
 1. MySQL server ver: 5.5.43-0ubuntu0.14.04.1
 2. Amnesia ver: amnesia-1.6.2
 3. Erlang/OTP ver: 17
+4. Maven any version
+5. Java Development Kit (JDK) ver: 1.7 or above
 
-###When you are installing the MySql-server you need to setup an root password make sure you have this in hand during this installation.
+####When you are installing the MySql-server you need to setup an root password make sure you have this in hand during this installation.
 
-###When you have completede the prior-steps
+####When you have completede the prior-steps
 4. run make init_db password=<your SQL rootPassword>
    This will create the Database structure and run a load script for the Database you will need to enter your password one time per Database table.
 5. If you dont get any errors you are done.
  
-#### Compiling and testing Server
+#### Make and maven.
 
-#### Make.
+##### Follow these steps after setting up the database
 
-##### To compile everything
+1. Run ´make´ to compile the system code
+2. Run ´make start_server´ to start the server
+3. Go to src/JavaNetLib, enter ´mvn install´ to compile the network module. This will install the network module in the local maven repository on your computer. This is needed in order to compile the GUI.
+4. Go to src/pivotgui and enter ´mvn package´ to compile the GUI
+5. In src/pivotgui/target, enter ´java -jar PivotGUI-jar-with-dependencies.jar´ to start the GUI.
 
-Run ´make´
 
 ##### To reload code (using Erlangs build in code swapping)
 
@@ -52,6 +57,7 @@ Run ´make test_$$$$´, where $$$$ is the name of the .erl file that has tests w
 
 Running ´make test_server´ will override the previous statment and start a special test where a server is initiated in case there is not already one. 
 
+To run the tests for the network library, go to src/JavaNetLib and enter ´mvn test´. (Maven must be installed in order for this to work)
 ## Starta systemet
 
 #### Make
@@ -65,6 +71,9 @@ It will, using Make, check if a server is already running. This is done by check
 ##### To shut down server:
 
 Run ´make stop_server´
+
+## Documentation
+To generate documentation enter ´make doc´ for the Erlang files. For the network library, go to src/JavaNetLib and enter ´mvn javadoc:javadoc´ (Maven must be installed in order for this to work) and documentation will be generated in the subfolders target/site.
 
 ## Struktur
 

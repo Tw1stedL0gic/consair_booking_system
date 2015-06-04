@@ -45,6 +45,7 @@ public class PacketListener implements Runnable {
 			while((data = this.input.readLine()) != null) {
 				if(!debug) {
 					try {
+						logger.info("PacketListener received message: " + data);
 						Message msg = Message.parseMessage(data);
 						mailbox.receive(msg);
 					}
@@ -53,7 +54,7 @@ public class PacketListener implements Runnable {
 						logger.log(Level.SEVERE, "PacketListener received malformed message! " +
 							"Message: \"" + e.getMessage() + "\"", e);
 
-						mailbox.send(new ErrorMsg(System.currentTimeMillis(), e.getMessage()));
+//						mailbox.send(new ErrorMsg(System.currentTimeMillis(), e.getMessage()));
 					}
 				}
 				else {

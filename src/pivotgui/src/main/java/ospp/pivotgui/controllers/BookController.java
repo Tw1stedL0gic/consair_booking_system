@@ -1,12 +1,10 @@
 package ospp.pivotgui.controllers;
 
 import org.apache.pivot.beans.BXML;
-import org.apache.pivot.beans.BXMLSerializer;
 import org.apache.pivot.beans.Bindable;
 import org.apache.pivot.collections.ArrayList;
 import org.apache.pivot.collections.HashMap;
 import org.apache.pivot.collections.Map;
-import org.apache.pivot.serialization.SerializationException;
 import org.apache.pivot.util.Resources;
 import org.apache.pivot.util.concurrent.Task;
 import org.apache.pivot.util.concurrent.TaskExecutionException;
@@ -15,12 +13,13 @@ import org.apache.pivot.wtk.*;
 import ospp.bookinggui.Flight;
 import ospp.bookinggui.Seat;
 import ospp.bookinggui.networking.Message;
-import ospp.bookinggui.networking.messages.*;
+import ospp.bookinggui.networking.messages.DisconnectMsg;
+import ospp.bookinggui.networking.messages.RequestSeatSuggestionMsg;
+import ospp.bookinggui.networking.messages.RequestSeatSuggestionRespMsg;
 import ospp.pivotgui.Main;
 import ospp.pivotgui.exceptions.DisconnectException;
 import ospp.pivotgui.exceptions.IncorrectMessageTypeException;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,20 +40,7 @@ public class BookController extends Window implements Bindable {
 
 		// Load flights into flightTable
 		if(flights != null) {
-			ArrayList<HashMap> tableRows = new ArrayList<>();
-
-			for(Flight f : flights) {
-				HashMap<String, String> row = new HashMap<>();
-
-				row.put("flightID", f.getFlightID());
-				row.put("flightNumber", f.getFlightNumber());
-				row.put("fromAirport", f.getFrom().getName());
-				row.put("toAirport", f.getTo().getName());
-				row.put("departure", f.getDeparture().toString());
-				row.put("arrival", f.getArrival().toString());
-			}
-
-			flightTable.setTableData(tableRows);
+			displayFlights();
 		}
 
 		selectButton.getButtonPressListeners().add(new ButtonPressListener() {
@@ -86,7 +72,7 @@ public class BookController extends Window implements Bindable {
 							throw new TaskExecutionException(new DisconnectException());
 						}
 						else {
-							logger.severe("Client received incorrect messagetype! Type: " + msg.getType());
+							logger.severe("Client received incorrect message type! Type: " + msg.getType());
 							throw new TaskExecutionException(new IncorrectMessageTypeException());
 						}
 					}
@@ -120,23 +106,27 @@ public class BookController extends Window implements Bindable {
 
 		// Load flights into flightTable
 		if(flightTable != null) {
-			ArrayList<HashMap> tableRows = new ArrayList<>();
-
-			for(Flight f : flights) {
-				HashMap<String, String> row = new HashMap<>();
-
-				row.put("flightID", f.getFlightID());
-				row.put("flightNumber", f.getFlightNumber());
-				row.put("fromAirport", f.getFrom().getName());
-				row.put("toAirport", f.getTo().getName());
-				row.put("departure", f.getDeparture().toString());
-				row.put("arrival", f.getArrival().toString());
-
-				tableRows.add(row);
-			}
-
-			flightTable.setTableData(tableRows);
+			displayFlights();
 		}
+	}
+
+	private void displayFlights() {
+		ArrayList<HashMap> tableRows = new ArrayList<>();
+
+		for(Flight f : flights) {
+			HashMap<String, String> row = new HashMap<>();
+
+			row.put("flightID", f.getFlightID());
+			row.put("flightNumber", f.getFlightNumber());
+			row.put("fromAirport", f.getFrom().getName());
+			row.put("toAirport", f.getTo().getName());
+			row.put("departure", f.getDeparture().toString());
+			row.put("arrival", f.getArrival().toString());
+
+			tableRows.add(row);
+		}
+
+		flightTable.setTableData(tableRows);
 	}
 
 	private void openBookConfirmWindow(Seat[] seat_list) {

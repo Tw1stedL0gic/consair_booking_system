@@ -117,7 +117,7 @@ Rapporten är i princip klar nu. Ska lägga till meddelandestruktur om vi tycker
 ##### Tisdag
 
 ##### Onsdag
-
+Jobbade med att färdigställa allt. Projektet, rapporten, presentationen, peer reviews. Allt som ska vara klart. Tidsåtgång 12h
 ##### Torsdag
 
 ##### Fredag

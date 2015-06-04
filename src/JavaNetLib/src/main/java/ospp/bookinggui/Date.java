@@ -71,4 +71,18 @@ public class Date {
 
 		return body;
 	}
+
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+
+		sb.append(YEAR).append('-');
+		sb.append(MONTH).append('-');
+		sb.append(DAY).append(' ');
+
+		sb.append(HOUR).append(':');
+		sb.append(MINUTE).append(':');
+		sb.append(SECOND);
+
+		return sb.toString();
+	}
 }
