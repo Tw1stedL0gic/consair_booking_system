@@ -163,13 +163,11 @@ get_flights_from_to_airport (From,To)->
 %% Output: 
 %% @end
 
-get_flights_date_to_from_airport (From,To,{{Year,Month,Day},{Hour,Minutes,Seconds}})->
-    Formatted_date = io:format("~p-~p-~p ~p:~p:~p", [Year, Month, Day, Hour, Minutes, Seconds]),
-
+get_flights_date_to_from_airport (From,To,Date)->
     {ok, Pid} = amnesia:open(consair_database),
     case get_airport_id_from_iata(To) of
 	{ok, IATA} ->
-	    amnesia:fetch(Pid, flights,{"airport_id=$1 and arrival_point=$2 and departure_date =$3",[From,IATA, Formatted_date]});
+	    amnesia:fetch(Pid, flights,{"airport_id=$1 and arrival_point=$2 and departure_date =$3",[From,IATA,Date]});
 	{error, Error} ->
 	    {error, Error}
     end.

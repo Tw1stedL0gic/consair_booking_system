@@ -1,5 +1,5 @@
 -module(server_utils).
--export([translate_package/1, now_as_string_millis/0, list_to_regexp/2, flatten_tuples_to_list/1, connect_send_and_receive_manual/3, connect_send_and_receive_manual/4, connect_send_and_receive/3, connect_send_and_receive/4, connect_send_and_receive_list/3, connect_send_and_receive_list/4, reload_code/0,reload_code/1, stop_server/0, stop_server/1,format_position_as_mod/2, format_position_as_mod/4, fill_with_white_space/2, pass_message_list/2, remove_first_element_in_tuples_list/1]).
+-export([translate_package/1, now_as_string_millis/0, list_to_regexp/2, flatten_tuples_to_list/1, connect_send_and_receive_manual/2, connect_send_and_receive_manual/3, connect_send_and_receive/2, connect_send_and_receive/3, connect_send_and_receive_list/2, connect_send_and_receive_list/3, reload_code/0,reload_code/1, stop_server/0, stop_server/1,format_position_as_mod/2, format_position_as_mod/4, fill_with_white_space/2, pass_message_list/2, remove_first_element_in_tuples_list/1]).
 
 -define(ELEMENT_SEPERATOR, "&"). 
 -define(MESSAGE_SEPERATOR, "\n").
@@ -10,9 +10,6 @@
 -define(DISCONNECT,                    4).
 -define(TERMINATE_SERVER,             24).
 -define(RELOAD_CODE,                  26).
--define(Admin_login, <<"1&1&Carl&asd&\n">>).
--define(Terminate_server, <<"24&1&\n">>).
--define(Default_timeout, 1000).
 
 %%---------------------------------------------------------------------%%
 
@@ -46,13 +43,13 @@ list_to_regexp([Tail | []], _) ->
       end,
       ?ELEMENT_SEPERATOR ++ ?MESSAGE_SEPERATOR);
 
-list_to_regexp([Head | Tail]) ->
+list_to_regexp([Head | Tail], Seperator) ->
     string:concat(string:concat(
 		    case is_integer(Head) of 
 			true -> integer_to_list(Head); 
 			_ -> Head 
 		    end,
-		    Seperator), list_to_regexp(Tail)).
+		    Seperator), list_to_regexp(Tail, Seperator)).
 
 %%---------------------------------------------------------------------%%
 
@@ -106,14 +103,14 @@ fill_with_white_space(String, N) ->
 
 %%---------------------------------------------------------------------%%
 
-connect_send_and_receive_manual(Message, Port, Timeout) ->
-    connect_send_and_receive_manual(Message, "localhost", Port, Timeout).
+connect_send_and_receive_manual(Message, Port) ->
+    connect_send_and_receive_manual(Message, "localhost", Port).
 
-connect_send_and_receive_manual(Message, IP, Port, Timeout) ->
+connect_send_and_receive_manual(Message, IP, Port) ->
     case gen_tcp:connect(IP, Port, ?CONNECTIONOPTIONS) of
 	{ok, Sock} ->
 	    gen_tcp:send(Sock, Message),	    
-	    case gen_tcp:recv(Sock, 0, Timeout) of
+	    case gen_tcp:recv(Sock, 0, 500) of
 		{ok, Response} -> 
 		    gen_tcp:send(Sock, translate_package({?DISCONNECT})),
 		    {ok, Response};
@@ -127,14 +124,14 @@ connect_send_and_receive_manual(Message, IP, Port, Timeout) ->
 	{error, Error} -> {error, Error}
     end.
 
-connect_send_and_receive(Message, Port, Timeout) ->
-    connect_send_and_receive(Message, "localhost", Port, Timeout).
+connect_send_and_receive(Message, Port) ->
+    connect_send_and_receive(Message, "localhost", Port).
 
-connect_send_and_receive(Message, IP, Port, Timeout) ->
+connect_send_and_receive(Message, IP, Port) ->
     case gen_tcp:connect(IP, Port, ?CONNECTIONOPTIONS) of
 	{ok, Sock} ->
 	    gen_tcp:send(Sock, translate_package(Message)),	    
-	    case gen_tcp:recv(Sock, 0, Timeout) of
+	    case gen_tcp:recv(Sock, 0, 500) of
 		{ok, Response} -> 
 		    gen_tcp:send(Sock, translate_package({?DISCONNECT})),
 		    {ok, Response};
@@ -148,13 +145,13 @@ connect_send_and_receive(Message, IP, Port, Timeout) ->
 	{error, Error} -> {error, Error}
     end.
 
-connect_send_and_receive_list(Message_list, Port, Timeout) when is_integer(Port) ->
-    connect_send_and_receive_list(Message_list, "localhost", Port, Timeout).
+connect_send_and_receive_list(Message_list, Port) when is_integer(Port) ->
+    connect_send_and_receive_list(Message_list, "localhost", Port).
 
-connect_send_and_receive_list(Message_list, IP, Port, Timeout) when is_integer(Port) ->
+connect_send_and_receive_list(Message_list, IP, Port) when is_integer(Port) ->
     case gen_tcp:connect(IP, Port, ?CONNECTIONOPTIONS) of
 	{ok, Sock} ->
-	    case connect_send_and_receive_list(Message_list, Sock, [], Timeout) of
+	    case connect_send_and_receive_list(Message_list, Sock, []) of
 		{ok, Response} ->
 		    gen_tcp:send(Sock, translate_package({?DISCONNECT})),
 		    {ok, Response};
@@ -166,20 +163,20 @@ connect_send_and_receive_list(Message_list, IP, Port, Timeout) when is_integer(P
 	    {error, Error}
     end;
 
-connect_send_and_receive_list([], _, Acc, _) when is_list(Acc) ->
+connect_send_and_receive_list([], _, Acc) when is_list(Acc) ->
     {ok, Acc};
 
-connect_send_and_receive_list([Message | Message_list], Sock, Acc, Timeout) when is_list(Acc) ->
+connect_send_and_receive_list([Message | Message_list], Sock, Acc) when is_list(Acc) ->
     gen_tcp:send(Sock, translate_package(Message)),
-    case gen_tcp:recv(Sock, 0, Timeout) of
+    case gen_tcp:recv(Sock, 0, 500) of
 	{error, timeout} ->
-	    connect_send_and_receive_list(Message_list, Sock, Acc, Timeout);
+	    connect_send_and_receive_list(Message_list, Sock, Acc);
 	{error, Error} -> 
 	    {error, Error};
 	{ok, Response} -> 
-	    connect_send_and_receive_list(Message_list, Sock, lists:append(Acc, [Response]), Timeout);
+	    connect_send_and_receive_list(Message_list, Sock, lists:append(Acc, [Response]));
 	Response -> 
-	    connect_send_and_receive_list(Message_list, Sock, lists:append(Acc, [Response]), Timeout)
+	    connect_send_and_receive_list(Message_list, Sock, lists:append(Acc, [Response]))
     end.
 
 %%---------------------------------------------------------------------%%
@@ -191,7 +188,7 @@ reload_code(IP) ->
     reload_code(IP, ?PORT).
 
 reload_code(IP, Port) ->
-    connect_send_and_receive_list([{?LOGIN, ["Carl", "asd"]}, {?RELOAD_CODE}], IP, Port, ?Default_timeout).
+    connect_send_and_receive_list([{?LOGIN, ["Carl", "asd"]}, {?RELOAD_CODE}], IP, Port).
 
 %%---------------------------------------------------------------------%%
 
@@ -202,7 +199,7 @@ stop_server(IP) ->
     stop_server(IP, ?PORT).
 
 stop_server(IP, Port) ->
-    connect_send_and_receive_list([{?LOGIN, ["Carl", "asd"]}, {?TERMINATE_SERVER}], IP, Port, ?Default_timeout).
+    connect_send_and_receive_list([{?LOGIN, ["Carl", "asd"]}, {?TERMINATE_SERVER}], IP, Port).
 
 %%---------------------------------------------------------------------%%
 
