@@ -10,6 +10,8 @@ OSPP (1DT096) 2015 - Grupp 04
 Gör en kort anteckning i dagboken under aktuell vecka och dag nedan
 varje gång du arbetat på projektet.
 
+Jag glömde att lägga till dagar idenna under en veckas tid och kommer inte ihåg vad jag gjorde eller när så vecka 19. Samt vecka 18 var det valborg och massor med stök.
+
 ## Vecka 16
 
 ##### Måndag
@@ -38,7 +40,7 @@ satt hemma och läste på om databaser och server inteface i erlang 3h
 ##### Satarday
 Suttit och fixat med server pga om desigen av java interface  1,5h
 ## Vecka 18
-
+Denna vecka blev det inte mycket gjort då det var valborg!
 ##### Måndag
 
 ##### Tisdag
@@ -112,13 +114,14 @@ Suttit med bugg check med carl och med lucas medans vi har kopplat ihop våra mo
 har suttit med install instrukotn samt att fixat den sista delen av bugg fixar från sql db till booking_agenet filen. Dvs laggt till 3 frågor jag hade missat att skapa.
 
 ## Vecka 23
-
+Denna vecka 
 ##### Måndag
-
+Jobbat med buggar och med att skirva lite på rapporten
 ##### Tisdag
-
+Jobbat med buggar mm
 ##### Onsdag
-
+Hotfixat buggar, laggt till make för genrering av doc till erlang
+tränna och skirvit om lite på presentationen
 ##### Torsdag
-
+Redovisning hela dagen
 ##### Fredag
